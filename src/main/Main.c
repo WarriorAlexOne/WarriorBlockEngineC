@@ -37,25 +37,34 @@ int main (int argc, char* args[]) {
         SDL_WINDOW_SHOWN
         | SDL_WINDOW_RESIZABLE
     );
+    SDL_Window* window2 = SDL_CreateWindow(
+        title,
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        1700,
+        900,
+        SDL_WINDOW_SHOWN
+        | SDL_WINDOW_RESIZABLE
+    );
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 2);
 
     SDL_Surface* windowIcon = IMG_Load(iconPath);
     if (windowIcon == NULL) {
         printf("SDL_image Error: %s\nUnable To Load Window Icon.", IMG_GetError());
-        SDL_FreeSurface(windowIcon);
+        // SDL_FreeSurface(windowIcon);
     }
     else {
         SDL_SetWindowIcon(window, windowIcon);
-        SDL_FreeSurface(windowIcon);
+        // SDL_FreeSurface(windowIcon);
     }
-    
+
 
 
     //Main Loop
     while (!quit) {
         updateClocks();
         SDL_RenderPresent(renderer);
-        
+
         SDL_SetRenderDrawColor(renderer, 25, 51, 153, 255);  //Pretty Navy Blue.
         SDL_RenderClear(renderer);
 
@@ -66,6 +75,7 @@ int main (int argc, char* args[]) {
 
         // Tick Loop
         if (tickPassed) {
+            // SDL_RenderCopy();  //Player Render
 
         }
 
