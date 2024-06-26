@@ -9,21 +9,23 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "../utils/globalVariables.h"
+#include "../utils/tools.h"
 #include "../utils/clock.h"
+#include "../input/inputs.h"
 #include "../utils/debugTools.h"
 #include "../utils/stringTools.h"
 
-void initMainWindow ();
 
-
-string title[32] = "WarriorBlockEngine 0.0";
-string iconPath[64] = "assets/textures/misc/WarriorBlockEngine Logo v1.png";
-
-int quit = 0;
 bool bordered = true;
 
 SDL_Window* window;
 SDL_Renderer* renderer;
+
+
+void initMainWindow ();
+void windowUpdate ();
+
 
 void initMainWindow () {
     window = SDL_CreateWindow(
@@ -46,12 +48,13 @@ void initMainWindow () {
         SDL_SetWindowIcon(window, windowIcon);
         SDL_FreeSurface(windowIcon);
     }
+    addFrameFunction(windowUpdate);
     printf("Main Window Initialized!\n");
     printf("Renderer Initialized!\n");
 }
 
-// void setWindowTitle (SDL_Window* window, string text[]) {
-//     SDL_SetWindowTitle(window, titleFPS);
-// }
+void windowUpdate () {
+    SDL_SetWindowTitle(window, titleFPS);
+}
 
 #endif

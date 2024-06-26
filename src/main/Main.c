@@ -6,26 +6,28 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#define byte char
-#define string char
-
-SDL_Event event;  //Required for various inputs.
-
+#include "../utils/globalVariables.h"
+#include "../utils/tools.h"
 #include "../utils/clock.h"
+#include "../input/inputs.h"
 #include "../utils/debugTools.h"
 #include "../utils/stringTools.h"
 #include "../main/window.h"
 #include "../input/keyInput.h"
 #include "../input/controllerInput.h"
+#include "../input/touchInput.h"
 #include "../entity/player.h"
+#include "../maps/tiles.h"
+#include "../maps/levelGen.h"
 #include "../main/rendering.h"
 
 
 int main (int argc, char* args[]) {
     SDL_Init(SDL_INIT_EVERYTHING);
     IMG_Init(IMG_INIT_PNG);
-    initClockValues();
+    initClock();
     initDebugTools();
+    initInputs();
     initMainWindow();
     initKeyInput();
     initControllerInput();
@@ -36,20 +38,17 @@ int main (int argc, char* args[]) {
 
     //Main Loop
     while (!quit) {
-        updateClocks();
 
-        if (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                quit = 1;
-            }
+        while (gamePaused) {
+            updateClocks();
         }
 
-        
+        updateClocks();
     }
     
     // SDL_DestroyTexture(texture);
-    if (controller) {
-        SDL_GameControllerClose(controller[0]);
+    if (controllers) {
+        SDL_GameControllerClose(controllers[0].SDL_Controller);
     }
     free(playerList);
     SDL_DestroyRenderer(renderer);

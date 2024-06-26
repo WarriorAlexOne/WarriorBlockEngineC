@@ -9,8 +9,12 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "../utils/globalVariables.h"
+#include "../utils/tools.h"
 #include "../utils/clock.h"
+#include "../input/inputs.h"
 #include "../utils/debugTools.h"
+
 
 bool isNum (char c);
 bool isAlpha (char c);
