@@ -8,8 +8,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#include "../utils/FastNoiseLite/FastNoiseLite.h"
-
 #include "../utils/globalVariables.h"
 #include "../utils/tools.h"
 #include "../utils/clock.h"
@@ -20,6 +18,7 @@
 #include "../input/keyInput.h"
 #include "../input/controllerInput.h"
 #include "../input/touchInput.h"
+#include "../utils/FastNoiseLite/FastNoiseLite.h"
 #include "../maps/tiles.h"
 #include "../maps/levelGen.h"
 #include "../entity/player.h"
