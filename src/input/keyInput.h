@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
+#include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -23,20 +25,20 @@ int keyPressed[SDL_NUM_SCANCODES];
 int keyReleased[SDL_NUM_SCANCODES];
 
 
-int checkHeldKey (int scancode);
-int checkPressedKey (int scancode);
-int checkReleasedKey (int scancode);
+int checkKeyHeld (int scancode);
+int checkKeyPressed (int scancode);
+int checkKeyReleased (int scancode);
 void initKeyInput ();
 void updateKeyInput ();
 
 
-int checkHeldKey (int scancode) {  // Checks if a key is being held. Use in an if statement with the key-to-be-detected as an argument.
+int checkKeyHeld (int scancode) {  // Checks if a key is being held. Use in an if statement with the key-to-be-detected as an argument.
     return keyHeld[scancode];
 }
-int checkPressedKey (int scancode) {  //Checks if a key was quickly pressed. Use in an if statement with the key-to-be-detected as an argument.
+int checkKeyPressed (int scancode) {  //Checks if a key was quickly pressed. Use in an if statement with the key-to-be-detected as an argument.
     return keyPressed[scancode];
 }
-int checkReleasedKey (int scancode) {  //Checks if a key was released. Use in an if statement with the key-to-be-detected as an argument.
+int checkKeyReleased (int scancode) {  //Checks if a key was released. Use in an if statement with the key-to-be-detected as an argument.
     return keyReleased[scancode];
 }
 

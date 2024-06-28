@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
+#include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -32,8 +34,8 @@ void initMainWindow () {
         title,
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        1700,
-        900,
+        1300,
+        800,
         SDL_WINDOW_SHOWN
         | SDL_WINDOW_RESIZABLE
     );

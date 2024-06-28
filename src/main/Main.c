@@ -2,9 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
+#include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+
+#include "../utils/FastNoiseLite/FastNoiseLite.h"
 
 #include "../utils/globalVariables.h"
 #include "../utils/tools.h"
@@ -16,9 +20,9 @@
 #include "../input/keyInput.h"
 #include "../input/controllerInput.h"
 #include "../input/touchInput.h"
-#include "../entity/player.h"
 #include "../maps/tiles.h"
 #include "../maps/levelGen.h"
+#include "../entity/player.h"
 #include "../main/rendering.h"
 
 
@@ -31,10 +35,12 @@ int main (int argc, char* args[]) {
     initMainWindow();
     initKeyInput();
     initControllerInput();
+    initTiles();
+    initLevelGen();
+    createLevel();
     initPlayers();
     initRenderer();
     printf("Initialization Complete!\n\n");
-
 
     //Main Loop
     while (!quit) {
@@ -46,11 +52,12 @@ int main (int argc, char* args[]) {
         updateClocks();
     }
     
-    // SDL_DestroyTexture(texture);
+    destroyTileTextures(tiles, numberOfTiles);
     if (controllers) {
         SDL_GameControllerClose(controllers[0].SDL_Controller);
     }
-    free(playerList);
+    free(noiseData);
+    free(players);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
