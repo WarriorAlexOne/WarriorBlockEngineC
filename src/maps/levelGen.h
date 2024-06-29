@@ -2,56 +2,47 @@
 #define LEVELGEN_H
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
 #include <math.h>
-#include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 #include "../utils/globalVariables.h"
-#include "../utils/tools.h"
-#include "../utils/clock.h"
-#include "../input/inputs.h"
-#include "../utils/debugTools.h"
-#include "../utils/stringTools.h"
-#include "../main/window.h"
-#include "../input/keyInput.h"
-#include "../input/controllerInput.h"
-#include "../input/touchInput.h"
 #include "../utils/FastNoiseLite/FastNoiseLite.h"
+#include "../main/window.h"
 #include "../maps/tiles.h"
 
 
-#define LEVEL_W 512
-#define LEVEL_H 512
+#define LEVEL_W 10240
+#define LEVEL_H 10240
 
 
-int levelWidth = LEVEL_W;
-int levelHeight = LEVEL_H;
+long long int levelWidth = LEVEL_W;
+long long int levelHeight = LEVEL_H;
 
 fnl_state noise;
-double* noiseData;
+double noiseData;
 double roughness = 8.0;
 double noiseGate = -0.1;
 
-int levelData[LEVEL_W][LEVEL_H];
+long long int levelData[LEVEL_W][LEVEL_H];
+bool levelCreated = false;
+
+
+long long int testNum = 0;
 
 
 void initLevelGen ();
 void initSeeds (int seed);
 void createLevel ();
 void readAndRenderLevel ();
-// void getNoise ();
 
 
 void initLevelGen () {
     noise = fnlCreateState();
     noise.noise_type = FNL_NOISE_PERLIN;
     // worldSeed = 1092834;
-    initSeeds(12948537);
+    initSeeds(1294853);
 }
 
 void initSeeds (int seed) {
@@ -67,31 +58,31 @@ void initSeeds (int seed) {
 }
 
 void createLevel () {
-    for (int x = 0; x < levelWidth; x++) {
-        for (int y = 0; y < levelHeight; y++) {
-            if (y >= 0 && y <= 512) {
-                levelData[x][y] = DIRT;
+    for (long long int x = 0; x < levelWidth; x++) {
+        for (long long int y = 0; y < levelHeight; y++) {
+            noiseData = fnlGetNoise3D(&noise, x * roughness, y * roughness, (int)perlinSeed);
+            if (y >= 0 && y < levelHeight) levelData[x][y] = DIRT;
+            // if (y >= 0 && y <= 8) levelData[x][y] = AIR;
+            // if (y >= 15) levelData[x][y] = STONE;
+            if (noiseData < noiseGate) {
+                
+                // levelData[x][y+3] = GRASS;
+                levelData[x][y] = AIR;
+                // testNum++;
+                // printf("%i. %f\n", x, noiseData);
             }
-            if (fnlGetNoise3D(&noise, x * roughness, y * roughness, (int)perlinSeed) < noiseGate) levelData[x][y] = AIR;
         }
     }
+    // levelCreated = true;
 }
 
-            // if (y >= 0 && y <= 8) {
-            //     levelData[x][y] = AIR;
-            // }
-            
-            // if (y >= 15) {
-            //     levelData[x][y] = STONE;
-            // }
-
 void readAndRenderLevel () {
-    for (int x = 0; x < levelWidth; x++) {
-        for (int y = 0; y < levelHeight; y++) {
-            for (short tileID = 0; tileID < numberOfTiles; tileID++) {
+    for (int x = (((int)(players[0].x)/DEFAULT_TILE_SIZE)/gameScale); /*gameScale is temp. Will need changing when camera added*/ x < (((int)(players[0].x)/DEFAULT_TILE_SIZE)/gameScale) + 50; x++) {
+        for (int y = (((int)(players[0].y)/DEFAULT_TILE_SIZE)/gameScale); y < (((int)(players[0].y)/DEFAULT_TILE_SIZE)/gameScale) + 50; y++) {
+            for (long long int tileID = 0; tileID < numberOfTiles; tileID++) {
                 if (levelData[x][y] == tileID) {
-                    tiles[tileID].tileDimensions.x = (x * DEFAULT_TILE_SIZE) * gameScale;
-                    tiles[tileID].tileDimensions.y = (y * DEFAULT_TILE_SIZE) * gameScale;
+                    tiles[tileID].tileDimensions.x = ((x * DEFAULT_TILE_SIZE) * gameScale) - cameraX;
+                    tiles[tileID].tileDimensions.y = ((y * DEFAULT_TILE_SIZE) * gameScale) - cameraY;
                     tiles[tileID].tileDimensions.w = (DEFAULT_TILE_SIZE * gameScale) + (fmod(gameScale, 1) == 0 ? 0 : 1) + (gameScale < 1 ? 1 : 0);
                     tiles[tileID].tileDimensions.h = (DEFAULT_TILE_SIZE * gameScale) + (fmod(gameScale, 1) == 0 ? 0 : 1) + (gameScale < 1 ? 1 : 0);
                     SDL_RenderCopy(renderer, tiles[tileID].texture, NULL, &tiles[tileID].tileDimensions);

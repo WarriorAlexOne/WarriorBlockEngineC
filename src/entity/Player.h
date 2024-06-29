@@ -12,52 +12,16 @@
 #include <SDL2/SDL_image.h>
 
 #include "../utils/globalVariables.h"
-#include "../utils/tools.h"
 #include "../utils/clock.h"
-#include "../input/inputs.h"
-#include "../utils/debugTools.h"
-#include "../utils/stringTools.h"
 #include "../main/window.h"
 #include "../input/keyInput.h"
 #include "../input/controllerInput.h"
 #include "../input/touchInput.h"
-#include "../utils/FastNoiseLite/FastNoiseLite.h"
+#include "../entity/camera.h"
 #include "../maps/tiles.h"
 #include "../maps/levelGen.h"
 
 
-typedef struct {
-    byte ID;
-
-    //Coords
-    double x;
-    double y;
-    double sizeX;
-    double sizeY;
-
-    //Speed
-    double speed;
-    double velocityX;
-    double velocityY;
-
-    //Jump
-    bool canJump;
-    bool jumped;
-    bool isJumping;
-    bool isFalling;
-    double jumpPower;
-    double jumpAccel;
-    double jumpVelocity;
-
-    //Gravity
-    double gravity;
-    double gravityAccel;
-
-    //Collision
-    bool onGround;
-} Player;
-
-Player* players;
 byte numberOfPlayers = 1;
 
 SDL_Rect playerRect;
@@ -86,7 +50,7 @@ void initPlayers () {
         players[i].sizeY = 16 * gameScale;
 
         //Speed
-        players[i].speed = 1 * gameScale;
+        players[i].speed = 50 * gameScale;
         players[i].velocityX = 0 * gameScale;
         players[i].velocityY = 0 * gameScale;
 
@@ -143,7 +107,7 @@ void playerFrameInput (Player* player[]) {
             player[i]->sizeX = DEFAULT_TILE_SIZE * gameScale;
             player[i]->sizeY = DEFAULT_TILE_SIZE * gameScale;
         }
-        if (checkKeyHeld(SDL_SCANCODE_MINUS)) {
+        if (checkKeyHeld(SDL_SCANCODE_MINUS) && gameScale >= 0.1) {
             gameScale -= (0.01 * 60) * deltaTime;
             player[i]->sizeX = DEFAULT_TILE_SIZE * gameScale;
             player[i]->sizeY = DEFAULT_TILE_SIZE * gameScale;
@@ -151,27 +115,27 @@ void playerFrameInput (Player* player[]) {
 
         if (checkKeyHeld(SDL_SCANCODE_LEFTBRACKET)) {
             perlinSeed -= (1 * 60) * deltaTime;
-            printf("%i\n", perlinSeed);
+            printf("%f\n", perlinSeed);
         }
         if (checkKeyHeld(SDL_SCANCODE_RIGHTBRACKET)) {
             perlinSeed += (1 * 60) * deltaTime;
-            printf("%i\n", perlinSeed);
+            printf("%f\n", perlinSeed);
         }
         if (checkKeyHeld(SDL_SCANCODE_C)) {
-            createLevel();
+            // createLevel();
         }
 
         if (checkKeyHeld(SDL_SCANCODE_W)) {
-            player[i]->y -= ((5 * 60) * deltaTime) * gameScale;
+            player[i]->y -= ((player[i]->speed * 60) * deltaTime) * gameScale;
         }
         if (checkKeyHeld(SDL_SCANCODE_A)) {
-            player[i]->x -= ((5 * 60) * deltaTime) * gameScale;
+            player[i]->x -= ((player[i]->speed * 60) * deltaTime) * gameScale;
         }
         if (checkKeyHeld(SDL_SCANCODE_S)) {
-            player[i]->y += ((5 * 60) * deltaTime) * gameScale;
+            player[i]->y += ((player[i]->speed * 60) * deltaTime) * gameScale;
         }
         if (checkKeyHeld(SDL_SCANCODE_D)) {
-            player[i]->x += ((5 * 60) * deltaTime) * gameScale;
+            player[i]->x += ((player[i]->speed * 60) * deltaTime) * gameScale;
         }
 
         if (checkKeyPressed(SDL_SCANCODE_T)) {

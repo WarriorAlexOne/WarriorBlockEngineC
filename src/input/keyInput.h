@@ -5,46 +5,37 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <math.h>
-#include <time.h>
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 
-#include "../utils/globalVariables.h"
-#include "../utils/tools.h"
 #include "../utils/clock.h"
-#include "../input/inputs.h"
-#include "../utils/debugTools.h"
-#include "../utils/stringTools.h"
-#include "../main/window.h"
 
 
-int keyHeld[SDL_NUM_SCANCODES];
-int keyPressed[SDL_NUM_SCANCODES];
-int keyReleased[SDL_NUM_SCANCODES];
+bool keyHeld[SDL_NUM_SCANCODES];
+bool keyPressed[SDL_NUM_SCANCODES];
+bool keyReleased[SDL_NUM_SCANCODES];
 
 
-int checkKeyHeld (int scancode);
-int checkKeyPressed (int scancode);
-int checkKeyReleased (int scancode);
+bool checkKeyHeld (short scancode);
+bool checkKeyPressed (short scancode);
+bool checkKeyReleased (short scancode);
 void initKeyInput ();
 void updateKeyInput ();
 
 
-int checkKeyHeld (int scancode) {  // Checks if a key is being held. Use in an if statement with the key-to-be-detected as an argument.
+bool checkKeyHeld (short scancode) {  // Checks if a key is being held. Use in an if statement with the key-to-be-detected as an argument.
     return keyHeld[scancode];
 }
-int checkKeyPressed (int scancode) {  //Checks if a key was quickly pressed. Use in an if statement with the key-to-be-detected as an argument.
+bool checkKeyPressed (short scancode) {  //Checks if a key was quickly pressed. Use in an if statement with the key-to-be-detected as an argument.
     return keyPressed[scancode];
 }
-int checkKeyReleased (int scancode) {  //Checks if a key was released. Use in an if statement with the key-to-be-detected as an argument.
+bool checkKeyReleased (short scancode) {  //Checks if a key was released. Use in an if statement with the key-to-be-detected as an argument.
     return keyReleased[scancode];
 }
 
 //Called at runtime to setup the keyboard input.
 void initKeyInput () {
-    for (int i = 0; i < SDL_NUM_SCANCODES; i++) {
+    for (short i = 0; i < SDL_NUM_SCANCODES; i++) {
         keyHeld[i] = 0;
         keyPressed[i] = 0;
         keyReleased[i] = 0;
@@ -56,7 +47,7 @@ void initKeyInput () {
 //Called every frame to update detected keys.
 void updateKeyInput () {
     const Uint8* state = SDL_GetKeyboardState(NULL);
-    for (int i = 0; i < SDL_NUM_SCANCODES; i++) {
+    for (short i = 0; i < SDL_NUM_SCANCODES; i++) {
         if (state[i]) {
             if (!keyHeld[i]) {
                 keyPressed[i] = 1;

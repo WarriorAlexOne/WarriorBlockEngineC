@@ -9,6 +9,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "../utils/globalVariables.h"
+#include "../utils/FastNoiseLite/FastNoiseLite.h"
 #include "../utils/tools.h"
 #include "../utils/clock.h"
 #include "../input/inputs.h"
@@ -18,7 +19,7 @@
 #include "../input/keyInput.h"
 #include "../input/controllerInput.h"
 #include "../input/touchInput.h"
-#include "../utils/FastNoiseLite/FastNoiseLite.h"
+#include "../entity/camera.h"
 #include "../maps/tiles.h"
 #include "../maps/levelGen.h"
 #include "../entity/player.h"
@@ -55,7 +56,6 @@ int main (int argc, char* args[]) {
     if (controllers) {
         SDL_GameControllerClose(controllers[0].SDL_Controller);
     }
-    free(noiseData);
     free(players);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

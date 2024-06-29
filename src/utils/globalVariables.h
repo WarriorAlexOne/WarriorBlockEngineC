@@ -2,15 +2,8 @@
 #define GLOBALVARIABLES_H
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <math.h>
-#include <time.h>
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-
 
 #define FNL_IMPL
 
@@ -19,11 +12,44 @@
 #define string char
 
 
+typedef struct {
+    byte ID;
+
+    //Coords
+    double x;
+    double y;
+    double sizeX;
+    double sizeY;
+
+    //Speed
+    double speed;
+    double velocityX;
+    double velocityY;
+
+    //Jump
+    bool canJump;
+    bool jumped;
+    bool isJumping;
+    bool isFalling;
+    double jumpPower;
+    double jumpAccel;
+    double jumpVelocity;
+
+    //Gravity
+    double gravity;
+    double gravityAccel;
+
+    //Collision
+    bool onGround;
+} Player;
+
+Player* players;
+
 //Window
 string title[48] = "WarriorBlockEngine 0.0";
 string iconPath[64] = "assets/textures/misc/WarriorBlockEngine Logo v1.png";
-int windowW;
-int windowH;
+int windowW = 1300;
+int windowH = 800;
 
 //Game Variables
 byte gamePaused = 0;

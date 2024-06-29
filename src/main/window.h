@@ -2,21 +2,12 @@
 #define WINDOW_H
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <math.h>
-#include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 #include "../utils/globalVariables.h"
-#include "../utils/tools.h"
 #include "../utils/clock.h"
-#include "../input/inputs.h"
-#include "../utils/debugTools.h"
-#include "../utils/stringTools.h"
 
 
 bool bordered = true;
@@ -34,8 +25,8 @@ void initMainWindow () {
         title,
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        1300,
-        800,
+        windowW,
+        windowH,
         SDL_WINDOW_SHOWN
         | SDL_WINDOW_RESIZABLE
     );
@@ -50,6 +41,7 @@ void initMainWindow () {
         SDL_SetWindowIcon(window, windowIcon);
         SDL_FreeSurface(windowIcon);
     }
+
     addFrameFunction(windowUpdate);
     printf("Main Window Initialized!\n");
     printf("Renderer Initialized!\n");
