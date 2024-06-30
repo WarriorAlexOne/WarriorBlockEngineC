@@ -17,6 +17,7 @@
 #include "../utils/stringTools.h"
 #include "../main/window.h"
 #include "../input/keyInput.h"
+#include "../input/mouseInput.h"
 #include "../input/controllerInput.h"
 #include "../input/touchInput.h"
 #include "../entity/camera.h"
@@ -34,6 +35,7 @@ int main (int argc, char* args[]) {
     initInputs();
     initMainWindow();
     initKeyInput();
+    initMouseInput();
     initControllerInput();
     initTiles();
     initLevelGen();

@@ -40,6 +40,7 @@ bool tilesInitialized = false;
 void initTiles ();
 Tile createTile (short ID, string tileName[]);
 SDL_Texture* createTileTexture (SDL_Texture* texture, string texturePath[]);
+void setFoliageColor (Tile tile);
 
 
 void initTiles () {
@@ -60,6 +61,7 @@ Tile createTile (short ID, string tileName[]) {
 
     sprintf(texturePath, "%s%s%s", TILE_FILE_PATH, tileName, IMG_FORMAT);
     newTile.texture = createTileTexture(newTile.texture, texturePath);
+    setFoliageColor(newTile);
 
     numberOfTiles++;
 
@@ -74,6 +76,15 @@ SDL_Texture* createTileTexture (SDL_Texture* texture, string texturePath[]) {
 void destroyTileTextures (Tile tiles[], int tileAmount) {
     for (int i = 0; i < tileAmount; i++) {
         SDL_DestroyTexture(tiles[i].texture);
+    }
+}
+
+void setFoliageColor (Tile tile) {
+    if (
+        tile.ID == GRASS ||
+        tile.ID == OAK_LEAVES
+        ) {
+        SDL_SetTextureColorMod(tile.texture, 0, 191, 0);  //Green
     }
 }
 
