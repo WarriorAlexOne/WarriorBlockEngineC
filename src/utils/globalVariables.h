@@ -9,8 +9,6 @@
 
 #define byte char
 #define string char
-#define Vec1 double
-#define Vec1_Int int
 
 //Window Title
 string title[48] = "WarriorBlockEngine 0.0";
