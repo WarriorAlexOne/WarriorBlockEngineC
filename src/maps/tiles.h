@@ -73,18 +73,18 @@ SDL_Texture* createTileTexture (SDL_Texture* texture, string texturePath[]) {
     return texture;
 }
 
-void destroyTileTextures (Tile tiles[], int tileAmount) {
-    for (int i = 0; i < tileAmount; i++) {
-        SDL_DestroyTexture(tiles[i].texture);
-    }
-}
-
 void setFoliageColor (Tile tile) {
     if (
         tile.ID == GRASS ||
         tile.ID == OAK_LEAVES
         ) {
         SDL_SetTextureColorMod(tile.texture, 0, 191, 0);  //Green
+    }
+}
+
+void destroyTileTextures (Tile tiles[], int tileAmount) {
+    for (int i = 0; i < tileAmount; i++) {
+        SDL_DestroyTexture(tiles[i].texture);
     }
 }
 

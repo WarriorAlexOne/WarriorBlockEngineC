@@ -87,7 +87,7 @@ void initPlayers () {
         players[i].screenY = windowH/2;
 
         //Speed
-        players[i].speed = 1 * gameScale;
+        players[i].speed = 10 * gameScale;
         players[i].velocityX = 0 * gameScale;
         players[i].velocityY = 0 * gameScale;
 
@@ -130,7 +130,6 @@ void playerFrameUpdate () {
     playerFrameInput(&players);
     playerGravity(&players);
     playerJump(&players);
-    
 }
 
 void playerRender () {

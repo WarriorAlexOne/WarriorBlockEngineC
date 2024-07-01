@@ -8,6 +8,7 @@
 #define FNL_IMPL
 
 #define byte char
+#define ubyte unsigned char
 #define string char
 
 //Window Title
@@ -19,7 +20,7 @@ int windowH = 800;
 
 //Game Variables
 byte gamePaused = 0;
-double gameScale = 3.0;  //Other values are multiplied by this.
+double gameScale = 0.3;  //Other values are multiplied by this.
 const double DEFAULT_TILE_SIZE = 16.0;
 int worldSeed;
 double perlinSeed;

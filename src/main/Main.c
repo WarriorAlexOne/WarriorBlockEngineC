@@ -11,6 +11,8 @@
 #include "../utils/globalVariables.h"
 #include "../utils/FastNoiseLite/FastNoiseLite.h"
 #include "../utils/tools.h"
+#include "../utils/vector2D.h"
+#include "../utils/vector3D.h"
 #include "../utils/clock.h"
 #include "../input/inputs.h"
 #include "../utils/debugTools.h"
