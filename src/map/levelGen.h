@@ -10,7 +10,7 @@
 #include "../utils/globalVariables.h"
 #include "../utils/FastNoiseLite/FastNoiseLite.h"
 #include "../main/window.h"
-#include "../maps/tiles.h"
+#include "../map/tiles.h"
 
 
 #define LEVEL_W 512
@@ -38,13 +38,14 @@ void initLevelGen ();
 void initSeeds (int seed);
 void createLevel ();
 void readAndRenderLevel ();
-void setLevelDirt ();
-void setLevelGrass ();
+void Level_GenerateSurface (int tileID);
+void Level_SetDirt ();
+void Level_SetGrass ();
 
 
-void fillLevel (int tileID);
-void addLevelHills ();
-void addLevelCaves ();
+void Level_FillAll (int tileID);
+void Level_AddHills ();
+void Level_AddCaves ();
 
 
 void initLevelGen () {
@@ -67,37 +68,24 @@ void initSeeds (int seed) {
 }
 
 void createLevel () {
-    int noise_Height = 7;
-    double perlin_scale = 10;
-    for (int x = 0; x <= levelWidth; x++) {
-        double noise_gate_multiplier = (fnlGetNoise2D(&noise, x/60.0, worldSeed)+1)/2;
-        for (int y = 0; y <= levelHeight; y++) {
-            double perlin_height = (fnlGetNoise3D(&noise, x * perlin_scale, y  * perlin_scale, perlinSeed)+1)/2;
-            double local_noise_gate = y/(groundLevel*2.0) * noise_Height - noise_Height/2.0 + noise_gate_multiplier/2.0;
-            if (perlin_height > local_noise_gate) {
-                levelData[x][levelHeight - y] = STONE;
-            }
-        }
-    }
-    setLevelDirt();
-    setLevelGrass();
-    // fillLevel(GRASS);
-    // addLevelHills();
-    // addLevelCaves();
+    levelData[0][0] = GRASS;
+    Level_GenerateSurface(STONE);
+    Level_SetDirt();
+    Level_SetGrass();
     levelCreated = true;
 }
 
 void readAndRenderLevel () {
-    int zoom = 0;
+    int offset = 0;
     for (
-        int x = zoom + (cameraX >= zoom ? (((int)cameraX/DEFAULT_TILE_SIZE)/gameScale) : zoom);
+        int x = offset + (cameraX >= offset ? (((int)cameraX/DEFAULT_TILE_SIZE)/gameScale) : offset);
         x <= (((windowW/DEFAULT_TILE_SIZE) + ((int)cameraX/DEFAULT_TILE_SIZE)) + 512 < levelWidth ?  //If edge of screen + camera offset is less than the level width in tiles
                 ((windowW/DEFAULT_TILE_SIZE) + ((int)cameraX/DEFAULT_TILE_SIZE)) + 512 :  //If true, tile render limit is set to window edge + camera offset.
                     levelWidth);  //If false (meaning window edge + camera offset is larger than the level), tile render is set to max level size.
         x++
         ) {
         for (
-            int y = zoom + (cameraY >= zoom ? (((int)cameraY/DEFAULT_TILE_SIZE)/gameScale) : zoom);
+            int y = offset + (cameraY >= offset ? (((int)cameraY/DEFAULT_TILE_SIZE)/gameScale) : offset);
             y <= (((windowH/DEFAULT_TILE_SIZE) + ((int)cameraY/DEFAULT_TILE_SIZE)) + 256 < levelHeight ?  //If edge of screen + camera offset is less than the level width in tiles
                 ((windowH/DEFAULT_TILE_SIZE) + ((int)cameraY/DEFAULT_TILE_SIZE)) + 256 :  //If true, tile render limit is set to window edge + camera offset.
                     levelHeight);  //If false (meaning window edge + camera offset is larger than the level), tile render is set to max level size.
@@ -105,8 +93,8 @@ void readAndRenderLevel () {
             ) {
             for (short tileID = 0; tileID <= numberOfTiles; tileID++) {
                 if (levelData[x][y] == tileID) {
-                    tiles[tileID].tileDimensions.x = ((x * DEFAULT_TILE_SIZE) * gameScale) - (int)cameraX;
-                    tiles[tileID].tileDimensions.y = ((y * DEFAULT_TILE_SIZE) * gameScale) - (int)cameraY;
+                    tiles[tileID].tileDimensions.x = ((x * DEFAULT_TILE_SIZE) * gameScale) - (cameraX*gameScale);
+                    tiles[tileID].tileDimensions.y = ((y * DEFAULT_TILE_SIZE) * gameScale) - (cameraY*gameScale);
                     tiles[tileID].tileDimensions.w = (DEFAULT_TILE_SIZE * gameScale) + (fmod(gameScale, 1) == 0 ? 0 : 1) + (gameScale < 1 ? 1 : 0);
                     tiles[tileID].tileDimensions.h = (DEFAULT_TILE_SIZE * gameScale) + (fmod(gameScale, 1) == 0 ? 0 : 1) + (gameScale < 1 ? 1 : 0);
                     SDL_RenderCopy(renderer, tiles[tileID].texture, NULL, &tiles[tileID].tileDimensions);
@@ -117,21 +105,36 @@ void readAndRenderLevel () {
     }
 }
 
-void setLevelDirt () {
+void Level_GenerateSurface (int tileID) {
+    int noise_Height = 7;
+    double perlin_scale = 10;
     for (int x = 0; x <= levelWidth; x++) {
+        double noise_gate_multiplier = (fnlGetNoise2D(&noise, x/60.0, worldSeed)+1)/2;
         for (int y = 0; y <= levelHeight; y++) {
-            if (levelData[x][y] == STONE && levelData[x][y-1] == AIR) {
-                levelData[x][y] = DIRT;
-                levelData[x][y+1] = DIRT;
-                levelData[x][y+2] = DIRT;
+            double perlin_height = (fnlGetNoise3D(&noise, x * perlin_scale, y  * perlin_scale, perlinSeed)+1)/2;
+            double local_noise_gate = y/(groundLevel*2.0) * noise_Height - noise_Height/2.0 + noise_gate_multiplier/2.0;
+            if (perlin_height > local_noise_gate) {
+                levelData[x][levelHeight - y] = tileID;
             }
         }
     }
 }
 
-void setLevelGrass () {
+void Level_SetDirt () {
     for (int x = 0; x <= levelWidth; x++) {
-        for (int y = 0; y <= levelHeight; y++) {
+        for (int y = 0; y <= groundLevel+10; y++) {  //10 block downwards buffer
+            for (byte i = 1; i <= 3; i++) {  //3 layers of dirt
+                if (levelData[x][y] == STONE && levelData[x][y-i] == AIR) {
+                    levelData[x][y] = DIRT;
+                }
+            }
+        }
+    }
+}
+
+void Level_SetGrass () {
+    for (int x = 0; x <= levelWidth; x++) {
+        for (int y = 0; y <= groundLevel+10; y++) {  //10 block downwards buffer
             if (levelData[x][y] == DIRT && levelData[x][y-1] == AIR) {
                 levelData[x][y] = GRASS;
             }
@@ -141,7 +144,7 @@ void setLevelGrass () {
 
 
 
-void fillLevel (int tileID) {
+void Level_FillAll (int tileID) {
     for (int x = 0; x <= levelWidth; x++) {
         for (int y = 0; y <= levelHeight; y++) {
             levelData[x][y] = tileID;
@@ -149,7 +152,7 @@ void fillLevel (int tileID) {
     }
 }
 
-void addLevelHills () {
+void Level_AddHills () {
     for (int x = 0; x <= levelWidth; x++) {
         for (int y = 0; y <= levelHeight; y++) {
             if (y <= 127) {
@@ -162,7 +165,7 @@ void addLevelHills () {
     }
 }
 
-void addLevelCaves () {
+void Level_AddCaves () {
     for (int x = 0; x <= levelWidth; x++) {
         for (int y = 0; y <= levelHeight; y++) {
             if (levelData[x][y] == GRASS) {

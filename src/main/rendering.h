@@ -7,7 +7,7 @@
 
 #include "../utils/clock.h"
 #include "../main/window.h"
-#include "../maps/levelGen.h"
+#include "../map/levelGen.h"
 #include "../entity/player.h"
 
 
@@ -22,6 +22,7 @@ void initRenderer () {
 
 void updateRenderer () {
     SDL_SetRenderDrawColor(renderer, 25, 51, 153, 255);  //Pretty Navy Blue.
+    // SDL_SetRenderDrawColor(renderer, 117, 151, 251, 255);  //Slome Sky Color
     SDL_RenderClear(renderer);
 
     readAndRenderLevel();

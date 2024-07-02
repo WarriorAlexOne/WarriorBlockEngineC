@@ -19,8 +19,8 @@
 #include "../input/controllerInput.h"
 #include "../input/touchInput.h"
 #include "../entity/camera.h"
-#include "../maps/tiles.h"
-#include "../maps/levelGen.h"
+#include "../map/tiles.h"
+#include "../map/levelGen.h"
 
 
 typedef struct {
@@ -71,6 +71,7 @@ void playerRender ();
 void playerGravity (Player* player[]);
 void playerJump (Player* player[]);
 void playerFrameInput (Player* player[]);
+void playerUpdateStats (Player* player[]);
 
 
 void initPlayers () {
@@ -96,12 +97,12 @@ void initPlayers () {
         players[i].jumped = false;
         players[i].isJumping = false;
         players[i].isFalling = false;
-        players[i].jumpPower = 60 * gameScale;
+        players[i].jumpPower = 4.875 * gameScale;
         players[i].jumpAccel = 1 * gameScale;
         players[i].jumpVelocity = 0 * gameScale;
 
         //Gravity
-        players[i].gravity = 1 * gameScale;
+        players[i].gravity = 0.375 * gameScale;
 
         //Collision
         players[i].onGround = false;
@@ -115,21 +116,18 @@ void initPlayers () {
 void playerTickUpdate () {
     if (checkKeyHeld(SDL_SCANCODE_EQUALS)) {
         gameScale *= 1.01;
-        // cameraX += 10.0;
-        // cameraY += 20.0;
     }
         
     if (checkKeyHeld(SDL_SCANCODE_MINUS) && gameScale >= 0.1) {
         gameScale /= 1.01;
-        // cameraX -= 20.0;
-        // cameraY -= 20.0;
     }
+    playerGravity(&players);
+    playerJump(&players);
 }
 
 void playerFrameUpdate () {
+    playerUpdateStats(&players);
     playerFrameInput(&players);
-    playerGravity(&players);
-    playerJump(&players);
 }
 
 void playerRender () {
@@ -138,12 +136,28 @@ void playerRender () {
     SDL_RenderCopy(renderer, texture, NULL, &playerRect);
 }
 
-void playerGravity (Player* player[]) {
+void playerUpdateStats (Player* player[]) {
+    for (int i = 0; i < numberOfPlayers; i++) {
+        cameraX += player[i]->velocityX;
+        cameraY += player[i]->velocityY;
+    }
+    printf("Velocity: %f\n", players[0].velocityY);
+}
 
+void playerGravity (Player* player[]) {
+    if (cameraY < 1500) {
+        players[0].velocityY += players[0].gravity;
+    }
+    if (cameraY > 1500) {
+        players[0].velocityY = 0;
+    }
 }
 
 void playerJump (Player* player[]) {
-
+    if (players[0].canJump) {
+        players[0].velocityY -= players[0].jumpPower;
+        players[0].canJump = false;
+    }
 }
 
 void playerFrameInput (Player* player[]) {
@@ -179,27 +193,31 @@ void playerFrameInput (Player* player[]) {
             cameraX += (player[i]->speed * 60) * deltaTime;
         }
 
-        if (checkKeyPressed(SDL_SCANCODE_T)) {
-            printf("T PRESSED!!!!\n");
+        if (checkKeyPressed(SDL_SCANCODE_SPACE)) {
+            player[i]->canJump = true;
         }
-        if (checkMousePressed(MOUSE_LEFT)) {
-            printf("LEFT CLICK!!!\n");
-        }
-        if (checkMousePressed(MOUSE_RIGHT)) {
-            printf("RIGHT CLICK!!!\n");
-        }
-        if (checkMousePressed(MOUSE_MIDDLE)) {
-            printf("MIDDLE CLICK!!!\n");
-        }
-        if (checkMouseReleased(MOUSE_LEFT)) {
-            printf("-----LEFT RELEASED!!!\n");
-        }
-        if (checkMouseReleased(MOUSE_RIGHT)) {
-            printf("-----RIGHT RELEASED!!!\n");
-        }
-        if (checkMouseReleased(MOUSE_MIDDLE)) {
-            printf("-----MIDDLE RELEASED!!!\n");
-        }
+
+        // if (checkKeyPressed(SDL_SCANCODE_T)) {
+        //     printf("T PRESSED!!!!\n");
+        // }
+        // if (checkMousePressed(MOUSE_LEFT)) {
+        //     printf("LEFT CLICK!!!\n");
+        // }
+        // if (checkMousePressed(MOUSE_RIGHT)) {
+        //     printf("RIGHT CLICK!!!\n");
+        // }
+        // if (checkMousePressed(MOUSE_MIDDLE)) {
+        //     printf("MIDDLE CLICK!!!\n");
+        // }
+        // if (checkMouseReleased(MOUSE_LEFT)) {
+        //     printf("-----LEFT RELEASED!!!\n");
+        // }
+        // if (checkMouseReleased(MOUSE_RIGHT)) {
+        //     printf("-----RIGHT RELEASED!!!\n");
+        // }
+        // if (checkMouseReleased(MOUSE_MIDDLE)) {
+        //     printf("-----MIDDLE RELEASED!!!\n");
+        // }
     }
 }
 

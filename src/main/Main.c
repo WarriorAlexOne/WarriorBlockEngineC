@@ -23,8 +23,9 @@
 #include "../input/controllerInput.h"
 #include "../input/touchInput.h"
 #include "../entity/camera.h"
-#include "../maps/tiles.h"
-#include "../maps/levelGen.h"
+#include "../map/tiles.h"
+#include "../map/levelGen.h"
+#include "../map/mining.h"
 #include "../entity/player.h"
 #include "../main/rendering.h"
 
@@ -42,6 +43,7 @@ int main (int argc, char* args[]) {
     initTiles();
     initLevelGen();
     createLevel();
+    initBlockManipulation();
     initPlayers();
     initRenderer();
     printf("Initialization Complete!\n\n");

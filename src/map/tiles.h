@@ -61,7 +61,7 @@ Tile createTile (short ID, string tileName[]) {
 
     sprintf(texturePath, "%s%s%s", TILE_FILE_PATH, tileName, IMG_FORMAT);
     newTile.texture = createTileTexture(newTile.texture, texturePath);
-    setFoliageColor(newTile);
+    // setFoliageColor(newTile);
 
     numberOfTiles++;
 

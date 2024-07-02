@@ -20,7 +20,7 @@ int windowH = 800;
 
 //Game Variables
 byte gamePaused = 0;
-double gameScale = 0.3;  //Other values are multiplied by this.
+double gameScale = 1.0;  //Other values are multiplied by this.
 const double DEFAULT_TILE_SIZE = 16.0;
 int worldSeed;
 double perlinSeed;
