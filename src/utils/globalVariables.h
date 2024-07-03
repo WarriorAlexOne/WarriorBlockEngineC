@@ -15,6 +15,7 @@
 string title[48] = "WarriorBlockEngine 0.0";
 string iconPath[64] = "assets/textures/misc/WarriorBlockEngine Logo v1.png";
 
+byte quit = 0; //Main Window Exit
 int windowW = 1300;
 int windowH = 800;
 
@@ -22,6 +23,7 @@ int windowH = 800;
 byte gamePaused = 0;
 double gameScale = 1.0;  //Other values are multiplied by this.
 const double DEFAULT_TILE_SIZE = 16.0;
+int currentLevel = 0;
 int worldSeed;
 double perlinSeed;
 

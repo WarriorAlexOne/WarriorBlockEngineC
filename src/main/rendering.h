@@ -13,6 +13,7 @@
 
 void initRenderer ();
 void updateRenderer ();
+void screenSaver ();
 
 
 void initRenderer () {
@@ -25,10 +26,14 @@ void updateRenderer () {
     // SDL_SetRenderDrawColor(renderer, 117, 151, 251, 255);  //Slome Sky Color
     SDL_RenderClear(renderer);
 
-    readAndRenderLevel();
+    readAndRenderLevel(currentLevel);
     playerRender();
 
     SDL_RenderPresent(renderer);
+}
+
+void screenSaver () {  //Add fun screen saver that activates after 10 minutes of no player inputs.
+
 }
 
 #endif

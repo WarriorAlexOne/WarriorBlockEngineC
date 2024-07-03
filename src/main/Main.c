@@ -7,6 +7,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "../utils/globalVariables.h"
 #include "../utils/FastNoiseLite/FastNoiseLite.h"
@@ -33,6 +34,7 @@
 int main (int argc, char* args[]) {
     SDL_Init(SDL_INIT_EVERYTHING);
     IMG_Init(IMG_INIT_PNG);
+    TTF_Init();
     initClock();
     initDebugTools();
     initInputs();
@@ -42,11 +44,17 @@ int main (int argc, char* args[]) {
     initControllerInput();
     initTiles();
     initLevelGen();
-    createLevel();
+    createLevel0();
     initBlockManipulation();
     initPlayers();
     initRenderer();
     printf("Initialization Complete!\n\n");
+
+    // FILE* fp = fopen("saves/testFile.txt", "w");
+
+    // fprintf(fp, "Test");
+
+    // fclose(fp);
 
     //Main Loop
     while (!quit) {

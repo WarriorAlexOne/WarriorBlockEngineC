@@ -18,8 +18,6 @@
 
 SDL_Event event;  //Handles various inputs.
 
-byte quit = 0; //Main Window Exit
-
 
 void initInputs ();
 void updateInputs ();

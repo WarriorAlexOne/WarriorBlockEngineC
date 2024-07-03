@@ -15,14 +15,14 @@ void initBlockManipulation () {
 }
 
 void destroyBlock () {
-    if (checkMousePressed(MOUSE_LEFT)) {
-        levelData
-        [((mouseX - (int)cameraX) / (int)((int)DEFAULT_TILE_SIZE * gameScale))]
-        [((mouseY - (int)cameraY) / (int)((int)DEFAULT_TILE_SIZE * gameScale))] = AIR;
+    // if (checkMousePressed(MOUSE_LEFT)) {
+    //     levelData[0]
+    //     [((mouseX - (int)mainCamera.coords.x) / (int)((int)DEFAULT_TILE_SIZE * gameScale))]
+    //     [((mouseY - (int)mainCamera.coords.y) / (int)((int)DEFAULT_TILE_SIZE * gameScale))] = AIR;
 
-        printf("X: %i\n", ((mouseX - (int)cameraX) / (int)((int)DEFAULT_TILE_SIZE * gameScale)));
-        printf("---Y: %i\n", ((mouseY - (int)cameraY) / (int)((int)DEFAULT_TILE_SIZE * gameScale)));
-    }
+    //     printf("X: %i\n", ((mouseX - (int)mainCamera.coords.x) / (int)((int)DEFAULT_TILE_SIZE * gameScale)));
+    //     printf("---Y: %i\n", ((mouseY - (int)mainCamera.coords.y) / (int)((int)DEFAULT_TILE_SIZE * gameScale)));
+    // }
 }
 
 #endif

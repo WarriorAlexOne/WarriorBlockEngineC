@@ -12,6 +12,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "../utils/globalVariables.h"
+#include "../utils/vector2D.h"
 #include "../utils/clock.h"
 #include "../main/window.h"
 #include "../input/keyInput.h"
@@ -24,33 +25,37 @@
 
 
 typedef struct {
+    bool up;
+    bool left;
+    bool down;
+    bool right;
+    bool jump;
+    bool pause;
+} Controls;
+
+typedef struct {
     byte ID;
 
-    //Coords
-    double x;
-    double y;
-    double sizeX;
-    double sizeY;
-    int screenX;
-    int screenY;
+    //Controls
+    Controls pressed;
+    bool controlsEnabled;
+
+    //Coordinates
+    Vec2 coords;
+    Vec2 size;
+    Vec2 screenCoords;
 
     //Speed
     double speed;
-    double velocityX;
-    double velocityY;
+    Vec2 velocity;
 
     //Jump
-    bool canJump;
-    bool jumped;
     bool isJumping;
     bool isFalling;
     double jumpPower;
-    double jumpAccel;
-    double jumpVelocity;
 
     //Gravity
     double gravity;
-    double gravityAccel;
 
     //Collision
     bool onGround;
@@ -80,32 +85,33 @@ void initPlayers () {
         players[i].ID = i + 1;
         
         //Coords
-        players[i].x = 0;
-        players[i].y = 0;
-        players[i].sizeX = 16 * gameScale;
-        players[i].sizeY = 16 * gameScale;
-        players[i].screenX = windowW/2;
-        players[i].screenY = windowH/2;
+        players[i].coords.x = 0;
+        players[i].coords.y = 0;
+        players[i].size.x = 16;
+        players[i].size.y = 16;
 
         //Speed
-        players[i].speed = 10 * gameScale;
-        players[i].velocityX = 0 * gameScale;
-        players[i].velocityY = 0 * gameScale;
+        players[i].speed = 10;
+        players[i].velocity.x = 0;
+        players[i].velocity.y = 0;
 
         //Jump
-        players[i].canJump = false;
-        players[i].jumped = false;
-        players[i].isJumping = false;
-        players[i].isFalling = false;
-        players[i].jumpPower = 4.875 * gameScale;
-        players[i].jumpAccel = 1 * gameScale;
-        players[i].jumpVelocity = 0 * gameScale;
+        players[i].jumpPower = 2.5;
 
         //Gravity
-        players[i].gravity = 0.375 * gameScale;
+        players[i].gravity = 0.1;
 
         //Collision
         players[i].onGround = false;
+
+        //Controls
+        players[i].controlsEnabled = true;
+        players[i].pressed.up = false;
+        players[i].pressed.left = false;
+        players[i].pressed.down = false;
+        players[i].pressed.right = false;
+        players[i].pressed.jump = false;
+        players[i].pressed.pause = false;
     }
     texture = IMG_LoadTexture(renderer, "assets/textures/players/Slome.png");  //Temporary
     addTickFunction(playerTickUpdate);
@@ -116,6 +122,7 @@ void initPlayers () {
 void playerTickUpdate () {
     if (checkKeyHeld(SDL_SCANCODE_EQUALS)) {
         gameScale *= 1.01;
+
     }
         
     if (checkKeyHeld(SDL_SCANCODE_MINUS) && gameScale >= 0.1) {
@@ -131,93 +138,71 @@ void playerFrameUpdate () {
 }
 
 void playerRender () {
-    playerRect = makeRect((int)players[0].screenX, (int)players[0].screenY, (int)players[0].sizeX, (int)players[0].sizeY);
+    playerRect = makeRect((int)players[0].screenCoords.x, (int)players[0].screenCoords.y, (int)players[0].size.x, (int)players[0].size.y);
 
     SDL_RenderCopy(renderer, texture, NULL, &playerRect);
 }
 
 void playerUpdateStats (Player* player[]) {
     for (int i = 0; i < numberOfPlayers; i++) {
-        cameraX += player[i]->velocityX;
-        cameraY += player[i]->velocityY;
+        mainCamera.coords.x += player[i]->velocity.x;
+        mainCamera.coords.y += player[i]->velocity.y;
     }
-    printf("Velocity: %f\n", players[0].velocityY);
+    printf("Velocity: %f\n", players[0].velocity.y);
 }
 
 void playerGravity (Player* player[]) {
-    if (cameraY < 1500) {
-        players[0].velocityY += players[0].gravity;
+    if (mainCamera.coords.y < 1500) {
+        players[0].velocity.y += players[0].gravity;
     }
-    if (cameraY > 1500) {
-        players[0].velocityY = 0;
+    if (mainCamera.coords.y > 1500) {
+        players[0].velocity.y = 0;
     }
 }
 
 void playerJump (Player* player[]) {
-    if (players[0].canJump) {
-        players[0].velocityY -= players[0].jumpPower;
-        players[0].canJump = false;
+    if (players[0].pressed.jump && players[0].velocity.y == 0) {
+        players[0].velocity.y -= players[0].jumpPower;
+        players[0].pressed.jump = false;
     }
 }
 
 void playerFrameInput (Player* player[]) {
     for (byte i = 0; i < numberOfPlayers; i++) {
-        player[i]->sizeX = DEFAULT_TILE_SIZE * gameScale;
-        player[i]->sizeY = DEFAULT_TILE_SIZE * gameScale;
+        player[i]->size.x = DEFAULT_TILE_SIZE * gameScale;
+        player[i]->size.y = DEFAULT_TILE_SIZE * gameScale;
 
-        player[i]->screenX = (windowW/2) - player[i]->sizeX/2;
-        player[i]->screenY = (windowH/2) - player[i]->sizeY/2;
+        player[i]->screenCoords.x = (windowW/2) - player[i]->size.x/2;
+        player[i]->screenCoords.y = (windowH/2) - player[i]->size.y/2;
 
-        if (checkKeyHeld(SDL_SCANCODE_LEFTBRACKET)) {
-            perlinSeed -= (1 * 60) * deltaTime;
-            printf("%f\n", perlinSeed);
+        if (player[i]->controlsEnabled) {
+            //Up
+            if (checkKeyHeld(SDL_SCANCODE_W)) player[i]->pressed.up = true;
+            if (checkKeyReleased(SDL_SCANCODE_W)) player[i]->pressed.up = false;
+            //Left
+            if (checkKeyHeld(SDL_SCANCODE_A)) player[i]->pressed.left = true;
+            if (checkKeyReleased(SDL_SCANCODE_A)) player[i]->pressed.left = false;
+            //Down
+            if (checkKeyHeld(SDL_SCANCODE_S)) player[i]->pressed.down = true;
+            if (checkKeyReleased(SDL_SCANCODE_S)) player[i]->pressed.down = false;
+            //Right
+            if (checkKeyHeld(SDL_SCANCODE_D)) player[i]->pressed.right = true;
+            if (checkKeyReleased(SDL_SCANCODE_D)) player[i]->pressed.right = false;
+            //Jump
+            if (checkKeyHeld(SDL_SCANCODE_SPACE)) player[i]->pressed.jump = true;
+            if (checkKeyReleased(SDL_SCANCODE_SPACE)) player[i]->pressed.jump = false;
+            //Pause
+            if (checkKeyHeld(SDL_SCANCODE_ESCAPE)) player[i]->pressed.pause = true;
+            if (checkKeyReleased(SDL_SCANCODE_ESCAPE)) player[i]->pressed.pause = false;
         }
-        if (checkKeyHeld(SDL_SCANCODE_RIGHTBRACKET)) {
-            perlinSeed += (1 * 60) * deltaTime;
-            printf("%f\n", perlinSeed);
+        else {
+            player[i]->pressed.up = false;
+            player[i]->pressed.left = false;
+            player[i]->pressed.down = false;
+            player[i]->pressed.right = false;
+            player[i]->pressed.jump = false;
+            player[i]->pressed.pause = false;
         }
-        if (checkKeyHeld(SDL_SCANCODE_C)) {
-            // createLevel();
-        }
-
-        if (checkKeyHeld(SDL_SCANCODE_W)) {
-            cameraY -= (player[i]->speed * 60) * deltaTime;
-        }
-        if (checkKeyHeld(SDL_SCANCODE_A)) {
-            cameraX -= (player[i]->speed * 60) * deltaTime;
-        }
-        if (checkKeyHeld(SDL_SCANCODE_S)) {
-            cameraY += (player[i]->speed * 60) * deltaTime;
-        }
-        if (checkKeyHeld(SDL_SCANCODE_D)) {
-            cameraX += (player[i]->speed * 60) * deltaTime;
-        }
-
-        if (checkKeyPressed(SDL_SCANCODE_SPACE)) {
-            player[i]->canJump = true;
-        }
-
-        // if (checkKeyPressed(SDL_SCANCODE_T)) {
-        //     printf("T PRESSED!!!!\n");
-        // }
-        // if (checkMousePressed(MOUSE_LEFT)) {
-        //     printf("LEFT CLICK!!!\n");
-        // }
-        // if (checkMousePressed(MOUSE_RIGHT)) {
-        //     printf("RIGHT CLICK!!!\n");
-        // }
-        // if (checkMousePressed(MOUSE_MIDDLE)) {
-        //     printf("MIDDLE CLICK!!!\n");
-        // }
-        // if (checkMouseReleased(MOUSE_LEFT)) {
-        //     printf("-----LEFT RELEASED!!!\n");
-        // }
-        // if (checkMouseReleased(MOUSE_RIGHT)) {
-        //     printf("-----RIGHT RELEASED!!!\n");
-        // }
-        // if (checkMouseReleased(MOUSE_MIDDLE)) {
-        //     printf("-----MIDDLE RELEASED!!!\n");
-        // }
     }
 }
 
