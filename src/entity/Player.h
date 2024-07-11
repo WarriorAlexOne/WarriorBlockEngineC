@@ -3,15 +3,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <stdbool.h>
-#include <math.h>
-#include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "../utils/globalVariables.h"
+#include "../utils/tools.h"
 #include "../utils/vector2D.h"
 #include "../utils/clock.h"
 #include "../main/window.h"
@@ -19,9 +18,8 @@
 #include "../input/mouseInput.h"
 #include "../input/controllerInput.h"
 #include "../input/touchInput.h"
+#include "../entity/controls.h"
 #include "../entity/camera.h"
-#include "../map/tiles.h"
-#include "../map/levelGen.h"
 
 
 typedef struct {
@@ -68,6 +66,8 @@ SDL_Rect playerRect;
 
 SDL_Texture* texture;
 
+bool playerInit = false;
+
 
 void initPlayers ();
 void playerTickUpdate ();
@@ -113,51 +113,52 @@ void initPlayers () {
         players[i].pressed.jump = false;
         players[i].pressed.pause = false;
     }
-    texture = IMG_LoadTexture(renderer, "assets/textures/players/Slome.png");  //Temporary
+    texture = IMG_LoadTexture(windows[0].renderer, "assets/textures/players/Slome.png");  //Temporary
     addTickFunction(playerTickUpdate);
     addFrameFunction(playerFrameUpdate);
+
+    playerInit = true;
     printf("Players Initialized!\n");
 }
 
 void playerTickUpdate () {
-    if (checkKeyHeld(SDL_SCANCODE_EQUALS)) {
-        gameScale *= 1.01;
-
-    }
+    // if (checkKeyHeld(SDL_SCANCODE_EQUALS)) {
+    //     gameScale *= 1.01;
+    // }
         
-    if (checkKeyHeld(SDL_SCANCODE_MINUS) && gameScale >= 0.1) {
-        gameScale /= 1.01;
-    }
-    playerGravity(&players);
-    playerJump(&players);
+    // if (checkKeyHeld(SDL_SCANCODE_MINUS) && gameScale >= 0.1) {
+    //     gameScale /= 1.01;
+    // }
+    // playerGravity(&players);
+    // playerJump(&players);
 }
 
 void playerFrameUpdate () {
-    playerUpdateStats(&players);
+    // playerUpdateStats(&players);
     playerFrameInput(&players);
 }
 
 void playerRender () {
     playerRect = makeRect((int)players[0].screenCoords.x, (int)players[0].screenCoords.y, (int)players[0].size.x, (int)players[0].size.y);
 
-    SDL_RenderCopy(renderer, texture, NULL, &playerRect);
+    SDL_RenderCopy(windows[0].renderer, texture, NULL, &playerRect);
 }
 
 void playerUpdateStats (Player* player[]) {
-    for (int i = 0; i < numberOfPlayers; i++) {
-        mainCamera.coords.x += player[i]->velocity.x;
-        mainCamera.coords.y += player[i]->velocity.y;
-    }
-    printf("Velocity: %f\n", players[0].velocity.y);
+    // for (int i = 0; i < numberOfPlayers; i++) {
+    //     mainCamera.coords.x += player[i]->velocity.x;
+    //     mainCamera.coords.y += player[i]->velocity.y;
+    // }
+    // printf("Velocity: %f\n", players[0].velocity.y);
 }
 
 void playerGravity (Player* player[]) {
-    if (mainCamera.coords.y < 1500) {
-        players[0].velocity.y += players[0].gravity;
-    }
-    if (mainCamera.coords.y > 1500) {
-        players[0].velocity.y = 0;
-    }
+    // if (mainCamera.coords.y < 1500) {
+    //     players[0].velocity.y += players[0].gravity;
+    // }
+    // if (mainCamera.coords.y > 1500) {
+    //     players[0].velocity.y = 0;
+    // }
 }
 
 void playerJump (Player* player[]) {
@@ -172,8 +173,8 @@ void playerFrameInput (Player* player[]) {
         player[i]->size.x = DEFAULT_TILE_SIZE * gameScale;
         player[i]->size.y = DEFAULT_TILE_SIZE * gameScale;
 
-        player[i]->screenCoords.x = (windowW/2) - player[i]->size.x/2;
-        player[i]->screenCoords.y = (windowH/2) - player[i]->size.y/2;
+        player[i]->screenCoords.x = (windows[0].size.x/2) - player[i]->size.x/2;
+        player[i]->screenCoords.y = (windows[0].size.y/2) - player[i]->size.y/2;
 
         if (player[i]->controlsEnabled) {
             //Up
@@ -194,6 +195,20 @@ void playerFrameInput (Player* player[]) {
             //Pause
             if (checkKeyHeld(SDL_SCANCODE_ESCAPE)) player[i]->pressed.pause = true;
             if (checkKeyReleased(SDL_SCANCODE_ESCAPE)) player[i]->pressed.pause = false;
+            // if (checkKeyPressed(SDL_SCANCODE_F11)) {
+            //     window.bordered = !window.bordered;
+            //     SDL_GetDisplayBounds(0, &window.squareCoords);
+            //     SDL_SetWindowSize(window.window, window.size.x, window.size.y);
+            //     SDL_SetWindowBordered(window.window, !window.bordered);
+            //     if (!window.bordered) {
+            //         SDL_SetWindowFullscreen(window.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+            //     }
+            //     else {
+            //         SDL_SetWindowFullscreen(window.window, 0);
+            //         SDL_SetWindowSize(window.window, window.defaultSize.x, window.defaultSize.y);
+            //         SDL_SetWindowPosition(window.window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+            //     }
+            // }
         }
         else {
             player[i]->pressed.up = false;

@@ -3,6 +3,7 @@
 
 #include "../utils/vector2D.h"
 
+
 typedef struct {
     Vec2 coords;
 } Camera;

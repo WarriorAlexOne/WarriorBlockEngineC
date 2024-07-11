@@ -1,10 +1,8 @@
 #ifndef VECTOR2D_H
 #define VECTOR2D_H
 
-#include <stdlib.h>
 #include <math.h>
 
-#include "../utils/tools.h"
 
 typedef struct {
     double x;

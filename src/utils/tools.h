@@ -3,8 +3,10 @@
 
 #include <SDL2/SDL.h>
 
+
 #define min min  //To Make VS Code happy and not give false errors.
 #define max max  //To Make VS Code happy and not give false errors.
+
 
 SDL_Rect makeRect (int x, int y, int w, int h);
 double min (double num1, double num2);

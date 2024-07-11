@@ -2,9 +2,6 @@
 #define DEBUGTOOLS_H
 
 #include <stdio.h>
-#include <stdbool.h>
-
-#include "../utils/clock.h"
 
 
 bool debug = false;    //Toggles debug mode, which pauses the program upon exit to more easily review the console logs.

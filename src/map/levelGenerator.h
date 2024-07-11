@@ -2,7 +2,8 @@
 #define LEVELGEN_H
 
 #include <stdio.h>
-#include <math.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -10,6 +11,7 @@
 #include "../utils/globalVariables.h"
 #include "../utils/FastNoiseLite/FastNoiseLite.h"
 #include "../main/window.h"
+#include "../entity/camera.h"
 #include "../map/tiles.h"
 
 
@@ -29,7 +31,6 @@ double noiseGate = -0.1;
 double surfaceRoughness = 0.6;
 
 int levelData[LEVEL_AMOUNT][LEVEL_W][LEVEL_H];
-bool levelCreated = false;
 
 //Level Info
 int groundLevel = 127;
@@ -73,7 +74,6 @@ void createLevel0 () {
     Level0_GenerateSurface(STONE);
     Level0_SetDirt();
     Level0_SetGrass();
-    levelCreated = true;
 }
 
 void readAndRenderLevel (int levelID) {
@@ -87,8 +87,8 @@ void readAndRenderLevel (int levelID) {
         ) {
         for (
             int y = offset + (mainCamera.coords.y >= offset ? (((int)mainCamera.coords.y/DEFAULT_TILE_SIZE)/gameScale) : offset);
-            y <= (((windowH/DEFAULT_TILE_SIZE) + ((int)mainCamera.coords.y/DEFAULT_TILE_SIZE)) + 256 < levelHeight ?  //If edge of screen + camera offset is less than the level width in tiles
-                ((windowH/DEFAULT_TILE_SIZE) + ((int)mainCamera.coords.y/DEFAULT_TILE_SIZE)) + 256 :  //If true, tile render limit is set to window edge + camera offset.
+            y <= (((windows[0].size.x/DEFAULT_TILE_SIZE) + ((int)mainCamera.coords.y/DEFAULT_TILE_SIZE)) + 256 < levelHeight ?  //If edge of screen + camera offset is less than the level width in tiles
+                ((windows[0].size.y/DEFAULT_TILE_SIZE) + ((int)mainCamera.coords.y/DEFAULT_TILE_SIZE)) + 256 :  //If true, tile render limit is set to window edge + camera offset.
                     levelHeight);  //If false (meaning window edge + camera offset is larger than the level), tile render is set to max level size.
             y++
             ) {
@@ -98,7 +98,7 @@ void readAndRenderLevel (int levelID) {
                     tiles[tileID].tileDimensions.y = ((y * DEFAULT_TILE_SIZE) * gameScale) - (mainCamera.coords.y*gameScale);
                     tiles[tileID].tileDimensions.w = (DEFAULT_TILE_SIZE * gameScale) + (fmod(gameScale, 1) == 0 ? 0 : 1) + (gameScale < 1 ? 1 : 0);
                     tiles[tileID].tileDimensions.h = (DEFAULT_TILE_SIZE * gameScale) + (fmod(gameScale, 1) == 0 ? 0 : 1) + (gameScale < 1 ? 1 : 0);
-                    SDL_RenderCopy(renderer, tiles[tileID].texture, NULL, &tiles[tileID].tileDimensions);
+                    SDL_RenderCopy(windows[0].renderer, tiles[tileID].texture, NULL, &tiles[tileID].tileDimensions);
                     break;
                 }
             }

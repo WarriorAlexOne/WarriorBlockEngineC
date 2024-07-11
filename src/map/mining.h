@@ -1,9 +1,13 @@
 #ifndef MINING_H
 #define MINING_H
 
-#include "../input/mouseInput.h"
+#include <stdio.h>
+
+#include "../utils/globalVariables.h"
+#include "../utils/clock.h"
 #include "../entity/camera.h"
-#include "../map/levelGen.h"
+#include "../map/tiles.h"
+#include "../map/levelGenerator.h"
 
 
 void initBlockManipulation ();

@@ -1,7 +1,6 @@
-*.exe
+build
 .vscode
 .DS_Store
-!build
 assets
 temp.txt
 libraries

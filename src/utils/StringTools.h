@@ -1,8 +1,6 @@
 #ifndef STRTOOLS_H
 #define STRTOOLS_H
 
-#include <stdbool.h>
-
 
 bool isNum (char c);
 bool isAlpha (char c);

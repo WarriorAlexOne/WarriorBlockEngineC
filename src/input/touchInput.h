@@ -8,7 +8,6 @@
 #include "../utils/clock.h"
 
 
-
 void initTouchInput ();
 void updateTouchInput();
 

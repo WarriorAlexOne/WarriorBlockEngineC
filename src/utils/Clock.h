@@ -18,10 +18,6 @@ long long int lastTime = 0;
 
 long long int targetTime = 0;
 
-int fps = 0;
-int tps = 0;
-string strFPS[16];
-string titleFPS[48];
 
 void (*frameUpdateFunctions[1024]) ();
 short frameUpdateFunctionCount = 0;
@@ -29,26 +25,30 @@ short frameUpdateFunctionCount = 0;
 void (*tickUpdateFunctions[1024]) ();
 short tickUpdateFunctionCount = 0;
 
+void (*secUpdateFunctions[1024]) ();
+short secUpdateFunctionCount = 0;
+
 void (*pauseFrameUpdateFunctions[1024]) ();
 short pauseFrameUpdateFunctionCount = 0;
 
 
 void initClock ();
 void updateClocks ();
-void tickUpdate ();
+
 void frameUpdate ();
+void tickUpdate ();
+void secUpdate ();
 void pauseFrameUpdate ();
-void addTickFunction (void (*function) ());
+
 void addFrameFunction (void (*function) ());
+void addTickFunction (void (*function) ());
+void addSecFunction (void (*function) ());
 void addPauseFrameFunction (void (*function) ());
-void fpsToString ();
-void titleFPSString ();
 
 
 void initClock () {
     tickTime = MILLI_SEC/tickRate;
     targetTime = SDL_GetTicks64() + MILLI_SEC;
-    strcpy(titleFPS, title);
     printf("Clocks Initialized!\n");
 }
 
@@ -69,29 +69,37 @@ void updateClocks () {
         tps++;
         tickDelta--;
         tickUpdate();
+        // while (currentTime >= targetTime) {
+        //     fps = 0;
+        //     tps = 0;
+        //     secUpdate();
+        // }
     }
 
     //Sec Update
     if (currentTime >= targetTime) {
         targetTime = currentTime + MILLI_SEC;
-        fpsToString();
-        titleFPSString();
-        fps = 0;
-        tps = 0;
+        // fpsToString();
+        // titleFPSString();
     }
 
     frameUpdate();
 }
 
 
+void frameUpdate () {
+    for (int i = 0; i < frameUpdateFunctionCount; i++) {
+        frameUpdateFunctions[i]();
+    }
+}
 void tickUpdate () {
     for (int i = 0; i < tickUpdateFunctionCount; i++) {
         tickUpdateFunctions[i]();
     }
 }
-void frameUpdate () {
-    for (int i = 0; i < frameUpdateFunctionCount; i++) {
-        frameUpdateFunctions[i]();
+void secUpdate () {
+    for (int i = 0; i < secUpdateFunctionCount; i++) {
+        secUpdateFunctions[i]();
     }
 }
 void pauseFrameUpdate () {
@@ -100,30 +108,21 @@ void pauseFrameUpdate () {
     }
 }
 
-
-void addTickFunction (void (*function) ()) {
-    tickUpdateFunctions[tickUpdateFunctionCount] = function;
-    tickUpdateFunctionCount++;
-}
 void addFrameFunction (void (*function) ()) {
     frameUpdateFunctions[frameUpdateFunctionCount] = function;
     frameUpdateFunctionCount++;
 }
+void addTickFunction (void (*function) ()) {
+    tickUpdateFunctions[tickUpdateFunctionCount] = function;
+    tickUpdateFunctionCount++;
+}
+void addSecFunction (void (*function) ()) {
+    secUpdateFunctions[secUpdateFunctionCount] = function;
+    secUpdateFunctionCount++;
+}
 void addPauseFrameFunction (void (*function) ()) {
     pauseFrameUpdateFunctions[pauseFrameUpdateFunctionCount] = function;
     pauseFrameUpdateFunctionCount++;
-}
-
-
-void fpsToString () {
-    if (fps < 100000000 && fps > 0) {
-        sprintf(strFPS, "%s%i", "FPS: ", fps);
-    }
-}
-void titleFPSString () {
-    if (fps < 100000000 && fps > 0) {
-        sprintf(titleFPS, "%s%s%i", title, "   FPS: ", fps);
-    }
 }
 
 #endif

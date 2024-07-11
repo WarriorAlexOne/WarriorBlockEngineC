@@ -2,18 +2,19 @@
 #define TILES_H
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 #include "../utils/globalVariables.h"
-
+#include "../utils/tools.h"
 #include "../main/window.h"
 
 
-const string IMG_FORMAT[8] = ".png";
-const string TILE_FILE_PATH[24] = "assets/textures/tiles/";
+const char IMG_FORMAT[8] = ".png";
+const char TILE_FILE_PATH[24] = "assets/textures/tiles/";
 
 typedef struct {
     SDL_Texture* texture;
@@ -34,12 +35,11 @@ typedef enum {
 Tile tiles[8];
 
 short numberOfTiles = 0;
-bool tilesInitialized = false;
 
 
 void initTiles ();
-Tile createTile (short ID, string tileName[]);
-SDL_Texture* createTileTexture (SDL_Texture* texture, string texturePath[]);
+Tile createTile (short ID, char tileName[]);
+SDL_Texture* createTileTexture (SDL_Texture* texture, char texturePath[]);
 void setFoliageColor (Tile tile);
 
 
@@ -49,12 +49,11 @@ void initTiles () {
     tiles[3] = createTile(STONE, "stone");
     tiles[4] = createTile(OAK_LOG, "oak_log");
     tiles[5] = createTile(OAK_LEAVES, "oak_leaves");
-    tilesInitialized = true;
     printf("Tiles Initialized!\n");
 }
 
-Tile createTile (short ID, string tileName[]) {
-    string texturePath[128];
+Tile createTile (short ID, char tileName[]) {
+    char texturePath[128];
     Tile newTile;
     newTile.ID = ID;
     newTile.tileDimensions = makeRect(0, 0, DEFAULT_TILE_SIZE * gameScale, DEFAULT_TILE_SIZE * gameScale);
@@ -68,8 +67,8 @@ Tile createTile (short ID, string tileName[]) {
     return newTile;
 }
 
-SDL_Texture* createTileTexture (SDL_Texture* texture, string texturePath[]) {
-    texture = IMG_LoadTexture(renderer, texturePath);
+SDL_Texture* createTileTexture (SDL_Texture* texture, char texturePath[]) {
+    texture = IMG_LoadTexture(windows[0].renderer, texturePath);
     return texture;
 }
 

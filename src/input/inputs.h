@@ -2,22 +2,14 @@
 #define INPUTS_H
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <math.h>
-#include <time.h>
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 
-#include "../utils/globalVariables.h"
-#include "../utils/tools.h"
 #include "../utils/clock.h"
+#include "../main/window.h"
 
 
 SDL_Event event;  //Handles various inputs.
-
 
 void initInputs ();
 void updateInputs ();
@@ -25,12 +17,13 @@ void updateInputs ();
 
 void initInputs () {
     addFrameFunction(updateInputs);
+
     printf("Input Updater Initialized!\n");
 }
 
 void updateInputs () {
     SDL_PollEvent(&event);  //Start checking for events such as inputs.
-    if (event.type == SDL_QUIT) quit = 1;
+    if (event.type == SDL_QUIT) windows[0].quit = 1;
 }
 
 #endif
