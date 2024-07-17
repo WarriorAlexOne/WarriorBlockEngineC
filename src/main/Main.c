@@ -27,10 +27,11 @@
 #include "../entity/controls.h"
 #include "../entity/camera.h"
 #include "../map/tiles.h"
-#include "../map/levelGenerator.h"
+#include "../map/proceduralChunkGenerator.h"
+#include "../map/staticPositionLevelReader.h"
 #include "../map/mining.h"
 #include "../entity/player.h"
-#include "../map/levelRenderer.h"
+#include "../map/staticPositionLevelRenderer.h"
 #include "../main/rendering.h"
 
 
@@ -57,6 +58,7 @@ int main (int argc, char* args[]) {
     initTiles();
     initLevelGen();
     createLevel0();
+    readLevel(1);
     // initBlockManipulation();
     initPlayers();
     initRenderUpdater();

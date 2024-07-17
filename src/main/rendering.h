@@ -10,7 +10,7 @@
 #include "../utils/globalVariables.h"
 #include "../utils/clock.h"
 #include "../main/window.h"
-#include "../map/levelGenerator.h"
+#include "../map/proceduralChunkGenerator.h"
 #include "../entity/player.h"
 
 
@@ -30,7 +30,8 @@ void updateRenderer () {
     // SDL_SetRenderDrawColor(renderer, 117, 151, 251, 255);  //Slome Sky Color
     SDL_RenderClear(windows[0].renderer);
 
-    readAndRenderLevel(currentLevel);
+    // renderChunks(currentLevel);
+    renderStaticLevel();
     playerRender();
 
     SDL_RenderPresent(windows[0].renderer);

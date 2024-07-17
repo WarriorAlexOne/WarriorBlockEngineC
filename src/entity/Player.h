@@ -122,15 +122,13 @@ void initPlayers () {
 }
 
 void playerTickUpdate () {
-    // if (checkKeyHeld(SDL_SCANCODE_EQUALS)) {
-    //     gameScale *= 1.01;
-    // }
+    if (checkKeyHeld(SDL_SCANCODE_EQUALS)) {
+        gameScale *= 1.01;
+    }
         
-    // if (checkKeyHeld(SDL_SCANCODE_MINUS) && gameScale >= 0.1) {
-    //     gameScale /= 1.01;
-    // }
-    // playerGravity(&players);
-    // playerJump(&players);
+    if (checkKeyHeld(SDL_SCANCODE_MINUS) && gameScale >= 0.1) {
+        gameScale /= 1.01;
+    }
 }
 
 void playerFrameUpdate () {
@@ -197,7 +195,7 @@ void playerFrameInput (Player* player[]) {
             if (checkKeyReleased(SDL_SCANCODE_ESCAPE)) player[i]->pressed.pause = false;
             // if (checkKeyPressed(SDL_SCANCODE_F11)) {
             //     window.bordered = !window.bordered;
-            //     SDL_GetDisplayBounds(0, &window.squareCoords);
+                // SDL_GetDisplayBounds(0, &window.squareCoords);
             //     SDL_SetWindowSize(window.window, window.size.x, window.size.y);
             //     SDL_SetWindowBordered(window.window, !window.bordered);
             //     if (!window.bordered) {

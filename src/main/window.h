@@ -24,10 +24,10 @@ typedef struct {
     char title[128];
     char iconPath[128];
 
-    Vec2 defaultCoords;
-    Vec2 coords;
-    Vec2 defaultSize;
-    Vec2 size;
+    Vec2_Int defaultCoords;
+    Vec2_Int coords;
+    Vec2_Int defaultSize;
+    Vec2_Int size;
 
     SDL_Rect squareCoords;
 
@@ -45,7 +45,8 @@ int windowCount = 0;     //Global Window Count
 void createWindow (char title[], char iconPath[], int x, int y, int w, int h);
 void loadWindow (Window* window);
 void initRenderers (Window* window);
-// void windowUpdate ();
+void initWindowUpdates ();
+void windowUpdate ();
 // void fpsToString ();
 // void titleFPSString ();
 
@@ -115,11 +116,18 @@ void initRenderers (Window* window) {
     }
 
     printf("Renderer For Window %i Initialized!\n", windowCount);
+    initWindowUpdates();
 }
 
-// void windowUpdate (Window window) {
-//     SDL_SetWindowTitle(window.window, titleFPS);
-// }
+void initWindowUpdates () {
+    addFrameFunction(windowUpdate);
+}
+
+void windowUpdate () {
+    // SDL_SetWindowTitle(window.window, titleFPS);
+    SDL_GetWindowSize(windows[0].window, &windows[0].size.x, &windows[0].size.y);
+    printf("%i, %i\n", windows[0].size.x, windows[0].size.y);
+}
 
 // void fpsToString () {
 //     if (fps < 100000000 && fps > 0) {
