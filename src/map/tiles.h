@@ -18,7 +18,9 @@ const char TILE_FILE_PATH[24] = "assets/textures/tiles/";
 
 typedef struct {
     SDL_Texture* texture;
-    SDL_Rect tileDimensions;
+    Vec2 coords;
+    Vec2 size;
+    SDL_Rect rect;
     short ID;
     char tileName[64];
 } Tile;
@@ -32,7 +34,7 @@ typedef enum {
     OAK_LEAVES
 } TileNames;
 
-Tile tiles[8];
+Tile tiles[16];
 
 short numberOfTiles = 0;
 
@@ -44,11 +46,15 @@ void setFoliageColor (Tile tile);
 
 
 void initTiles () {
-    tiles[1] = createTile(GRASS, "grass");
-    tiles[2] = createTile(DIRT, "dirt");
-    tiles[3] = createTile(STONE, "stone");
-    tiles[4] = createTile(OAK_LOG, "oak_log");
-    tiles[5] = createTile(OAK_LEAVES, "oak_leaves");
+    tiles[1] = createTile(GRASS, "Ground Overworld Top");
+    tiles[2] = createTile(DIRT, "Ground Overworld Middle");
+    tiles[3] = createTile(STONE, "Ground Overworld TR Corner");
+    tiles[4] = createTile(OAK_LOG, "Ground Overworld Right");
+    tiles[5] = createTile(OAK_LEAVES, "Ground Overworld TR In Corner");
+    tiles[6] = createTile(6, "Ground Overworld TL Corner");
+    tiles[7] = createTile(7, "Ground Overworld Left");
+    tiles[8] = createTile(8, "Ground Overworld TL In Corner");
+    tiles[9] = createTile(9, "Question Block");
     printf("Tiles Initialized!\n");
 }
 
@@ -56,7 +62,11 @@ Tile createTile (short ID, char tileName[]) {
     char texturePath[128];
     Tile newTile;
     newTile.ID = ID;
-    newTile.tileDimensions = makeRect(0, 0, DEFAULT_TILE_SIZE * gameScale, DEFAULT_TILE_SIZE * gameScale);
+    newTile.coords.x = 0;
+    newTile.coords.y = 0;
+    newTile.size.x = DEFAULT_TILE_SIZE * gameScale;
+    newTile.size.y = DEFAULT_TILE_SIZE * gameScale;
+    newTile.rect = makeRect(newTile.coords.x, newTile.coords.y, newTile.size.x, newTile.size.y);
 
     sprintf(texturePath, "%s%s%s", TILE_FILE_PATH, tileName, IMG_FORMAT);
     newTile.texture = createTileTexture(newTile.texture, texturePath);

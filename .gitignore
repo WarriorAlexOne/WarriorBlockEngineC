@@ -3,4 +3,5 @@ build
 .DS_Store
 assets
 temp.txt
+temp.c
 libraries

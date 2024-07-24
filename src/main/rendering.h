@@ -32,7 +32,12 @@ void updateRenderer () {
 
     // renderChunks(currentLevel);
     renderStaticLevel();
+    SDL_SetRenderDrawColor(windows[0].renderer, 255, 0, 0, 255);
+    SDL_RenderFillRect(windows[0].renderer, &(SDL_Rect){mainCamera.coords.x - 16/2, mainCamera.coords.y - 16/2, 16, 16});
+    SDL_SetRenderDrawColor(windows[0].renderer, 0, 255, 0, 255);
+    SDL_RenderFillRect(windows[0].renderer, &(SDL_Rect){(windows[0].size.x/2)-8, (windows[0].size.y/2)-8, 16, 16});
     playerRender();
+    renderText();
 
     SDL_RenderPresent(windows[0].renderer);
 }

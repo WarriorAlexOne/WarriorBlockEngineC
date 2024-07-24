@@ -126,7 +126,7 @@ void initWindowUpdates () {
 void windowUpdate () {
     // SDL_SetWindowTitle(window.window, titleFPS);
     SDL_GetWindowSize(windows[0].window, &windows[0].size.x, &windows[0].size.y);
-    printf("%i, %i\n", windows[0].size.x, windows[0].size.y);
+    // printf("%i, %i\n", windows[0].size.x, windows[0].size.y);
 }
 
 // void fpsToString () {

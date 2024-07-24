@@ -31,7 +31,9 @@
 #include "../map/staticPositionLevelReader.h"
 #include "../map/mining.h"
 #include "../entity/player.h"
+#include "../entity/controls.h"
 #include "../map/staticPositionLevelRenderer.h"
+#include "../menu/text.h"
 #include "../main/rendering.h"
 
 
@@ -61,15 +63,11 @@ int main (int argc, char* args[]) {
     readLevel(1);
     // initBlockManipulation();
     initPlayers();
+    initControls();
+    initText();
     initRenderUpdater();
     printf("Initialization Complete!\n\n");
 
-
-    // FILE* fp = fopen("saves/testFile.txt", "w");
-
-    // fprintf(fp, "Test");
-
-    // fclose(fp);
 
     //Main Loop
     while (!windows[0].quit) {
@@ -81,6 +79,9 @@ int main (int argc, char* args[]) {
         updateClocks();
     }
     
+    SDL_DestroyTexture(texture);
+    TTF_CloseFont(font);
+    TTF_Quit();
     destroyTileTextures(tiles, numberOfTiles);
     // if (controllers) {
     //     SDL_GameControllerClose(controllers[0].SDL_Controller);

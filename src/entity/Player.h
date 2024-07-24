@@ -91,7 +91,7 @@ void initPlayers () {
         players[i].size.y = 16;
 
         //Speed
-        players[i].speed = 10;
+        players[i].speed = 0.25;
         players[i].velocity.x = 0;
         players[i].velocity.y = 0;
 
@@ -113,7 +113,7 @@ void initPlayers () {
         players[i].pressed.jump = false;
         players[i].pressed.pause = false;
     }
-    texture = IMG_LoadTexture(windows[0].renderer, "assets/textures/players/Slome.png");  //Temporary
+    texture = IMG_LoadTexture(windows[0].renderer, "assets/textures/players/Idle.png");  //Temporary
     addTickFunction(playerTickUpdate);
     addFrameFunction(playerFrameUpdate);
 
@@ -122,17 +122,60 @@ void initPlayers () {
 }
 
 void playerTickUpdate () {
-    if (checkKeyHeld(SDL_SCANCODE_EQUALS)) {
-        gameScale *= 1.01;
+    if (checkKeyHeld(SDL_SCANCODE_LSHIFT) && checkKeyHeld(SDL_SCANCODE_EQUALS)) {
+        gameScale *= 1.015;
     }
-        
-    if (checkKeyHeld(SDL_SCANCODE_MINUS) && gameScale >= 0.1) {
-        gameScale /= 1.01;
+    else if (checkKeyHeld(SDL_SCANCODE_EQUALS)) {
+        gameScale *= 1.005;
     }
+
+    if (checkKeyHeld(SDL_SCANCODE_LSHIFT) && checkKeyHeld(SDL_SCANCODE_MINUS) && gameScale >= 0.1) {
+        gameScale /= 1.015;
+    }
+    else if (checkKeyHeld(SDL_SCANCODE_MINUS) && gameScale >= 0.1) {
+        gameScale /= 1.005;
+    }
+
+    if (checkKeyHeld(SDL_SCANCODE_LSHIFT) && checkKeyHeld(SDL_SCANCODE_LEFTBRACKET)) {
+        worldRotation -= 0.02;
+        if (worldRotation < 0) {
+            worldRotation += 6.28318530717958647692;
+        }
+        printf("Rotation: %f\n", worldRotation);
+    }
+    else if (checkKeyHeld(SDL_SCANCODE_LEFTBRACKET)) {
+        worldRotation -= 0.004;
+        if (worldRotation < 0) {
+            worldRotation += 6.28318530717958647692;
+        }
+        printf("Rotation: %f\n", worldRotation);
+    }
+
+    if (checkKeyHeld(SDL_SCANCODE_LSHIFT) && checkKeyHeld(SDL_SCANCODE_RIGHTBRACKET)) {
+        worldRotation += 0.02;
+        if (worldRotation >= 6.28318530717958647692) {
+            worldRotation -= 6.28318530717958647692;
+        }
+        printf("Rotation: %f\n", worldRotation);
+    }
+    else if (checkKeyHeld(SDL_SCANCODE_RIGHTBRACKET)) {
+        worldRotation += 0.004;
+        if (worldRotation >= 6.28318530717958647692) {
+            worldRotation -= 6.28318530717958647692;
+        }
+        printf("Rotation: %f\n", worldRotation);
+    }
+
+    if (checkKeyHeld(SDL_SCANCODE_BACKSPACE)) {
+        gameScale = 1;
+        worldRotation = 0;
+    }
+    players[0].velocity.x *= 0.8;
+    players[0].velocity.y *= 0.8;
 }
 
 void playerFrameUpdate () {
-    // playerUpdateStats(&players);
+    playerUpdateStats(&players);
     playerFrameInput(&players);
 }
 
@@ -143,11 +186,16 @@ void playerRender () {
 }
 
 void playerUpdateStats (Player* player[]) {
-    // for (int i = 0; i < numberOfPlayers; i++) {
-    //     mainCamera.coords.x += player[i]->velocity.x;
-    //     mainCamera.coords.y += player[i]->velocity.y;
-    // }
-    // printf("Velocity: %f\n", players[0].velocity.y);
+    for (int i = 0; i < numberOfPlayers; i++) {
+        if (mainCamera.isStill) {
+            players[0].screenCoords.x += players[0].velocity.x;
+        }
+        else {
+            mainCamera.coords.x += players[0].velocity.x;
+            mainCamera.coords.y -= players[0].velocity.y;
+        }
+    }
+    // printf("Velocity: %lf\n", players[0].velocity.x);
 }
 
 void playerGravity (Player* player[]) {
@@ -171,8 +219,8 @@ void playerFrameInput (Player* player[]) {
         player[i]->size.x = DEFAULT_TILE_SIZE * gameScale;
         player[i]->size.y = DEFAULT_TILE_SIZE * gameScale;
 
-        player[i]->screenCoords.x = (windows[0].size.x/2) - player[i]->size.x/2;
-        player[i]->screenCoords.y = (windows[0].size.y/2) - player[i]->size.y/2;
+        // player[i]->screenCoords.x = (windows[0].size.x/2) - player[i]->size.x/2;
+        // player[i]->screenCoords.y = (windows[0].size.y/2) - player[i]->size.y/2;
 
         if (player[i]->controlsEnabled) {
             //Up
@@ -193,20 +241,26 @@ void playerFrameInput (Player* player[]) {
             //Pause
             if (checkKeyHeld(SDL_SCANCODE_ESCAPE)) player[i]->pressed.pause = true;
             if (checkKeyReleased(SDL_SCANCODE_ESCAPE)) player[i]->pressed.pause = false;
-            // if (checkKeyPressed(SDL_SCANCODE_F11)) {
-            //     window.bordered = !window.bordered;
-                // SDL_GetDisplayBounds(0, &window.squareCoords);
-            //     SDL_SetWindowSize(window.window, window.size.x, window.size.y);
-            //     SDL_SetWindowBordered(window.window, !window.bordered);
-            //     if (!window.bordered) {
-            //         SDL_SetWindowFullscreen(window.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-            //     }
-            //     else {
-            //         SDL_SetWindowFullscreen(window.window, 0);
-            //         SDL_SetWindowSize(window.window, window.defaultSize.x, window.defaultSize.y);
-            //         SDL_SetWindowPosition(window.window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-            //     }
-            // }
+
+            //Still Camera
+            if (checkKeyPressed(SDL_SCANCODE_C)) mainCamera.isStill = true;
+            if (checkKeyPressed(SDL_SCANCODE_V)) mainCamera.isStill = false;
+
+            //Fullscreen Toggle
+            if (checkKeyPressed(SDL_SCANCODE_F11)) {
+                windows[0].bordered = !windows[0].bordered;
+                SDL_GetDisplayBounds(0, &windows[0].squareCoords);
+                SDL_SetWindowSize(windows[0].window, windows[0].size.x, windows[0].size.y);
+                SDL_SetWindowBordered(windows[0].window, !windows[0].bordered);
+                if (!windows[0].bordered) {
+                    SDL_SetWindowFullscreen(windows[0].window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+                }
+                else {
+                    SDL_SetWindowFullscreen(windows[0].window, 0);
+                    SDL_SetWindowSize(windows[0].window, windows[0].defaultSize.x, windows[0].defaultSize.y);
+                    SDL_SetWindowPosition(windows[0].window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+                }
+            }
         }
         else {
             player[i]->pressed.up = false;
