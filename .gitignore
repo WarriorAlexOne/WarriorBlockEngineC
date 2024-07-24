@@ -5,3 +5,6 @@ assets
 temp.txt
 temp.c
 libraries
+src/map/staticLevels
+saves
+src/utils/FastNoiseLite
