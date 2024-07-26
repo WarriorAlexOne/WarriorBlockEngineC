@@ -14,7 +14,8 @@ char c1 = ' ';
 char c2 = '~';
 
 
-
+void initText ();
+void renderText ();
 
 
 void initText () {

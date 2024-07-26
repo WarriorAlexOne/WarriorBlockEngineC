@@ -20,9 +20,8 @@ typedef struct {
     SDL_Texture* texture;
     Vec2 coords;
     Vec2 size;
-    SDL_Rect rect;
     short ID;
-    char tileName[64];
+    char name[64];
 } Tile;
 
 typedef enum {
@@ -66,7 +65,7 @@ Tile createTile (short ID, char tileName[]) {
     newTile.coords.y = 0;
     newTile.size.x = DEFAULT_TILE_SIZE * gameScale;
     newTile.size.y = DEFAULT_TILE_SIZE * gameScale;
-    newTile.rect = makeRect(newTile.coords.x, newTile.coords.y, newTile.size.x, newTile.size.y);
+    sprintf(newTile.name, "%s", tileName);
 
     sprintf(texturePath, "%s%s%s", TILE_FILE_PATH, tileName, IMG_FORMAT);
     newTile.texture = createTileTexture(newTile.texture, texturePath);

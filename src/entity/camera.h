@@ -8,6 +8,7 @@
 
 typedef struct {
     Vec2 coords;
+    Vec2 tileCoords;
     bool isStill;
 } Camera;
 
@@ -22,11 +23,15 @@ void centerOnPlayers ();
 void initCamera () {
     mainCamera.coords.x = 0;
     mainCamera.coords.y = 0;
+    mainCamera.tileCoords.x = ((mainCamera.coords.x*gameScale)-(windows[0].size.x/2))/DEFAULT_TILE_SIZE;
+    mainCamera.tileCoords.y = ((mainCamera.coords.y*gameScale)-(windows[0].size.y/2))/DEFAULT_TILE_SIZE;
     mainCamera.isStill = false;
+    addTickFunction(updateCamera);
 }
 
 void updateCamera () {
-
+    mainCamera.tileCoords.x = ((mainCamera.coords.x*gameScale)-(windows[0].size.x/2))/DEFAULT_TILE_SIZE;
+    mainCamera.tileCoords.y = ((mainCamera.coords.y*gameScale)-(windows[0].size.y/2))/DEFAULT_TILE_SIZE;
 }
 
 void centerOnPlayers () {

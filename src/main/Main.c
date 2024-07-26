@@ -24,17 +24,20 @@
 #include "../input/mouseInput.h"
 #include "../input/controllerInput.h"
 #include "../input/touchInput.h"
-#include "../entity/controls.h"
 #include "../entity/camera.h"
 #include "../map/tiles.h"
 #include "../map/proceduralChunkGenerator.h"
 #include "../map/staticPositionLevelReader.h"
-#include "../map/mining.h"
 #include "../entity/player.h"
-#include "../entity/controls.h"
+#include "../map/tileManipulation.h"
 #include "../map/staticPositionLevelRenderer.h"
 #include "../menu/text.h"
 #include "../main/rendering.h"
+
+
+// FILE* fp = fopen("saves/testFile.txt", "w");
+// fprintf(fp, "Test");
+// fclose(fp);
 
 
 int main (int argc, char* args[]) {
@@ -57,13 +60,13 @@ int main (int argc, char* args[]) {
     initMouseInput();
     // initControllerInput();
     // initTouchInput();
+    initCamera();
     initTiles();
     initLevelGen();
     createLevel0();
     readLevel(1);
-    // initBlockManipulation();
     initPlayers();
-    initControls();
+    initBlockManipulation();
     initText();
     initRenderUpdater();
     printf("Initialization Complete!\n\n");

@@ -17,8 +17,8 @@ void renderChunks (int levelID) {
                     tiles[tileID].size.x = DEFAULT_TILE_SIZE;
                     tiles[tileID].size.y = DEFAULT_TILE_SIZE;
                     
-                    tiles[tileID].rect = makeRect(tiles[tileID].coords.x, tiles[tileID].coords.y, tiles[tileID].size.x, tiles[tileID].size.y);
-                    SDL_RenderCopy(windows[0].renderer, tiles[tileID].texture, NULL, &tiles[tileID].rect);
+                    SDL_Rect tileRect = makeRect(tiles[tileID].coords.x, tiles[tileID].coords.y, tiles[tileID].size.x, tiles[tileID].size.y);
+                    SDL_RenderCopy(windows[0].renderer, tiles[tileID].texture, NULL, &tileRect);
                     break;
                 }
             }

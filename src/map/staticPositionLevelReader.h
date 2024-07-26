@@ -13,13 +13,14 @@ typedef struct {
     short** metaData;
 } staticLevel;
 
-const char sLevelFilePath[32] = "src/map/staticLevels/level";
+const char sLevelFilePath[32] = "staticLevels/level";
 const char sLevelFormat[8] = ".txt";
 
 staticLevel staticLevelData;
 
 
 void readLevel (int levelID);
+void generateBlankLevel ();
 
 
 void readLevel (int levelID) {
@@ -28,7 +29,9 @@ void readLevel (int levelID) {
 
     FILE *file = fopen(levelPath, "r");
     if (file == NULL) {
-        perror("Error opening file");
+        printf("Missing Level Data!\n");
+        generateBlankLevel();
+        fclose(file);
         return;
     }
 
@@ -53,7 +56,7 @@ void readLevel (int levelID) {
     printf("LevelHeight: %i\n", staticLevelData.size.y);  //Temp debugging
 
     //Checks if Level Data is within X Bounds.
-    if (staticLevelData.size.x <= 10000 && staticLevelData.size.x >= 24) {
+    if (staticLevelData.size.x >= 24 && staticLevelData.size.x <= 10000 && staticLevelData.size.y >= 14 && staticLevelData.size.y <= 10000) {
 
         //Expand X Coordinates to correct level size.
         staticLevelData.data = malloc(staticLevelData.size.x * sizeof(int*));
@@ -98,20 +101,16 @@ void readLevel (int levelID) {
         // }
     }
     else {
-        printf("Invalid Level Size! Must be 24x14 or bigger!");
-
-        //Create and Load Blank Level
-        staticLevelData.data = malloc(24 * sizeof(int*));
-        staticLevelData.metaData = malloc(24 * sizeof(int*));
-
-        for (int x = 0; x < 24; x++) {
-            staticLevelData.data[x] = malloc(14 * sizeof(int));
-            staticLevelData.metaData[x] = malloc(14 * sizeof(int));
-            for (int y = 0; y < 14; y++) {
-                staticLevelData.data[x][y] = 1;
-                staticLevelData.metaData[x][y] = 1;
-            }
+        if (staticLevelData.size.x < 24 && staticLevelData.size.y < 14) {
+            printf("Invalid Level Size: (Width:%i, Height:%i)! Level must be between 24*14 and 10,000*10,000!\n", staticLevelData.size.x, staticLevelData.size.y);
         }
+        else if (staticLevelData.size.x < 24) {
+            printf("Invalid Level Width: %i! Level must be between 24*14 and 10,000*10,000!\n", staticLevelData.size.x);
+        }
+        else if (staticLevelData.size.y < 14) {
+            printf("Invalid Level Height: %i! Level must be between 24*14 and 10,000*10,000!\n", staticLevelData.size.y);
+        }
+        generateBlankLevel();
     }
 
     // fgets(line, sizeof(line), file);
@@ -141,6 +140,38 @@ void readLevel (int levelID) {
     //     printf("%s\n", token);
     //     token = strtok(NULL, ",");
     // }
+}
+
+void generateBlankLevel () {
+    //If there is no level data, create new level.
+    if (staticLevelData.data == NULL) {
+        printf("Generating Blank Level...\n");
+        staticLevelData.size.x = 24;
+        staticLevelData.size.y = 14;
+
+        //Create and Load Blank Level
+        staticLevelData.data = malloc(staticLevelData.size.x * sizeof(int*));
+        staticLevelData.metaData = malloc(staticLevelData.size.x * sizeof(int*));
+
+        for (int x = 0; x < staticLevelData.size.x; x++) {
+            staticLevelData.data[x] = malloc(staticLevelData.size.y * sizeof(int));
+            staticLevelData.metaData[x] = malloc(staticLevelData.size.y * sizeof(int));
+            for (int y = 0; y < staticLevelData.size.y; y++) {
+                staticLevelData.data[x][y] = 1;
+                staticLevelData.metaData[x][y] = 1;
+            }
+        }
+    }
+    //If there is level data, clear current level.
+    else if (staticLevelData.data != NULL && staticLevelData.size.x >= 24 && staticLevelData.size.x <= 10000 && staticLevelData.size.y >= 14 && staticLevelData.size.y <= 10000) {
+        printf("Clearing Level...\n");
+        for (int x = 0; x < staticLevelData.size.x; x++) {
+            for (int y = 0; y < staticLevelData.size.y; y++) {
+                staticLevelData.data[x][y] = 1;
+                staticLevelData.metaData[x][y] = 1;
+            }
+        }
+    }
 }
 
 #endif
