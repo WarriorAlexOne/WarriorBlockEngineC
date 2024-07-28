@@ -2,36 +2,36 @@
 #define CLOCK_H
 
 #include <stdio.h>
+#include <time.h>
 
 #include <SDL2/SDL.h>
 
 #include "../utils/globalVariables.h"
 
+#define CLOCK_MONOTONIC 1
 
-const double MILLI_SEC = 1000.0;
+
+const double NANO_SEC = 1000000000.0;
 double tickRate = 60.0;
-double tickTime = 0.0;
-double tickDelta = 0.0;           //Used for the tick clock. Do not use with game events.
-double deltaTime = 0.0;           //Used for game events to keep values consistent with time.
-long long int currentTime = 0;
-long long int lastTime = 0;
+double tickDelay;
+double tickDelta;           //Used for the tick clock. Do not use with game events.
+double deltaTime;           //Used for game events to keep values consistent with time.
+long long int currentTime;
+long long int lastTime;
 
-long long int targetTime = 0;
-
+long long int secTime;
 
 void (*frameUpdateFunctions[1024]) ();
-short frameUpdateFunctionCount = 0;
-
 void (*tickUpdateFunctions[1024]) ();
-short tickUpdateFunctionCount = 0;
-
 void (*secUpdateFunctions[1024]) ();
-short secUpdateFunctionCount = 0;
-
 void (*pauseFrameUpdateFunctions[1024]) ();
-short pauseFrameUpdateFunctionCount = 0;
 
+short frameUpdateFunctionCount;
+short tickUpdateFunctionCount;
+short secUpdateFunctionCount;
+short pauseFrameUpdateFunctionCount;
 
+long long currentNanoTime();
 void initClock ();
 void updateClocks ();
 
@@ -46,9 +46,15 @@ void addSecFunction (void (*function) ());
 void addPauseFrameFunction (void (*function) ());
 
 
+long long currentNanoTime() {
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (long long)ts.tv_sec * 1e9 + ts.tv_nsec;
+}
+
 void initClock () {
-    tickTime = MILLI_SEC/tickRate;
-    targetTime = SDL_GetTicks64() + MILLI_SEC;
+    tickDelay = NANO_SEC/tickRate;
+    secTime = currentNanoTime() + NANO_SEC;
     printf("Clocks Initialized!\n");
 }
 
@@ -56,20 +62,21 @@ void updateClocks () {
     while (gamePaused) {
         pauseFrameUpdate();
     }
-    currentTime = SDL_GetTicks64();
+    currentTime = currentNanoTime();
     fps++;
 
-    tickDelta += (currentTime - lastTime) / tickTime;
-    deltaTime = (currentTime - lastTime) / MILLI_SEC;
+    tickDelta += (currentTime - lastTime) / tickDelay;
+    deltaTime = (currentTime - lastTime) / NANO_SEC;
 
     lastTime = currentTime;
 
+    printf("NANOSECONDS: %lli\n", currentNanoTime());
     //Tick Update
     while (tickDelta >= 1) {
         tps++;
         tickDelta--;
         tickUpdate();
-        // while (currentTime >= targetTime) {
+        // while (currentTime >= secTime) {
         //     fps = 0;
         //     tps = 0;
         //     secUpdate();
@@ -77,8 +84,8 @@ void updateClocks () {
     }
 
     //Sec Update
-    if (currentTime >= targetTime) {
-        targetTime = currentTime + MILLI_SEC;
+    if (currentTime >= secTime) {
+        secTime = currentTime + NANO_SEC;
         // fpsToString();
         // titleFPSString();
     }
