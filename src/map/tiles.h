@@ -30,7 +30,11 @@ typedef enum {
     DIRT,
     STONE,
     OAK_LOG,
-    OAK_LEAVES
+    OAK_LEAVES,
+    OAK_PLANKS,
+    COBBLESTONE,
+    GLASS,
+    BEDROCK,
 } TileNames;
 
 Tile tiles[16];
@@ -45,15 +49,15 @@ void setFoliageColor (Tile tile);
 
 
 void initTiles () {
-    tiles[1] = createTile(GRASS, "Ground Overworld Top");
-    tiles[2] = createTile(DIRT, "Ground Overworld Middle");
-    tiles[3] = createTile(STONE, "Ground Overworld TR Corner");
-    tiles[4] = createTile(OAK_LOG, "Ground Overworld Right");
-    tiles[5] = createTile(OAK_LEAVES, "Ground Overworld TR In Corner");
-    tiles[6] = createTile(6, "Ground Overworld TL Corner");
-    tiles[7] = createTile(7, "Ground Overworld Left");
-    tiles[8] = createTile(8, "Ground Overworld TL In Corner");
-    tiles[9] = createTile(9, "Question Block");
+    tiles[GRASS] = createTile(GRASS, "grass");
+    tiles[DIRT] = createTile(DIRT, "dirt");
+    tiles[STONE] = createTile(STONE, "stone");
+    tiles[OAK_LOG] = createTile(OAK_LOG, "oak_log");
+    tiles[OAK_LEAVES] = createTile(OAK_LEAVES, "oak_leaves");
+    tiles[OAK_PLANKS] = createTile(OAK_PLANKS, "oak_planks");
+    tiles[COBBLESTONE] = createTile(COBBLESTONE, "cobblestone");
+    tiles[GLASS] = createTile(GLASS, "glass");
+    tiles[BEDROCK] = createTile(BEDROCK, "bedrock");
     printf("Tiles Initialized!\n");
 }
 

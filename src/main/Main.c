@@ -26,6 +26,7 @@
 #include "../input/touchInput.h"
 #include "../entity/camera.h"
 #include "../map/tiles.h"
+#include "../entity/items.h"
 #include "../map/proceduralChunkGenerator.h"
 #include "../map/staticPositionLevelReader.h"
 #include "../entity/player.h"
@@ -62,9 +63,11 @@ int main (int argc, char* args[]) {
     // initTouchInput();
     initCamera();
     initTiles();
+    initItems();
     initLevelGen();
     createLevel0();
     readLevel(1);
+    readBGLevel(1);
     initPlayers();
     initBlockManipulation();
     initText();
@@ -86,6 +89,7 @@ int main (int argc, char* args[]) {
     TTF_CloseFont(font);
     TTF_Quit();
     destroyTileTextures(tiles, numberOfTiles);
+    destroyItemTextures (items, numberOfItems);
     // if (controllers) {
     //     SDL_GameControllerClose(controllers[0].SDL_Controller);
     // }

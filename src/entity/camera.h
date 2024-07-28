@@ -12,7 +12,7 @@ typedef struct {
     bool isStill;
 } Camera;
 
-Camera mainCamera = {0, 0};
+Camera mainCamera;
 
 
 void initCamera ();
@@ -21,8 +21,8 @@ void centerOnPlayers ();
 
 
 void initCamera () {
-    mainCamera.coords.x = 0;
-    mainCamera.coords.y = 0;
+    mainCamera.coords.x = 90 * gameScale;
+    mainCamera.coords.y = 32 * gameScale;
     mainCamera.tileCoords.x = ((mainCamera.coords.x*gameScale)-(windows[0].size.x/2))/DEFAULT_TILE_SIZE;
     mainCamera.tileCoords.y = ((mainCamera.coords.y*gameScale)-(windows[0].size.y/2))/DEFAULT_TILE_SIZE;
     mainCamera.isStill = false;
@@ -30,8 +30,8 @@ void initCamera () {
 }
 
 void updateCamera () {
-    mainCamera.tileCoords.x = ((mainCamera.coords.x*gameScale)-(windows[0].size.x/2))/DEFAULT_TILE_SIZE;
-    mainCamera.tileCoords.y = ((mainCamera.coords.y*gameScale)-(windows[0].size.y/2))/DEFAULT_TILE_SIZE;
+    mainCamera.tileCoords.x = (((mainCamera.coords.x*gameScale)-(windows[0].size.x/2))/DEFAULT_TILE_SIZE)/gameScale;
+    mainCamera.tileCoords.y = (((mainCamera.coords.y*gameScale)-(windows[0].size.y/2))/DEFAULT_TILE_SIZE)/gameScale;
 }
 
 void centerOnPlayers () {

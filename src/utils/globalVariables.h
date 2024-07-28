@@ -11,7 +11,7 @@
 
 //Game Variables
 byte gamePaused = 0;
-double gameScale = 5.0;  //Other values are multiplied by this.
+double gameScale = 1.0;  //Other values are multiplied by this.
 double worldRotation = 0.0;
 const double DEFAULT_TILE_SIZE = 16.0;
 int currentLevel = 0;

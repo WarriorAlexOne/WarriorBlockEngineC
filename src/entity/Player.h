@@ -28,8 +28,9 @@ typedef struct {
     bool right;
     bool jump;
     bool run;
-    bool mining;
-    bool placing;
+    bool actionKey;
+    bool interactionKey;
+    bool pickaxe;
 } Controls;
 
 typedef struct {
@@ -52,6 +53,7 @@ typedef struct {
     Vec2 size;
     Vec2 screenCoords;
     Vec2 screenTileCoords;
+    Vec2 worldCoords;
 
     //Speed
     Vec2 accel;
@@ -91,6 +93,8 @@ void playerInput ();
 void playerWalk ();
 void updatePlayerStats ();
 void playerCollision ();
+int getTile (StaticLevel* level, Vec2_Int pos);
+int setTile (StaticLevel* level, Vec2_Int pos, short tileID);
 void rotateWorld ();
 void zoomCamera ();
 void pauseGame ();
@@ -111,6 +115,9 @@ void initPlayers () {
         players[i].pressed.right = false;
         players[i].pressed.jump = false;
         players[i].pressed.run = false;
+        players[i].pressed.actionKey = false;
+        players[i].pressed.interactionKey = false;
+        players[i].pressed.pickaxe = false;
         players[i].controlsEnabled = true;
 
         //Coordinates
@@ -118,15 +125,17 @@ void initPlayers () {
         players[i].coords.y = 0;
         players[i].size.x = DEFAULT_TILE_SIZE * gameScale;
         players[i].size.y = DEFAULT_TILE_SIZE * gameScale;
-        players[i].screenCoords.x = 0;  //-1024*10
-        players[i].screenCoords.y = 0;  //-1024*10
+        players[i].screenCoords.x = (windows[0].size.x/2)-(players[0].size.x/2);  //-1024*10
+        players[i].screenCoords.y = (windows[0].size.y/2)-(players[0].size.y/2);  //-1024*10
         players[i].screenTileCoords.x = 0;
         players[i].screenTileCoords.y = 0;
+        players[i].worldCoords.x = mainCamera.tileCoords.x + players[0].screenTileCoords.x;
+        players[i].worldCoords.y = mainCamera.tileCoords.y + players[0].screenTileCoords.y;
 
 
         //Speed
-        players[i].accel.x = 1.25;
-        players[i].accel.y = 1.25;
+        players[i].accel.x = 0.25;
+        players[i].accel.y = 0.25;
         players[i].velocity.x = 0;
         players[i].velocity.y = 0;
         players[i].gravity = 0.25;
@@ -147,6 +156,7 @@ void initPlayers () {
     }
     addFrameFunction(playerFrameUpdate);
     addTickFunction(playerTickUpdate);
+    texture = IMG_LoadTexture(windows[0].renderer, "assets/textures/players/Slome.png");
 
     //If 1 player, remove s from text.
     if (numberOfPlayers == 1) {
@@ -168,7 +178,6 @@ void playerTickUpdate () {
 }
 
 void playerFrameUpdate () {
-    playerRender();
     playerInput();
     resetStats();
 }
@@ -201,15 +210,19 @@ void playerInput () {
             if (checkKeyReleased(SDL_SCANCODE_SPACE)) players[i].pressed.jump = false;
             //Run
 
-            //Mining
-            if (checkMouseHeld(MOUSE_LEFT)) players[0].pressed.mining = true;
-            if (checkMouseReleased(MOUSE_LEFT)) players[0].pressed.mining = false;
-            //Placing
-            if (checkMousePressed(MOUSE_RIGHT)) {
-                players[0].pressed.placing = true;
+            //Action Key
+            if (checkMousePressed(MOUSE_LEFT)) {
+                players[0].pressed.actionKey = true;
             }
-            else if (players[0].pressed.placing) {
-                players[0].pressed.placing = false;
+            else if (players[0].pressed.actionKey) {
+                players[0].pressed.actionKey = false;
+            }
+            //Interaction Key
+            if (checkMousePressed(MOUSE_RIGHT)) {
+                players[0].pressed.interactionKey = true;
+            }
+            else if (players[0].pressed.interactionKey) {
+                players[0].pressed.interactionKey = false;
             }
             //Fullscreen
             if (checkKeyPressed(SDL_SCANCODE_F11)) fullscreen = true;
@@ -269,8 +282,10 @@ void updatePlayerStats () {
 
     // players[0].screenCoords.x = (windows[0].size.x/2) - players[0].size.x/2;
     // players[0].screenCoords.y = (windows[0].size.y/2) - players[0].size.y/2;
-    players[0].screenTileCoords.x = (players[0].screenCoords.x / DEFAULT_TILE_SIZE) / gameScale;
-    players[0].screenTileCoords.y = (players[0].screenCoords.y / DEFAULT_TILE_SIZE) / gameScale;
+    players[0].screenTileCoords.x = (players[0].screenCoords.x/DEFAULT_TILE_SIZE)/gameScale;
+    players[0].screenTileCoords.y = (players[0].screenCoords.y/DEFAULT_TILE_SIZE)/gameScale;
+    players[0].worldCoords.x = (mainCamera.tileCoords.x + players[0].screenTileCoords.x+1);
+    players[0].worldCoords.y = (mainCamera.tileCoords.y + players[0].screenTileCoords.y+1);
     if (mainCamera.isStill) {
         players[0].screenCoords.x += players[0].velocity.x;
         players[0].screenCoords.y -= players[0].velocity.y;
@@ -290,11 +305,32 @@ int idffegjgrhiugre = 0;
 void playerCollision () {
     if (checkCollision(players[0].screenCoords.x, players[0].screenCoords.y, players[0].size.x, players[0].size.y,500, 500, 200, 200)) {
         idffegjgrhiugre++;
-        printf("COLLISION DETECTED!!! %i\n", idffegjgrhiugre);
+        // printf("COLLISION DETECTED!!! %i\n", idffegjgrhiugre);
     }
-    // if (players[0].screenTileCoords.x + mainCamera.tileCoords.x + 1 == staticLevelData.data[(int)players[0].screenTileCoords.x + (int)mainCamera.tileCoords.x][(int)players[0].screenTileCoords.y]) {
+    if (getTile(&staticLevelData, (Vec2_Int){players[0].worldCoords.x, players[0].worldCoords.y}) == 1) {
+        printf("Found Grass!!!\n");
+    }
+    setTile(&staticLevelData, (Vec2_Int){players[0].worldCoords.x, players[0].worldCoords.y}, 8);
+}
 
-    // }
+//Gets the ID of the tile at the specified coordinates. Returns the tile ID if valid. Returns -1 if position is outside of world bounds.
+int getTile (StaticLevel* level, Vec2_Int pos) {
+    if (pos.x >= 0 && pos.x < level->size.x && pos.y >= 0 && pos.y < level->size.y) {
+        int worldTile = level->data[pos.x][pos.y];
+        return worldTile;
+    }
+    else {
+        return -1;
+    }
+}
+
+//Places a tile at coordinates specified. Returns the previous world tile that was there.
+int setTile (StaticLevel* level, Vec2_Int pos, short tileID) {
+    if (pos.x >= 0 && pos.x < level->size.x && pos.y >= 0 && pos.y < level->size.y && tileID >= 0 && tileID < numberOfTiles) {
+        int worldTile = level->data[pos.x][pos.y];
+        level->data[pos.x][pos.y] = tileID;
+        return worldTile;
+    }
 }
 
 void rotateWorld () {
