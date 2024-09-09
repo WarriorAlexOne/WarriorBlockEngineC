@@ -5,7 +5,6 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 
 #include "../utils/globalVariables.h"
 #include "../utils/clock.h"
@@ -14,6 +13,7 @@
 #include "../entity/items.h"
 #include "../map/proceduralChunkGenerator.h"
 #include "../entity/player.h"
+#include "../gui/text.h"
 
 
 void initRenderUpdater ();
@@ -24,6 +24,13 @@ void screenSaver ();
 void initRenderUpdater () {
     addFrameFunction(updateRenderer);
 
+    for (int x = 0; x < windows[0].size.x/(DEFAULT_TILE_SIZE/gameScale); x++) {
+        for (int y = 0; y < windows[0].size.y/(DEFAULT_TILE_SIZE/gameScale); y++) {
+            SDL_RenderCopy(windows[0].renderer, tiles[DIRT].texture, NULL, &(SDL_Rect){x*(16*gameScale), y*(16*gameScale), DEFAULT_TILE_SIZE*gameScale, DEFAULT_TILE_SIZE*gameScale});
+        }
+    }
+    
+    SDL_RenderPresent(windows[0].renderer);
     printf("Renderer Has Started!\n");
 }
 
@@ -42,8 +49,7 @@ void updateRenderer () {
     // SDL_RenderFillRect(windows[0].renderer, &(SDL_Rect){500, 500, 200, 200});
     SDL_RenderCopy(windows[0].renderer, selectedTile != 0 ? tiles[selectedTile].texture : items[IRON_PICKAXE].texture, NULL, &(SDL_Rect){windows[0].size.x-4-72, 12, 64, 64});
     playerRender();
-    renderText();
-
+    loopTexts();
     SDL_RenderPresent(windows[0].renderer);
 }
 

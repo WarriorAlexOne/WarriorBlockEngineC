@@ -103,7 +103,7 @@ void loadWindow (Window* window) {
 }
 
 void initRenderers (Window* window) {
-    window->renderer = SDL_CreateRenderer(window->window, -1, 2);
+    window->renderer = SDL_CreateRenderer(window->window, -1, SDL_RENDERER_ACCELERATED);
 
     SDL_Surface* windowIcon = IMG_Load(window->iconPath);
     if (windowIcon == NULL) {

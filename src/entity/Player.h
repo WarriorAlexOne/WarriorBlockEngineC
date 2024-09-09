@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <math.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 
 #include "../utils/globalVariables.h"
 #include "../utils/tools.h"
@@ -31,6 +31,7 @@ typedef struct {
     bool actionKey;
     bool interactionKey;
     bool pickaxe;
+    bool devKey;
 } Controls;
 
 typedef struct {
@@ -84,10 +85,13 @@ SDL_Texture* texture;
 
 bool playerInit = false;
 
+double temporary;
+
 
 void initPlayers ();
 void playerTickUpdate ();
 void playerFrameUpdate ();
+void playerSecUpdate ();
 void playerRender ();
 void playerInput ();
 void playerWalk ();
@@ -100,6 +104,7 @@ void zoomCamera ();
 void pauseGame ();
 void setFullscreen ();
 void resetStats ();
+void customCursor ();
 
 
 void initPlayers () {
@@ -118,6 +123,7 @@ void initPlayers () {
         players[i].pressed.actionKey = false;
         players[i].pressed.interactionKey = false;
         players[i].pressed.pickaxe = false;
+        players[i].pressed.devKey = false;
         players[i].controlsEnabled = true;
 
         //Coordinates
@@ -156,7 +162,9 @@ void initPlayers () {
     }
     addFrameFunction(playerFrameUpdate);
     addTickFunction(playerTickUpdate);
+    addSecFunction(playerSecUpdate);
     texture = IMG_LoadTexture(windows[0].renderer, "assets/textures/players/Slome.png");
+    customCursor("assets/textures/misc/slome_cursor.png");
 
     //If 1 player, remove s from text.
     if (numberOfPlayers == 1) {
@@ -165,6 +173,12 @@ void initPlayers () {
     else {
         printf("%i Players Initialized!\n", numberOfPlayers);
     }
+}
+
+void playerFrameUpdate () {
+    playerInput();
+    resetStats();
+    // printf("Coords: %f\n", temporary);
 }
 
 void playerTickUpdate () {
@@ -177,9 +191,8 @@ void playerTickUpdate () {
     setFullscreen();
 }
 
-void playerFrameUpdate () {
-    playerInput();
-    resetStats();
+void playerSecUpdate () {
+
 }
 
 void playerRender () {
@@ -241,6 +254,8 @@ void playerInput () {
             //Still Camera
             if (checkKeyPressed(SDL_SCANCODE_C)) mainCamera.isStill = true;
             if (checkKeyPressed(SDL_SCANCODE_V)) mainCamera.isStill = false;
+
+            if (checkKeyPressed(SDL_SCANCODE_GRAVE)) players[0].pressed.devKey = !players[0].pressed.devKey;
         }
         else {
             players[i].pressed.up = false;
@@ -277,11 +292,11 @@ void playerWalk () {
 }
 
 void updatePlayerStats () {
-    // players[0].size.x = DEFAULT_TILE_SIZE * gameScale;
-    // players[0].size.y = DEFAULT_TILE_SIZE * gameScale;
-
+    players[0].size.x = DEFAULT_TILE_SIZE * gameScale;
+    players[0].size.y = DEFAULT_TILE_SIZE * gameScale;
     // players[0].screenCoords.x = (windows[0].size.x/2) - players[0].size.x/2;
     // players[0].screenCoords.y = (windows[0].size.y/2) - players[0].size.y/2;
+
     players[0].screenTileCoords.x = (players[0].screenCoords.x/DEFAULT_TILE_SIZE)/gameScale;
     players[0].screenTileCoords.y = (players[0].screenCoords.y/DEFAULT_TILE_SIZE)/gameScale;
     players[0].worldCoords.x = (mainCamera.tileCoords.x + players[0].screenTileCoords.x+1);
@@ -303,14 +318,12 @@ void updatePlayerStats () {
 
 int idffegjgrhiugre = 0;
 void playerCollision () {
-    if (checkCollision(players[0].screenCoords.x, players[0].screenCoords.y, players[0].size.x, players[0].size.y,500, 500, 200, 200)) {
-        idffegjgrhiugre++;
+    // if (checkCollision(players[0].screenCoords.x, players[0].screenCoords.y, players[0].size.x, players[0].size.y,500, 500, 200, 200)) {
+        // idffegjgrhiugre++;
         // printf("COLLISION DETECTED!!! %i\n", idffegjgrhiugre);
-    }
-    if (getTile(&staticLevelData, (Vec2_Int){players[0].worldCoords.x, players[0].worldCoords.y}) == 1) {
-        printf("Found Grass!!!\n");
-    }
-    setTile(&staticLevelData, (Vec2_Int){players[0].worldCoords.x, players[0].worldCoords.y}, 8);
+    // }
+    temporary = (mainCamera.tileCoords.x) + (((players[0].screenCoords.x+(8*gameScale)+((fmod(gameScale, 1) == 0 ? 0 : 0.375)*gameScale))/gameScale)/DEFAULT_TILE_SIZE);
+    
 }
 
 //Gets the ID of the tile at the specified coordinates. Returns the tile ID if valid. Returns -1 if position is outside of world bounds.
@@ -408,6 +421,13 @@ void resetStats () {
         gameScale = 1;
         worldRotation = 0;
     }
+}
+
+void customCursor (char texturePath[]) {
+    SDL_Surface* cursorSurface = IMG_Load(texturePath);
+    SDL_Cursor* cursor = SDL_CreateColorCursor(cursorSurface, 0, 0);
+    SDL_SetCursor(cursor);
+    SDL_FreeSurface(cursorSurface);
 }
 
 #endif

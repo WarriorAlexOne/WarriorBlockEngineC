@@ -5,8 +5,8 @@
 
 #include <SDL2/SDL.h>
 
-#define min min  //To Make VS Code happy and not give false errors.
-#define max max  //To Make VS Code happy and not give false errors.
+#define min min  //VS Code was angry with this name, so this is defined.
+#define max max  //VS Code was angry with this name, so this is defined.
 
 
 SDL_Rect makeRect (int x, int y, int w, int h);

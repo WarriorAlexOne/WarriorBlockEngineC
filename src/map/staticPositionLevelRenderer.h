@@ -24,18 +24,16 @@ void rotate_point (double angle, double *x, double *y) {
 }
 
 void renderStaticLevel () {
-    for (
-        int x = ((mainCamera.coords.x)-(windows[0].size.x/2) > 0 ? ((mainCamera.coords.x)-(windows[0].size.x/2))/DEFAULT_TILE_SIZE : 0);
-        x < ((mainCamera.coords.x/DEFAULT_TILE_SIZE) + ((windows[0].size.x/2)/DEFAULT_TILE_SIZE)+1 < staticLevelData.size.x ?
-             (mainCamera.coords.x/DEFAULT_TILE_SIZE) + ((windows[0].size.x/2)/DEFAULT_TILE_SIZE)+1 : staticLevelData.size.x);
-        x++
-        ) {
-        for (
-            int y = ((mainCamera.coords.y)-(windows[0].size.y/2) > 0 ? ((mainCamera.coords.y)-(windows[0].size.y/2))/DEFAULT_TILE_SIZE : 0);
-            y < ((mainCamera.coords.y/DEFAULT_TILE_SIZE) + ((windows[0].size.y/2)/DEFAULT_TILE_SIZE)+1 < staticLevelData.size.y ?
-                 (mainCamera.coords.y/DEFAULT_TILE_SIZE) + ((windows[0].size.y/2)/DEFAULT_TILE_SIZE)+1 : staticLevelData.size.y);
-            y++
-        ) {
+    int startingX = ((mainCamera.coords.x)-(windows[0].size.x/2) > 0 ? ((mainCamera.coords.x)-(windows[0].size.x/2))/DEFAULT_TILE_SIZE : 0);
+    int endingX = ((mainCamera.coords.x/DEFAULT_TILE_SIZE) + ((windows[0].size.x/2)/DEFAULT_TILE_SIZE)+1 < staticLevelData.size.x ?
+                   (mainCamera.coords.x/DEFAULT_TILE_SIZE) + ((windows[0].size.x/2)/DEFAULT_TILE_SIZE)+1 : staticLevelData.size.x);
+
+    int startingY = ((mainCamera.coords.y)-(windows[0].size.y/2) > 0 ? ((mainCamera.coords.y)-(windows[0].size.y/2))/DEFAULT_TILE_SIZE : 0);
+    int endingY = ((mainCamera.coords.y/DEFAULT_TILE_SIZE) + ((windows[0].size.y/2)/DEFAULT_TILE_SIZE)+1 < staticLevelData.size.y ?
+                   (mainCamera.coords.y/DEFAULT_TILE_SIZE) + ((windows[0].size.y/2)/DEFAULT_TILE_SIZE)+1 : staticLevelData.size.y);
+
+    for (int x = startingX; x < endingX; x++) {
+        for (int y = startingY; y < endingY; y++) {
             for (short tileID = 0; tileID <= numberOfTiles; tileID++) {
                 if (staticLevelData.data[x][y] == tileID) {
                     double tileCenterX = ((x * DEFAULT_TILE_SIZE) * gameScale);
@@ -72,18 +70,16 @@ void renderStaticLevel () {
 }
 
 void renderStaticBGLevel () {
-    for (
-        int x = ((mainCamera.coords.x)-(windows[0].size.x/2) > 0 ? ((mainCamera.coords.x)-(windows[0].size.x/2))/DEFAULT_TILE_SIZE : 0);
-        x < ((mainCamera.coords.x/DEFAULT_TILE_SIZE) + ((windows[0].size.x/2)/DEFAULT_TILE_SIZE)+1 < staticLevelData.size.x ?
-             (mainCamera.coords.x/DEFAULT_TILE_SIZE) + ((windows[0].size.x/2)/DEFAULT_TILE_SIZE)+1 : staticLevelData.size.x);
-        x++
-        ) {
-        for (
-            int y = ((mainCamera.coords.y)-(windows[0].size.y/2) > 0 ? ((mainCamera.coords.y)-(windows[0].size.y/2))/DEFAULT_TILE_SIZE : 0);
-            y < ((mainCamera.coords.y/DEFAULT_TILE_SIZE) + ((windows[0].size.y/2)/DEFAULT_TILE_SIZE)+1 < staticLevelData.size.y ?
-                 (mainCamera.coords.y/DEFAULT_TILE_SIZE) + ((windows[0].size.y/2)/DEFAULT_TILE_SIZE)+1 : staticLevelData.size.y);
-            y++
-        ) {
+    int startingX = ((mainCamera.coords.x)-(windows[0].size.x/2) > 0 ? ((mainCamera.coords.x)-(windows[0].size.x/2))/DEFAULT_TILE_SIZE : 0);
+    int endingX = ((mainCamera.coords.x/DEFAULT_TILE_SIZE) + ((windows[0].size.x/2)/DEFAULT_TILE_SIZE)+1 < staticBGLevelData.size.x ?
+                   (mainCamera.coords.x/DEFAULT_TILE_SIZE) + ((windows[0].size.x/2)/DEFAULT_TILE_SIZE)+1 : staticBGLevelData.size.x);
+
+    int startingY = ((mainCamera.coords.y)-(windows[0].size.y/2) > 0 ? ((mainCamera.coords.y)-(windows[0].size.y/2))/DEFAULT_TILE_SIZE : 0);
+    int endingY = ((mainCamera.coords.y/DEFAULT_TILE_SIZE) + ((windows[0].size.y/2)/DEFAULT_TILE_SIZE)+1 < staticBGLevelData.size.y ?
+                   (mainCamera.coords.y/DEFAULT_TILE_SIZE) + ((windows[0].size.y/2)/DEFAULT_TILE_SIZE)+1 : staticBGLevelData.size.y);
+
+    for (int x = startingX; x < endingX; x++) {
+        for (int y = startingY; y < endingY; y++) {
             for (short tileID = 0; tileID <= numberOfTiles; tileID++) {
                 if (staticBGLevelData.data[x][y] == tileID) {
                     double tileCenterX = ((x * DEFAULT_TILE_SIZE) * gameScale);

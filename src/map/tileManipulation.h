@@ -29,8 +29,8 @@ void initBlockManipulation () {
 }
 
 void actionKeyPressed () {
-    adjustedMouseX = (mainCamera.tileCoords.x/gameScale) + (((mouseX+(8*gameScale)+((fmod(gameScale, 1) == 0 ? 0 : 0.375)*gameScale))/gameScale)/DEFAULT_TILE_SIZE);
-    adjustedMouseY = (mainCamera.tileCoords.y/gameScale) + (((mouseY+(8*gameScale)+((fmod(gameScale, 1) == 0 ? 0 : 0.375)*gameScale))/gameScale)/DEFAULT_TILE_SIZE);
+    adjustedMouseX = (mainCamera.tileCoords.x) + (((mouseX+(8*gameScale)+((fmod(gameScale, 1) == 0 ? 0 : 0.375)*gameScale))/gameScale)/DEFAULT_TILE_SIZE);
+    adjustedMouseY = (mainCamera.tileCoords.y) + (((mouseY+(8*gameScale)+((fmod(gameScale, 1) == 0 ? 0 : 0.375)*gameScale))/gameScale)/DEFAULT_TILE_SIZE);
     if (
         players[0].pressed.actionKey &&
         players[0].pressed.pickaxe &&
@@ -61,8 +61,8 @@ void actionKeyPressed () {
 }
 
 void interactionKeyPressed () {
-    adjustedMouseX = (mainCamera.tileCoords.x/gameScale) + (((mouseX+(8*gameScale)+((fmod(gameScale, 1) == 0 ? 0 : 0.375)*gameScale))/gameScale)/DEFAULT_TILE_SIZE);
-    adjustedMouseY = (mainCamera.tileCoords.y/gameScale) + (((mouseY+(8*gameScale)+((fmod(gameScale, 1) == 0 ? 0 : 0.375)*gameScale))/gameScale)/DEFAULT_TILE_SIZE);
+    adjustedMouseX = (mainCamera.tileCoords.x) + (((mouseX+(8*gameScale)+((fmod(gameScale, 1) == 0 ? 0 : 0.375)*gameScale))/gameScale)/DEFAULT_TILE_SIZE);
+    adjustedMouseY = (mainCamera.tileCoords.y) + (((mouseY+(8*gameScale)+((fmod(gameScale, 1) == 0 ? 0 : 0.375)*gameScale))/gameScale)/DEFAULT_TILE_SIZE);
     if (
         players[0].pressed.interactionKey &&
         !players[0].pressed.pickaxe &&

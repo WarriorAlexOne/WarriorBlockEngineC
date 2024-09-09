@@ -70,7 +70,6 @@ void updateClocks () {
 
     lastTime = currentTime;
 
-    printf("NANOSECONDS: %lli\n", currentNanoTime());
     //Tick Update
     while (tickDelta >= 1) {
         tps++;
@@ -88,6 +87,11 @@ void updateClocks () {
         secTime = currentTime + NANO_SEC;
         // fpsToString();
         // titleFPSString();
+        printf("FPS: %i\n", fps);
+        printf("TPS: %i\n", tps);
+        fps = 0;
+        tps = 0;
+        secUpdate();
     }
 
     frameUpdate();
