@@ -9,7 +9,7 @@
 
 double min (double a, double b);
 double max (double a, double b);
-bool checkCollision (RectF item1, RectF item2);
+bool checkCollision (RectD item1, RectD item2);
 int fib (int n);
 
 #endif

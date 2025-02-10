@@ -3,7 +3,7 @@
 
 #include "../../include/util/common.h"
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 #define FNL_IMPL
 
@@ -25,20 +25,6 @@ typedef struct {
     double y;
     double w;
     double h;
-} RectF;
-
-// Window Variables
-SDL_DisplayMode displayMode;
-
-// Game Variables
-bool gamePaused = false;
-double gameScale = 3.0;   // Other values are multiplied by this.
-double worldRotation = 0.0;
-double DEFAULT_TILE_SIZE = 16.0;
-int currentLevel = 0;
-int worldSeed;
-double perlinSeed;
-
-bool quit = false;
+} RectD;
 
 #endif

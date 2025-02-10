@@ -2,14 +2,7 @@
 .vscode
 assets
 build
+games
 include/util/FastNoiseLite
 libraries
-obj
-saves
-screenshots
-staticLevels
-TestDirect
-temp.c
-temp.txt
-test.c
-testRender.png
+credits.txt

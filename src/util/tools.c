@@ -12,7 +12,7 @@ double max (double a, double b) {
     return a > b ? a : b;
 }
 
-bool checkCollision (RectF a, RectF b) {
+bool checkCollision (RectD a, RectD b) {
     return a.x + a.w >= b.x && a.x <= b.x + b.w && a.y + a.h >= b.y && a.y <= b.y + b.h;
 }
 
