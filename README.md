@@ -1,5 +1,4 @@
 # WarriorBlockEngineC
-
 A game engine made in C with SDL3. This engine plans to support the creation of a variety of games and genres, with
 many convenient features to implement changes to games quickly and easily. This is a massive project that will likely take years to complete.
 
