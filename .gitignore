@@ -6,3 +6,4 @@ include/SDL3
 include/SDL3_image
 lib
 credits.txt
+plans.txt
