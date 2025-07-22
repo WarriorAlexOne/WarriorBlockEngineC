@@ -1,5 +1,5 @@
 /**
- * @file WAO_Clock.h
+ * @file WBE_Clock.h
  * @brief Provides functionality for managing Clock instances.
  *
  * This module includes the definition of the Clock structure and
@@ -7,29 +7,29 @@
  * editing their various aspects, and creating timers.
  */
 
-#ifndef WAO_CLOCK_H
-#define WAO_CLOCK_H
+#ifndef WBE_CLOCK_H
+#define WBE_CLOCK_H
 
 #include <SDL3/SDL.h>
 
 /**
  * @brief Number of nanoseconds in one second.
  */
-#define NANO_SEC 1000000000.0
+#define WBE_NANO_SEC 1000000000.0
 
 /**
  * @brief Default rate that frames will be limited to.
  * 
  * - Default: 60
  */
-#define DEFAULT_FRAMERATE 60
+#define WBE_DEFAULT_FRAMERATE 60
 
 /**
  * @brief Default rate that ticks will always run.
  * 
  * - Default: 60
  */
-#define DEFAULT_TICKRATE 60
+#define WBE_DEFAULT_TICKRATE 60
 
 /**
  * @brief The limit at which the program stops ticking.
@@ -37,11 +37,11 @@
  * This is amount of ticks the program will continue accounting for before it stops ticking. Prevents the 'fastforward' effect from being absurdly long.
  * 1 tick is subtracted to account for stop delay when no longer counting ticks.
  * 
- * - Default: ((DEFAULT_TICKRATE * 4) - 1) --- *AKA 4 seconds*
+ * - Default: ((WBE_DEFAULT_TICKRATE * 4) - 1) --- *AKA 4 seconds*
  */
-#define TICK_CATCHUP_LIMIT (DEFAULT_TICKRATE * 4) - 1
+#define WBE_TICK_CATCHUP_LIMIT (WBE_DEFAULT_TICKRATE * 4) - 1
 
-#define SEC_CATCHUP_LIMIT NANO_SEC * 4
+#define WBE_SEC_CATCHUP_LIMIT WBE_NANO_SEC * 4
 
 /**
  * @brief Internal function limit.
@@ -49,7 +49,7 @@
  * Purely determines how much memory is allocated to functions that are updated, thus dictating how many functions can be updated at a time.
  * It is safe to edit these values to any number that is required by the program, up to the integer limit.
  */
-#define CYCLE_FUNCTION_LIMIT 1024
+#define WBE_CYCLE_FUNCTION_LIMIT 1024
 
 /**
  * @brief Internal function limit.
@@ -57,7 +57,7 @@
  * Purely determines how much memory is allocated to functions that are updated, thus dictating how many functions can be updated at a time.
  * It is safe to edit these values to any number that is required by the program, up to the integer limit.
  */
-#define FRAME_FUNCTION_LIMIT 1024
+#define WBE_FRAME_FUNCTION_LIMIT 1024
 
 /**
  * @brief Internal function limit.
@@ -65,7 +65,7 @@
  * Purely determines how much memory is allocated to functions that are updated, thus dictating how many functions can be updated at a time.
  * It is safe to edit these values to any number that is required by the program, up to the integer limit.
  */
-#define TICK_FUNCTION_LIMIT 1024
+#define WBE_TICK_FUNCTION_LIMIT 1024
 
 /**
  * @brief Internal function limit.
@@ -73,9 +73,11 @@
  * Purely determines how much memory is allocated to functions that are updated, thus dictating how many functions can be updated at a time.
  * It is safe to edit these values to any number that is required by the program, up to the integer limit.
  */
-#define SEC_FUNCTION_LIMIT 1024
+#define WBE_SEC_FUNCTION_LIMIT 1024
 
-#define DEFAULT_TIMER_MALLOC 8
+#define WBE_DEFAULT_TIMER_MALLOC 8
+
+#define WBE_CLOCK_CREATION_LIMIT 64
 
 
 typedef struct {
@@ -84,7 +86,7 @@ typedef struct {
     long long int endTime;
     long long int remainingTime;
     long long int remainingTime_Seconds;
-} WAO_Timer;
+} WBE_Timer;
 
 /**
  * @brief Represents a Clock instance.
@@ -130,7 +132,7 @@ typedef struct {
     /**
      * @brief The frame limit.
      * 
-     * The amount of frames the program will be limited to per second. Directly coordinates with the WAO_UpdateClock function to
+     * The amount of frames the program will be limited to per second. Directly coordinates with the WBE_UpdateClock function to
      * determine the amount of times the functions are ran per second.
      */
     double frameRate;
@@ -176,16 +178,16 @@ typedef struct {
 
 
     // Function arrays used for updating specified functions at different points.
-    void (*cycleUpdateFunctions[CYCLE_FUNCTION_LIMIT])();
+    void (*cycleUpdateFunctions[WBE_CYCLE_FUNCTION_LIMIT])();
 
 
-    void (*frameUpdateFunctions[FRAME_FUNCTION_LIMIT])();
+    void (*frameUpdateFunctions[WBE_FRAME_FUNCTION_LIMIT])();
 
 
-    void (*tickUpdateFunctions[TICK_FUNCTION_LIMIT])();
+    void (*tickUpdateFunctions[WBE_TICK_FUNCTION_LIMIT])();
 
 
-    void (*secUpdateFunctions[SEC_FUNCTION_LIMIT])();
+    void (*secUpdateFunctions[WBE_SEC_FUNCTION_LIMIT])();
 
 
     // Keeps track of how many functions each array contains during runtime. Used to loop through each populated element in the array.
@@ -202,18 +204,18 @@ typedef struct {
 
 
     // Error helper arrays
-    bool e_cycleUpdateErrorPositions[CYCLE_FUNCTION_LIMIT];
+    bool e_cycleUpdateErrorPositions[WBE_CYCLE_FUNCTION_LIMIT];
 
-    bool e_frameUpdateErrorPositions[FRAME_FUNCTION_LIMIT];
+    bool e_frameUpdateErrorPositions[WBE_FRAME_FUNCTION_LIMIT];
 
-    bool e_tickUpdateErrorPositions[TICK_FUNCTION_LIMIT];
+    bool e_tickUpdateErrorPositions[WBE_TICK_FUNCTION_LIMIT];
 
-    bool e_secUpdateErrorPositions[SEC_FUNCTION_LIMIT];
+    bool e_secUpdateErrorPositions[WBE_SEC_FUNCTION_LIMIT];
 
     // Timer Variables
     int timerCount;
-    WAO_Timer* timers;
-} WAO_Clock;
+    WBE_Timer* timers;
+} WBE_Clock;
 
 
 // long long int Clock_nanoTime();
@@ -227,25 +229,20 @@ typedef struct {
  * 
  * @return A Clock pointer to create a new instance.
  */
-WAO_Clock* WAO_CreateClock();
-void WAO_DestroyClock (WAO_Clock** clockPtr);
+WBE_Clock* WBE_CreateClock();
+void WBE_DestroyClock (WBE_Clock** clockPtr);
 
-void WAO_InitClock (WAO_Clock* clock);
-void WAO_UpdateClock (WAO_Clock* clock);
+void WBE_InitClock (WBE_Clock* clock);
+void WBE_UpdateClock (WBE_Clock* clock);
 
-static void WAO_CycleUpdate (WAO_Clock* clock);
-static void WAO_FrameUpdate (WAO_Clock* clock);
-static void WAO_TickUpdate (WAO_Clock* clock);
-static void WAO_SecUpdate (WAO_Clock* clock);
+bool WBE_AddCycleFunction (WBE_Clock* clock, void (*function)());
+bool WBE_AddFrameFunction (WBE_Clock* clock, void (*function)());
+bool WBE_AddTickFunction (WBE_Clock* clock, void (*function)());
+bool WBE_AddSecFunction (WBE_Clock* clock, void (*function)());
 
-bool WAO_AddCycleFunction (WAO_Clock* clock, void (*function)());
-bool WAO_AddFrameFunction (WAO_Clock* clock, void (*function)());
-bool WAO_AddTickFunction (WAO_Clock* clock, void (*function)());
-bool WAO_AddSecFunction (WAO_Clock* clock, void (*function)());
-
-long long int WAO_GetCPS (WAO_Clock* clock);
-int WAO_GetFPS (WAO_Clock* clock);
-int WAO_GetTPS (WAO_Clock* clock);
-double WAO_GetDT (WAO_Clock* clock);
+long long int WBE_GetCPS (WBE_Clock* clock);
+int WBE_GetFPS (WBE_Clock* clock);
+int WBE_GetTPS (WBE_Clock* clock);
+double WBE_GetDT (WBE_Clock* clock);
 
 #endif

@@ -1,9 +1,9 @@
-#ifndef WAO_ERROR_H
-#define WAO_ERROR_H
+#ifndef WBE_ERROR_H
+#define WBE_ERROR_H
 
 /*
 Case     0       reserved for No Error.
-Case     1-999   reserved for Setup Errors.
+Case     1-999   reserved for Startup Errors.
 Case  1000-1999  reserved for Clock Errors.
 Case  2000-2999  reserved for Keyboard Input Errors.
 Case  3000-3999  reserved for Mouse Input Errors.
@@ -16,6 +16,15 @@ Case  9000-9999  reserved for Splash Errors.
 Case 10000-10999 reserved for Math Errors.
 */
 
-void WAO_GetError (int errorCode);
+typedef enum {
+    WBE_NO_ERROR_FOUND = 0,
+    WBE_ChangeBit_ERROR_1 = 10000,
+    WBE_ChangeBit_ERROR_2,
+    WBE_ChangeBit_ERROR_3,
+    WBE_ChangeBit_Error_4,
+    WBE_UNKNOWN_ERROR
+} WBE_ErrorCodes;
+
+void WBE_GetError (int errorCode);
 
 #endif

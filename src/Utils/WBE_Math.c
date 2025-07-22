@@ -1,9 +1,9 @@
-#include "Utils/WAO_Math.h"
-#include "Error/WAO_Error.h"
-#include "Error/Error_WAO_Math.h"
+#include "Utils/WBE_Math.h"
+#include "Error/WBE_Error.h"
+#include "Error/Error_WBE_Math.h"
 #include <SDL3/SDL.h>
 
-long long WAO_Fibonacci (long long index) {
+long long WBE_Fibonacci (long long index) {
     int isNegative = 0;
     if (index == 0) return 0;
     if (index < 0) {
@@ -24,8 +24,8 @@ long long WAO_Fibonacci (long long index) {
     return a;
 }
 
-int WAO_ChangeBit (int var, int bitPos, int on_or_off) {
-    int errorCode = Error_WAO_ChangeBit(var, bitPos, on_or_off);
+int WBE_ChangeBit (int var, int bitPos, int on_or_off) {
+    int errorCode = Error_WBE_ChangeBit(var, bitPos, on_or_off);
     if (errorCode) return var;
 
     int bitMask = 0;

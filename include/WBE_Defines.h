@@ -1,5 +1,5 @@
-#ifndef WAO_DEFINES_H
-#define WAO_DEFINES_H
+#ifndef WBE_DEFINES_H
+#define WBE_DEFINES_H
 
 #define byte char
 
