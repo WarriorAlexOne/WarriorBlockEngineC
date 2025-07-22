@@ -1,7 +1,15 @@
 #include "Utils/WAO_Math.h"
+#include "Error/WAO_Error.h"
+#include "Error/Error_WAO_Math.h"
+#include <SDL3/SDL.h>
 
-long long fib (long long index) {
-    if (index < 1) return 0;
+long long WAO_Fibonacci (long long index) {
+    int isNegative = 0;
+    if (index == 0) return 0;
+    if (index < 0) {
+        index = -index;
+        isNegative = 1;
+    }
     long long temp = 0;
     long long a = 0;
     long long b = 1;
@@ -12,5 +20,23 @@ long long fib (long long index) {
         b = temp;
         index--;
     }
+    if (isNegative) a = -a;
     return a;
+}
+
+int WAO_ChangeBit (int var, int bitPos, int on_or_off) {
+    int errorCode = Error_WAO_ChangeBit(var, bitPos, on_or_off);
+    if (errorCode) return var;
+
+    int bitMask = 0;
+    if (on_or_off == 1) {
+        bitMask = 1 << bitPos;
+        var |= bitMask;
+    }
+    else if (on_or_off == 0) {
+        bitMask = ~(1 << bitPos);
+        var &= bitMask;
+    }
+
+    return var;
 }

@@ -1,6 +1,8 @@
+#ifndef WAO_WINDOW_H
+#define WAO_WINDOW_H
+
 #include <SDL3/SDL.h>
-#include "WAO_Defines.h"
-#include "Tools/WAO_Vector2D.h"
+#include "Utils/WAO_Vector2D.h"
 
 #define WAO_MAX_WINDOW_COUNT 64
 #define WAO_MAX_TITLE_LENGTH 1024
@@ -30,3 +32,5 @@ typedef struct {
     bool isHidden;
 
 } WAO_Window;
+
+#endif

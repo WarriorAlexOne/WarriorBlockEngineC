@@ -1,18 +1,19 @@
+#include <string.h>
 #include "Utils/WAO_String.h"
 
-bool WAO_IsCharNum (char character) {
+int WAO_IsCharNum (char character) {
     return character >= '0' && character <= '9';
 }
 
-bool WAO_IsCharLetter (char character) {
+int WAO_IsCharLetter (char character) {
     return (character >= 'A' && character <= 'Z') || (character >= 'a' && character <= 'z');
 }
 
-bool WAO_IsCharLowerCase (char character) {
+int WAO_IsCharLowerCase (char character) {
     return (character >= 'a' && character <= 'z');
 }
 
-bool WAO_IsCharUpperCase (char character) {
+int WAO_IsCharUpperCase (char character) {
     return (character >= 'A' && character <= 'Z');
 }
 
@@ -26,7 +27,8 @@ char* WAO_StringShiftAlpha (char string[], int shiftSteps) {
 
     // Positive Shift Logic
     for (long long unsigned int i = 0; i < stringLength; i++) {
-        if (String_isLowerCase(string[i])) {
+        if (WAO_IsCharLowerCase(string[i])) {
+            // If a letter's shift value is past 'z', go back to 'a' and add shift steps.
             if ((string[i] + shiftSteps) > 'z') {
                 string[i] -= 26;
                 string[i] += shiftSteps;
@@ -35,7 +37,8 @@ char* WAO_StringShiftAlpha (char string[], int shiftSteps) {
             string[i] += shiftSteps;
         }
 
-        else if (String_isUpperCase(string[i])) {
+        // If a letter's shift value is past 'Z', go back to 'A' and add shift steps.
+        else if (WAO_IsCharUpperCase(string[i])) {
             if ((string[i] + shiftSteps) > 'Z') {
                 string[i] -= 26;
                 string[i] += shiftSteps;
@@ -49,7 +52,8 @@ char* WAO_StringShiftAlpha (char string[], int shiftSteps) {
     WAO_StringShiftAlpha_NegativeStep:
     // Negative Shift Logic
     for (long long unsigned int i = 0; i < stringLength; i++) {
-        if (String_isLowerCase(string[i])) {
+        if (WAO_IsCharLowerCase(string[i])) {
+            // If a letter's shift value is below 'a', go back to 'z' and add shift steps.
             if ((string[i] + shiftSteps) < 'a') {
                 string[i] += 26;
                 string[i] += shiftSteps;
@@ -58,7 +62,8 @@ char* WAO_StringShiftAlpha (char string[], int shiftSteps) {
             string[i] += shiftSteps;
         }
 
-        else if (String_isUpperCase(string[i])) {
+        // If a letter's shift value is past 'Z', go back to 'A' and add shift steps.
+        else if (WAO_IsCharUpperCase(string[i])) {
             if ((string[i] + shiftSteps) < 'A') {
                 string[i] += 26;
                 string[i] += shiftSteps;

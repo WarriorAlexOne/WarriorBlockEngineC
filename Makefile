@@ -7,9 +7,11 @@ LDLIBS = -Llib -lSDL3 -lSDL3_image
 SRC_DIR = src
 INCLUDE_DIR = include
 BUILD_DIR = build
+UTILS_DIR = $(SRC_DIR)/Utils
+ERROR_DIR = $(SRC_DIR)/Error
 
 # Files
-SRCS = $(wildcard $(SRC_DIR)/*.c)
+SRCS = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(UTILS_DIR)/*.c) $(wildcard $(ERROR_DIR)/*.c)
 OBJS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 EXEC = $(BUILD_DIR)/game
 
@@ -27,6 +29,12 @@ $(EXEC): $(OBJS)
 
 # Compile source files to object files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/%.o: $(UTILS_DIR)/%.c
+	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/%.o: $(ERROR_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@
 
 # Clean build directory

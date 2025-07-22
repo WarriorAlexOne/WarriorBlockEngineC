@@ -7,10 +7,10 @@
  * editing their various aspects, and creating timers.
  */
 
-#ifndef CLOCK_H
-#define CLOCK_H
+#ifndef WAO_CLOCK_H
+#define WAO_CLOCK_H
 
-#include <stdbool.h>
+#include <SDL3/SDL.h>
 
 /**
  * @brief Number of nanoseconds in one second.
