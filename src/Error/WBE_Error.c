@@ -1,6 +1,6 @@
-#include "Error/WBE_Error.h"
 #include <SDL3/SDL.h>
 #include <stdint.h>
+#include "Error/WBE_Error.h"
 
 /*
 Case     0       reserved for No Error.
@@ -18,7 +18,7 @@ Case 10000-10999 reserved for Math Errors.
 */
 
 // World Errors:
-const char Error_WBE_CreateWorld_Start[] = "Error in WBE_CreateWorld: ";
+// const char Error_WBE_CreateWorld_Start[] = "Error in WBE_CreateWorld: ";
 // Splash Errors:
 // const char Error_WBE_;
 // Math Errors:
@@ -32,20 +32,26 @@ void WBE_GetError (int errorCode) {
         case 0:
             SDL_Log("No error found.");
             break;
-        case 7000:
-            SDL_Log("%sCamera argument is NULL or corrupted!\n", Error_WBE_CreateWorld_Start);
-            SDL_Log("Attempting to fix camera...\n");
-            break;
-        case 7001:
-            SDL_Log("%sCould not fix camera!\n", Error_WBE_CreateWorld_Start);
-            break;
+        // case 7000:
+        //     SDL_Log("%sCamera argument is NULL or corrupted!\n", Error_WBE_CreateWorld_Start);
+        //     SDL_Log("Attempting to fix camera...\n");
+        //     break;
+        // case 7001:
+        //     SDL_Log("%sCould not fix camera!\n", Error_WBE_CreateWorld_Start);
+        //     break;
         case 9000:
             break;
-        case WBE_ChangeBit_ERROR_1:
-            SDL_Log("%sChosen bit position is too low! Please use a higher value.\n", Error_WBE_ChangeBit_Start);
+        case WBE_ChangeBit_ERROR_1:   // Impossible, but will be kept for any future changes.
+            SDL_Log("%sbitPos is too low! Please use a higher value.\n", Error_WBE_ChangeBit_Start);
             break;
         case WBE_ChangeBit_ERROR_2:
-            SDL_Log("%sChosen bit position is too high! Please use a value lower than %lli.\n", Error_WBE_ChangeBit_Start, (sizeof(int32_t)*8));
+            SDL_Log("%sbitPos is too high! Please use a value lower than %lli.\n", Error_WBE_ChangeBit_Start, (sizeof(int32_t)*8));
+            break;
+        case WBE_ChangeBit_ERROR_3:   // Impossible, but will be kept for any future changes.
+            SDL_Log("%son_or_off is too low! Please use 1 or 0.\n", Error_WBE_ChangeBit_Start);
+            break;
+        case WBE_ChangeBit_Error_4:
+            SDL_Log("%son_or_off is too high! Please use 1 or 0.\n", Error_WBE_ChangeBit_Start);
             break;
     }
 }

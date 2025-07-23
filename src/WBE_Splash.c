@@ -1,6 +1,6 @@
 #include <SDL3/SDL.h>
-#include "WBE_Splash.h"
 #include "Error/Error_WBE_Splash.h"
+#include "WBE_Splash.h"
 
 // char** WBE_CreateSplashList (int listLength, int maxStringLength) {
 //     // if (Error_WBE_CreateSplashList(listLength, maxStringLength)) {

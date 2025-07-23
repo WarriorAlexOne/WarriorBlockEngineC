@@ -1,7 +1,5 @@
-#include "Utils/WBE_Math.h"
-#include "Error/WBE_Error.h"
 #include "Error/Error_WBE_Math.h"
-#include <SDL3/SDL.h>
+#include "Utils/WBE_Math.h"
 
 long long WBE_Fibonacci (long long index) {
     int isNegative = 0;
@@ -24,7 +22,7 @@ long long WBE_Fibonacci (long long index) {
     return a;
 }
 
-int WBE_ChangeBit (int var, int bitPos, int on_or_off) {
+int32_t WBE_ChangeBit (int32_t var, unsigned int bitPos, unsigned int on_or_off) {
     int errorCode = Error_WBE_ChangeBit(var, bitPos, on_or_off);
     if (errorCode) return var;
 

@@ -9,9 +9,13 @@ INCLUDE_DIR = include
 BUILD_DIR = build
 UTILS_DIR = $(SRC_DIR)/Utils
 ERROR_DIR = $(SRC_DIR)/Error
+TESTS_DIR = $(SRC_DIR)/Tests
 
 # Files
-SRCS = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(UTILS_DIR)/*.c) $(wildcard $(ERROR_DIR)/*.c)
+SRCS = $(wildcard $(SRC_DIR)/*.c) \
+	   $(wildcard $(UTILS_DIR)/*.c) \
+	   $(wildcard $(ERROR_DIR)/*.c) \
+	   $(wildcard $(TESTS_DIR)/*.c)
 OBJS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 EXEC = $(BUILD_DIR)/game
 
@@ -35,6 +39,9 @@ $(BUILD_DIR)/%.o: $(UTILS_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.o: $(ERROR_DIR)/%.c
+	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/%.o: $(TESTS_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@
 
 # Clean build directory

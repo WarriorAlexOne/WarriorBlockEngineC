@@ -5,11 +5,10 @@
 #include "Utils/WBE_String.h"
 #include "Utils/WBE_Math.h"
 #include "WBE_Clock.h"
+#include "Tests/Test_WBE_Math.h"
 
 int main (int argc, char **argv) {
-    // WBE_Clock* testClock = WBE_CreateClock();
-    // WBE_CycleUpdate(testClock);
-
+    WBE_TestMathFunctions();
 
     printf("Am I Looping? %lli\n", WBE_Fibonacci(6));
     return 0;
