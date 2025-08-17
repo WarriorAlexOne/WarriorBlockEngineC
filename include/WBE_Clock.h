@@ -230,9 +230,10 @@ typedef struct {
  * @return A Clock pointer to create a new instance.
  */
 WBE_Clock* WBE_CreateClock();
-void WBE_DestroyClock (WBE_Clock** clockPtr);
-
 void WBE_InitClock (WBE_Clock* clock);
+void WBE_DestroyClock (WBE_Clock** clockPtr);
+void WBE_CleanupClocks ();
+
 void WBE_UpdateClock (WBE_Clock* clock);
 
 bool WBE_AddCycleFunction (WBE_Clock* clock, void (*function)());

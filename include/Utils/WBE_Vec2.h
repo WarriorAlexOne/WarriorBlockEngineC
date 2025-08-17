@@ -6,58 +6,58 @@
 typedef struct {
     byte x;
     byte y;
-} WBE_Vector2D_B;
+} WBE_Vec2_B;
 
 typedef struct {
     short x;
     short y;
-} WBE_Vector2D_S;
+} WBE_Vec2_S;
 
 typedef struct {
     int x;
     int y;
-} WBE_Vector2D_I;
+} WBE_Vec2_I;
 
 typedef struct {
     long long x;
     long long y;
-} WBE_Vector2D_LL;
+} WBE_Vec2_LL;
 
 typedef struct {
     float x;
     float y;
-} WBE_Vector2D_F;
+} WBE_Vec2_F;
 
 typedef struct {
     double x;
     double y;
-} WBE_Vector2D_D;
+} WBE_Vec2_D;
 
 typedef struct {
     long double x;
     long double y;
-} WBE_Vector2D_LD;
+} WBE_Vec2_LD;
 
 // Unsigned Variants
 
 typedef struct {
     unsigned byte x;
     unsigned byte y;
-} WBE_Vector2D_UB;
+} WBE_Vec2_UB;
 
 typedef struct {
     unsigned short x;
     unsigned short y;
-} WBE_Vector2D_US;
+} WBE_Vec2_US;
 
 typedef struct {
     unsigned int x;
     unsigned int y;
-} WBE_Vector2D_UI;
+} WBE_Vec2_UI;
 
 typedef struct {
     unsigned long long x;
     unsigned long long y;
-} WBE_Vector2D_ULL;
+} WBE_Vec2_ULL;
 
 #endif

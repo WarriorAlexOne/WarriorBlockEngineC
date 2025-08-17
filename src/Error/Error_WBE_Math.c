@@ -25,7 +25,7 @@ int32_t Error_WBE_ChangeBit (int32_t var, unsigned int bitPos, unsigned int on_o
         errorTracker |= bitMask;
     }
     if (on_or_off > 1) {
-        WBE_GetError(WBE_ChangeBit_Error_4);
+        WBE_GetError(WBE_ChangeBit_ERROR_4);
         bitMask = 1 << 3;
         errorTracker |= bitMask;
     }

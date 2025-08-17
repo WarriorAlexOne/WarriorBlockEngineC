@@ -1,4 +1,5 @@
-// #include "e_clock.h"
+#include "Error/Error_WBE_Clock.h"
+#include "Error/WBE_Error.h"
 #include "WBE_Clock.h"
 
 WBE_Clock** clockTracker = NULL;
@@ -9,34 +10,148 @@ static void WBE_FrameUpdate (WBE_Clock* clock);
 static void WBE_TickUpdate (WBE_Clock* clock);
 static void WBE_SecUpdate (WBE_Clock* clock);
 
-// Get system time in nanoseconds, converted to a 64-bit int. (Replaced with SDL_GetTicksNS to ensure multiplatform compatibility).
-// This function is known to work for Windows, Linux, and Android. Not tested on other platforms. Kept for any usefulness.
-// long long int WBE_GetNanoTime() {
-//     struct timespec ts;
-//     clock_gettime(1, &ts);
-//     return (long long int)ts.tv_sec * WBE_NANO_SEC + ts.tv_nsec;
-// }
-
 WBE_Clock* WBE_CreateClock() {
     WBE_Clock* clock = SDL_malloc(sizeof(WBE_Clock));
-    // if (!e_Clock_create(clock)) return NULL;
 
+    if (Error_WBE_CreateClock(clock)) {
+        SDL_Log("Attemping to fix clock...\n");
+        clock = SDL_malloc(sizeof(WBE_Clock));
+
+        if (Error_WBE_CreateClock(clock)) {
+            return NULL;
+        }
+    }
+
+    if (clockTracker == NULL) {
+        clockTracker = (WBE_Clock**)SDL_malloc(sizeof(WBE_Clock*) * WBE_CLOCK_CREATION_LIMIT);
+    }
+    clockTracker[clocksMade++] = clock;
+
+    SDL_Log("Clock created! ");
     WBE_InitClock(clock);
     
-    SDL_Log("Clock created.");
     return clock;
 }
 
-void WBE_DestroyClock (WBE_Clock** clockPtr) {
-    // if (!e_Clock_destroy(clockPtr)) return;
-
-    SDL_free(*clockPtr);
-    *clockPtr = NULL;
-    SDL_Log("Clock destroyed.");
-}
-
 void WBE_InitClock (WBE_Clock* clock) {
-    // if (!e_Clock_init(clock)) return;
+    long long int currentCycleTime;
+
+    /**
+     * @brief Used to calculate timing limits.
+     * 
+     * Primarily used to calculate the cycle delta and tick delta, to check how much time has passed, and how much time was lost.
+     */
+    long long int lastCycleTime;
+
+    /**
+     * @brief Used to get the time between 'cycles'.
+     * 
+     * Useful for making variables account for slowdown and speedup, allowing them to be more consistent.
+     */
+    double cycleDelta;
+
+    /**
+     * @brief Tracks the cycles per second.
+     */
+    long long int cps;
+
+    /**
+     * @brief Stores the last amount of cycles.
+     * 
+     * Keeps track of the amount of cycles that were counted during the last second. Updates every second.
+     * 
+     * Useful for getting the CPS of a program for that thread.
+     */
+    long long int getCPS;
+
+    /**
+     * @brief The frame limit.
+     * 
+     * The amount of frames the program will be limited to per second. Directly coordinates with the WBE_UpdateClock function to
+     * determine the amount of times the functions are ran per second.
+     */
+    double frameRate;
+
+
+    double frameTime;   // Frame Rate converted to a second-fraction.
+
+
+    double frameTarget;   // Constantly updates to the next time when it runs a frame.
+
+
+    long long int lastFrameTime;   // Used to calculate the frameDelta, to check how much time has passed/was lost between frames.
+
+
+    double frameDelta;   // Used to get the time between frames. Useful for making values run consistently with a varying framerate.
+
+
+    int fps;   // Frames per second.
+
+
+    int getFPS;
+
+
+    double tickRate;
+
+
+    double tickTime;   // Tick Rate converted to a second-fraction.
+
+
+    double tickTarget;   // Constantly updates to the next time 'til it runs a tick.
+
+
+    double tickDelta;   // Different from other delta times. Keeps track of current tick progression, and whether ticks were lost or not.
+
+
+    int tps;   // Ticks per second.
+
+
+    int getTPS;
+
+
+    long long int secTarget;   // Updates every time a second passes, to know when the next second should pass.
+
+
+    // Function arrays used for updating specified functions at different points.
+    void (*cycleUpdateFunctions[WBE_CYCLE_FUNCTION_LIMIT])();
+
+
+    void (*frameUpdateFunctions[WBE_FRAME_FUNCTION_LIMIT])();
+
+
+    void (*tickUpdateFunctions[WBE_TICK_FUNCTION_LIMIT])();
+
+
+    void (*secUpdateFunctions[WBE_SEC_FUNCTION_LIMIT])();
+
+
+    // Keeps track of how many functions each array contains during runtime. Used to loop through each populated element in the array.
+    int cycleUpdateCount;
+
+
+    int frameUpdateCount;
+
+
+    int tickUpdateCount;
+
+
+    int secUpdateCount;
+
+
+    // Error helper arrays
+    bool e_cycleUpdateErrorPositions[WBE_CYCLE_FUNCTION_LIMIT];
+
+    bool e_frameUpdateErrorPositions[WBE_FRAME_FUNCTION_LIMIT];
+
+    bool e_tickUpdateErrorPositions[WBE_TICK_FUNCTION_LIMIT];
+
+    bool e_secUpdateErrorPositions[WBE_SEC_FUNCTION_LIMIT];
+
+    // Timer Variables
+    int timerCount;
+    WBE_Timer* timers;
+    // Fix init vars from here, up
+
     clock->currentCycleTime = SDL_GetTicksNS();
     clock->lastCycleTime = clock->currentCycleTime;
     clock->cycleDelta = (clock->currentCycleTime - clock->lastCycleTime) / WBE_NANO_SEC;
@@ -101,11 +216,20 @@ void WBE_InitClock (WBE_Clock* clock) {
     //     clock->timers->remainingTime = 0;
     //     clock->timers->remainingTime_Seconds = 0;
     // }
-    if (clockTracker == NULL) {
-        clockTracker = (WBE_Clock**)SDL_malloc(sizeof(WBE_Clock*) * WBE_CLOCK_CREATION_LIMIT);
-    }
-    clockTracker[clocksMade] = clock;
-    clocksMade++;
+    SDL_Log("Clock initialized!\n");
+}
+
+void WBE_DestroyClock (WBE_Clock** clockPtr) {
+    // if (!e_Clock_destroy(clockPtr)) return;
+
+    SDL_free(*clockPtr);
+    *clockPtr = NULL;
+    
+    SDL_Log("Clock destroyed.");
+}
+
+void WBE_CleanupClocks () {
+
 }
 
 void WBE_UpdateClock (WBE_Clock* clock) {

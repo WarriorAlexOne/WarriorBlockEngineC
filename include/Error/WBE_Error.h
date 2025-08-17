@@ -18,10 +18,11 @@ Case 10000-10999 reserved for Math Errors.
 
 typedef enum {
     WBE_NO_ERROR_FOUND = 0,
+    WBE_CreateClock_ERROR_1 = 1000,
     WBE_ChangeBit_ERROR_1 = 10000,
     WBE_ChangeBit_ERROR_2,
     WBE_ChangeBit_ERROR_3,
-    WBE_ChangeBit_Error_4,
+    WBE_ChangeBit_ERROR_4,
     WBE_UNKNOWN_ERROR
 } WBE_ErrorCodes;
 

@@ -1,7 +1,7 @@
 # Compiler and flags
 CC = gcc
 CFLAGS = -Wall -Iinclude -Iinclude/SDL3 -c
-LDLIBS = -Llib -lSDL3 -lSDL3_image
+LDLIBS = -Llib -lSDL3 -lSDL3_image -lraylib -lopengl32 -lgdi32 -lwinmm
 
 # Directories
 SRC_DIR = src
