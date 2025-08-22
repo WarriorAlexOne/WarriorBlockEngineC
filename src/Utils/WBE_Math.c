@@ -1,5 +1,5 @@
-#include "Error/Error_WBE_Math.h"
-#include "Utils/WBE_Math.h"
+#include "WBE/Error/Error_WBE_Math.h"
+#include "WBE/Utils/WBE_Math.h"
 
 long long WBE_Fibonacci (long long index) {
     int isNegative = 0;

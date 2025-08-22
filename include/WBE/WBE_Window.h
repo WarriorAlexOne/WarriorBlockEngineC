@@ -2,7 +2,7 @@
 #define WBE_WINDOW_H
 
 #include <SDL3/SDL.h>
-#include "Utils/WBE_Vec2.h"
+#include "WBE/Utils/WBE_Vec2.h"
 
 #define WBE_MAX_WINDOW_COUNT 64
 #define WBE_MAX_TITLE_LENGTH 1024

@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <SDL3/SDL.h>
-#include "Error/WBE_Error.h"
+#include "WBE/Error/WBE_Error.h"
 
 /*
 Case     0       reserved for No Error.

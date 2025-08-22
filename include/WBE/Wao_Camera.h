@@ -1,7 +1,7 @@
 #ifndef WAO_CAMERA_H
 #define WAO_CAMERA_H
 
-#include "Utils/WBE_Vec2.h"
+#include "WBE/Utils/WBE_Vec2.h"
 
 typedef struct {
     WBE_Vec2_D pos;

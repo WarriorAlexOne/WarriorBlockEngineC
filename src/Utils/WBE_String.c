@@ -1,5 +1,5 @@
 #include <string.h>
-#include "Utils/WBE_String.h"
+#include "WBE/Utils/WBE_String.h"
 
 int WBE_IsCharNum (char character) {
     return character >= '0' && character <= '9';

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Wao_Key.h"
+#include "WBE/Wao_Key.h"
 
 Wao_KeyCheck* Wao_CreateKeyChecker () {
     Wao_KeyCheck* keyChecker = (Wao_KeyCheck*)malloc(sizeof(Wao_KeyCheck));

@@ -1,5 +1,5 @@
-#include "Error/WBE_Error.h"
-#include "Error/Error_WBE_Clock.h"
+#include "WBE/Error/WBE_Error.h"
+#include "WBE/Error/Error_WBE_Clock.h"
 
 bool Error_WBE_CreateClock(WBE_Clock* clock) {
     if (clock == NULL) {

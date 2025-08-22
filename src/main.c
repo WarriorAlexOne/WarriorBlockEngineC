@@ -1,9 +1,8 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
-#include "WBE_Startup.h"
-#include "WBE_Clock.h"
-
-#include "WBE_Cleanup.h"
+#include "WBE/WBE_Startup.h"
+#include "WBE/WBE_Clock.h"
+#include "WBE/WBE_Cleanup.h"
 
 int main (int argc, char *argv[]) {
     WBE_Startup();

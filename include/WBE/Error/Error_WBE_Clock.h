@@ -2,8 +2,8 @@
 #define ERROR_WBE_CLOCK_H
 
 #include <stdint.h>
-#include "WBE_Defines.h"
-#include "WBE_Clock.h"
+#include "WBE/WBE_Defines.h"
+#include "WBE/WBE_Clock.h"
 
 bool Error_WBE_CreateClock(WBE_Clock* clock);
 int32_t Error_WBE_DestroyClock (WBE_Clock** clockPtr);

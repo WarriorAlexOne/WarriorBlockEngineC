@@ -1,6 +1,6 @@
 #include <SDL3/SDL.h>
-#include "Utils/WBE_Math.h"
-#include "Tests/Test_WBE_Math.h"
+#include "WBE/Utils/WBE_Math.h"
+#include "WBE/Tests/Test_WBE_Math.h"
 
 void WBE_TestMathFunctions () {
     // ------------------------------------------------------------- //

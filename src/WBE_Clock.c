@@ -1,6 +1,6 @@
-#include "Error/Error_WBE_Clock.h"
-#include "Error/WBE_Error.h"
-#include "WBE_Clock.h"
+#include "WBE/Error/Error_WBE_Clock.h"
+#include "WBE/Error/WBE_Error.h"
+#include "WBE/WBE_Clock.h"
 
 WBE_Clock** clockTracker = NULL;
 int clocksMade = 0;

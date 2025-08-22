@@ -1,7 +1,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
-#include "WBE_Info.h"
-#include "WBE_Startup.h"
+#include "WBE/WBE.h"
+#include "WBE/WBE_Startup.h"
 
 void WBE_Startup () {
     SDL_Init(SDL_INIT_VIDEO);

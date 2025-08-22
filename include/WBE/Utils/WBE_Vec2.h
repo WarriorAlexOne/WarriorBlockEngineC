@@ -1,7 +1,7 @@
 #ifndef WBE_VECTOR2D_H
 #define WBE_VECTOR2D_H
 
-#include "WBE_Defines.h"
+#include "WBE/WBE_Defines.h"
 
 typedef struct {
     byte x;
