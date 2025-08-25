@@ -12,6 +12,6 @@ typedef struct {
     char** splashList;
 } WBE_SplashList;
 
-char** WBE_CreateSplashList (int listLength, int maxStringLength);
+// char** WBE_CreateSplashList (int listLength, int maxStringLength);
 
 #endif

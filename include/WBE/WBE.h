@@ -1,7 +1,6 @@
 #ifndef WBE_H
 #define WBE_H
 
-#define WBE_NAME "WarriorBlockEngine"
-#define WBE_VERSION "0.0.0"
+#include "WBE/WBE_Startup.h"
 
 #endif

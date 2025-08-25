@@ -1,20 +1,20 @@
-#include <SDL3/SDL.h>
-#include <SDL3_image/SDL_image.h>
-#include "WBE/WBE.h"
 #include "WBE/WBE_Startup.h"
+#include "WBE/WBE_Names.h"
 
-void WBE_Startup () {
+void WBE_Init () {
     SDL_Init(SDL_INIT_VIDEO);
     SDL_SetAppMetadata(WBE_NAME, WBE_VERSION ,NULL);
 
     SDL_Log(
-        "SDL Version: %d.%d.%d\n",
+        "%s SDL Version: %d.%d.%d\n",
+        NAME_WBE_Init,
         SDL_VERSIONNUM_MAJOR(SDL_VERSION),
         SDL_VERSIONNUM_MINOR(SDL_VERSION),
         SDL_VERSIONNUM_MICRO(SDL_VERSION)
     );
     SDL_Log(
-        "SDL_image Version: %d.%d.%d\n",
+        "%s SDL_image Version: %d.%d.%d\n",
+        NAME_WBE_Init,
         SDL_VERSIONNUM_MAJOR(SDL_IMAGE_VERSION),
         SDL_VERSIONNUM_MINOR(SDL_IMAGE_VERSION),
         SDL_VERSIONNUM_MICRO(SDL_IMAGE_VERSION)
@@ -22,5 +22,5 @@ void WBE_Startup () {
 
     
 
-    SDL_Log("%s Startup Successful!\n", WBE_NAME);
+    SDL_Log("%s %s Startup Successful!\n", NAME_WBE_Init, WBE_NAME);
 }

@@ -3,6 +3,6 @@
 #include "WBE/WBE_Cleanup.h"
 
 void WBE_Cleanup () {
-    WBE_CleanupClocks();
+    // WBE_CleanupClocks();
     SDL_Quit();
 }
