@@ -7,15 +7,23 @@ LDLIBS = -Llib -lSDL3 -lSDL3_image -lopengl32 -lgdi32 -lwinmm
 SRC_DIR = src
 INCLUDE_DIR = include
 BUILD_DIR = build
-UTILS_DIR = $(SRC_DIR)/Utils
+ENTITY_DIR = $(SRC_DIR)/Entity
 ERROR_DIR = $(SRC_DIR)/Error
-TESTS_DIR = $(SRC_DIR)/Tests
+INPUT_DIR = $(SRC_DIR)/Input
+SETUP_DIR = $(SRC_DIR)/Setup
+TEST_DIR = $(SRC_DIR)/Test
+UTIL_DIR = $(SRC_DIR)/Util
+WORLD_DIR = $(SRC_DIR)/World
 
 # Files
 SRCS = $(wildcard $(SRC_DIR)/*.c) \
-	   $(wildcard $(UTILS_DIR)/*.c) \
+	   $(wildcard $(ENTITY_DIR)/*.c) \
 	   $(wildcard $(ERROR_DIR)/*.c) \
-	   $(wildcard $(TESTS_DIR)/*.c)
+	   $(wildcard $(INPUT_DIR)/*.c) \
+	   $(wildcard $(SETUP_DIR)/*.c) \
+	   $(wildcard $(TEST_DIR)/*.c) \
+	   $(wildcard $(UTIL_DIR)/*.c) \
+	   $(wildcard $(WORLD_DIR)/*.c)
 OBJS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 EXEC = $(BUILD_DIR)/game
 
@@ -35,13 +43,25 @@ $(EXEC): $(OBJS)
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/%.o: $(UTILS_DIR)/%.c
+$(BUILD_DIR)/%.o: $(ENTITY_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.o: $(ERROR_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/%.o: $(TESTS_DIR)/%.c
+$(BUILD_DIR)/%.o: $(INPUT_DIR)/%.c
+	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/%.o: $(SETUP_DIR)/%.c
+	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/%.o: $(TEST_DIR)/%.c
+	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/%.o: $(UTIL_DIR)/%.c
+	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/%.o: $(WORLD_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@
 
 # Clean build directory
