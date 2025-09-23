@@ -241,6 +241,8 @@ bool WBE_AddFrameFunction (WBE_Clock* clock, void (*function)());
 bool WBE_AddTickFunction (WBE_Clock* clock, void (*function)());
 bool WBE_AddSecFunction (WBE_Clock* clock, void (*function)());
 
+void WBE_SetFrameLimit (WBE_Clock* clock, int fps);
+
 long long int WBE_GetCPS (WBE_Clock* clock);
 int WBE_GetFPS (WBE_Clock* clock);
 int WBE_GetTPS (WBE_Clock* clock);

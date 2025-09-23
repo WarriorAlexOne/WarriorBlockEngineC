@@ -14,6 +14,7 @@ SETUP_DIR = $(SRC_DIR)/Setup
 TEST_DIR = $(SRC_DIR)/Test
 UTIL_DIR = $(SRC_DIR)/Util
 WORLD_DIR = $(SRC_DIR)/World
+DEBUG_DIR = $(SRC_DIR)/Debug
 
 # Files
 SRCS = $(wildcard $(SRC_DIR)/*.c) \
@@ -23,7 +24,8 @@ SRCS = $(wildcard $(SRC_DIR)/*.c) \
 	   $(wildcard $(SETUP_DIR)/*.c) \
 	   $(wildcard $(TEST_DIR)/*.c) \
 	   $(wildcard $(UTIL_DIR)/*.c) \
-	   $(wildcard $(WORLD_DIR)/*.c)
+	   $(wildcard $(WORLD_DIR)/*.c) \
+	   $(wildcard $(DEBUG_DIR)/*.c)
 OBJS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 EXEC = $(BUILD_DIR)/game
 
@@ -62,6 +64,9 @@ $(BUILD_DIR)/%.o: $(UTIL_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.o: $(WORLD_DIR)/%.c
+	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/%.o: $(DEBUG_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@
 
 # Clean build directory

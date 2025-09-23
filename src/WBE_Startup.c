@@ -5,6 +5,8 @@ void WBE_Init () {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("%s Failed to load SDL!\n", NAME_WBE_Init);
     }
+
+    // Give external application info
     SDL_SetAppMetadata(WBE_NAME, WBE_VERSION ,NULL);
 
     // Print SDL Version
@@ -29,6 +31,6 @@ void WBE_Init () {
     SDL_Log("%s %s %s\n", NAME_WBE_Init, WBE_NAME, WBE_VERSION);
 
     
-
+    // Print Startup Confirmation
     SDL_Log("%s %s Startup Successful!\n", NAME_WBE_Init, WBE_NAME);
 }

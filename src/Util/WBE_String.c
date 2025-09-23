@@ -1,4 +1,4 @@
-#include <string.h>
+#include <SDL3/SDL.h>
 #include "WBE/Util/WBE_String.h"
 
 int WBE_IsCharNum (char character) {
@@ -17,10 +17,10 @@ int WBE_IsCharUpperCase (char character) {
     return (character >= 'A' && character <= 'Z');
 }
 
-char* WBE_StringShiftAlpha (char string[], int shiftSteps) {
+char* WBE_ShiftStringAlpha (char string[], int shiftSteps) {
     if (shiftSteps == 0) return string;   // Return string if there is no shift.
 
-    long long unsigned int stringLength = strlen(string);
+    long long unsigned int stringLength = SDL_strlen(string);
     shiftSteps %= 26;   // If steps is a multiple of 26, go back to 0
 
     if (shiftSteps < 0) goto WBE_StringShiftAlpha_NegativeStep;   // If shift argument is negative, go to the second loop.
@@ -73,4 +73,18 @@ char* WBE_StringShiftAlpha (char string[], int shiftSteps) {
         }
     }
     return string;
+}
+
+int WBE_strcpy (char* dstStr, char* srcStr, int maxDstLen) {
+    // Ensure strings aren't NULL and max size isn't invalid.
+    if (dstStr == NULL || srcStr == NULL || maxDstLen == 0) return -1;   // Error -1: a parameter is invalid.
+
+    // Copy within maximum character length.
+    SDL_strlcpy(dstStr, srcStr, maxDstLen);
+
+    // Check for truncation.
+    if (SDL_strnlen(srcStr, maxDstLen) >= maxDstLen) return 1;   // Error 1: string was truncated
+
+    // If no truncation, return 0 to denote successful copy.
+    return 0;
 }

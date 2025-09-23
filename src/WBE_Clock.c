@@ -103,8 +103,8 @@ void WBE_DestroyClock (WBE_Clock* clock) {
 
 void WBE_CleanupClocks (WBE_Clock* clock) {
     
-    SDL_free(clock->timers);
-    clock->timers = NULL;
+    // SDL_free(clock->timers);
+    // clock->timers = NULL;
 }
 
 void WBE_UpdateClock (WBE_Clock* clock) {
@@ -123,7 +123,7 @@ void WBE_UpdateClock (WBE_Clock* clock) {
     while (clock->currentCycleTime >= clock->frameTarget) {
         WBE_FrameUpdate(clock);
 
-        clock->frameDelta = (clock->currentCycleTime - clock->lastFrameTime) / (double)WBE_NANO_SEC;
+        clock->frameDelta = (clock->currentCycleTime - clock->lastFrameTime) / WBE_NANO_SEC;
         clock->lastFrameTime = clock->currentCycleTime;
 
         clock->frameTarget = clock->currentCycleTime + clock->frameTime;
@@ -133,7 +133,7 @@ void WBE_UpdateClock (WBE_Clock* clock) {
         // Tick Loop
         while (clock->tickDelta >= 1) {
 
-            // Limits the amount of time that ticks can make-up for, to avoid rapid fast forward.
+            // Limits the amount of time that ticks can make-up for, to avoid rapid fast-forward.
             if (clock->tickDelta > WBE_TICK_CATCHUP_LIMIT) {
                 clock->tickDelta = WBE_TICK_CATCHUP_LIMIT;
             }
@@ -226,6 +226,10 @@ bool WBE_AddSecFunction (WBE_Clock* clock, void (*function)()) {
         
 //     }
 // }
+
+void WBE_SetFrameLimit (WBE_Clock* clock, int fps) {
+    clock->frameTime = WBE_NANO_SEC / fps;
+}
 
 long long int WBE_GetCPS (WBE_Clock* clock) { return clock->cps; }
 int WBE_GetFPS (WBE_Clock* clock) { return clock->fps; }
