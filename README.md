@@ -10,6 +10,7 @@ many convenient features to implement changes to games quickly and easily. This 
 -Create a Window API for easy management of windows.
 -Add complete error detection for functions that take in arguments.
 -Add error correction for bad arguments.
+-Input API for easily detecting input from multiple connected keyboards, mice, controllers, and other
 
 # Long-Term Plans:
 -A full, easy to use API to handle many aspects of game creation, while handling the technicalities in the background.

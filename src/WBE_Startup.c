@@ -5,6 +5,9 @@ void WBE_Init () {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("%s Failed to load SDL!\n", NAME_WBE_Init);
     }
+    if (!TTF_Init()) {
+        SDL_Log("%s Failed to load SDL_ttf!\n", NAME_WBE_Init);
+    }
 
     // Give external application info
     SDL_SetAppMetadata(WBE_NAME, WBE_VERSION ,NULL);
@@ -27,9 +30,17 @@ void WBE_Init () {
         SDL_VERSIONNUM_MICRO(SDL_IMAGE_VERSION)
     );
 
-    // Print WarriorBlockEngine Version
-    SDL_Log("%s %s %s\n", NAME_WBE_Init, WBE_NAME, WBE_VERSION);
+    // Print SDL_ttf Version
+    SDL_Log(
+        "%s SDL_ttf Version: %d.%d.%d\n",
+        NAME_WBE_Init,
+        SDL_VERSIONNUM_MAJOR(SDL_TTF_VERSION),
+        SDL_VERSIONNUM_MINOR(SDL_TTF_VERSION),
+        SDL_VERSIONNUM_MICRO(SDL_TTF_VERSION)
+    );
 
+    // Print WarriorBlockEngine Version
+    SDL_Log("%s %s Version: %s\n", NAME_WBE_Init, WBE_NAME, WBE_VERSION);
     
     // Print Startup Confirmation
     SDL_Log("%s %s Startup Successful!\n", NAME_WBE_Init, WBE_NAME);

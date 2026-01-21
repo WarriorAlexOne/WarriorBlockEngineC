@@ -113,11 +113,8 @@ void WBE_UpdateClock (WBE_Clock* clock) {
     
     clock->currentCycleTime = SDL_GetTicksNS();
 
-    clock->cycleDelta = (clock->currentCycleTime - clock->lastCycleTime) / (double)WBE_NANO_SEC;
     clock->tickDelta += (clock->currentCycleTime - clock->lastCycleTime) / clock->tickTime;
     clock->lastCycleTime = clock->currentCycleTime;
-
-    clock->cps++;
 
     // Frame Loop
     while (clock->currentCycleTime >= clock->frameTarget) {

@@ -4,6 +4,10 @@ assets
 build
 include/SDL3
 include/SDL3_image
+include/SDL3_ttf
+include/Raylib
+src/Programs
+temp
 lib
 credits.txt
 plans.txt

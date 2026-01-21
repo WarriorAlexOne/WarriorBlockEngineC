@@ -1,6 +1,20 @@
 #ifndef WBE_H
 #define WBE_H
 
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
+
+#include "WBE/WBE_Info.h"
+#include "WBE/WBE_Defines.h"
+
+
 #include "WBE/WBE_Startup.h"
+
+#include "WBE/WBE_Window.h"
+#include "WBE/Input/WBE_Key.h"
+#include "WBE/Input/WBE_Mouse.h"
+
+#include "WBE/WBE_Cleanup.h"
 
 #endif

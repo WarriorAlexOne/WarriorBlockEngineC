@@ -1,9 +1,11 @@
-#include <SDL3_image/SDL_image.h>
 #include "WBE/WBE_Window.h"
-#include "WBE/Debug/Debug_WBE_Window.h"
+#include "WBE/Input/WBE_Input.h"
 #include "WBE/WBE_Defines.h"
-#include "WBE/Util/WBE_String.h"
+#include "WBE/Debug/Debug_WBE_Window.h"
 #include "WBE/WBE_Names.h"
+#include "WBE/Util/WBE_String.h"
+#include <SDL3_image/SDL_image.h>
+
 
 bool debug = 0;
 
@@ -11,6 +13,7 @@ int windowCount = 0;
 
 void* windowTracker[WBE_MAX_WINDOW_COUNT];
 void* rendererTracker[WBE_MAX_WINDOW_COUNT];
+
 
 WBE_Window WBE_CreateWindow (char title[], double width, double height) {
     WBE_Window window = {0};
@@ -119,4 +122,12 @@ void WBE_SetWindowIcon (WBE_Window* window, char iconPath[]) {
 void WBE_SetWindowVelocity (WBE_Window* window, double x, double y) {
     window->vel.x = x;
     window->vel.y = y;
+}
+
+void* WBE_GetWindowTracker () {
+    return windowTracker;
+}
+
+int WBE_GetWindowCount () {
+    return windowCount;
 }

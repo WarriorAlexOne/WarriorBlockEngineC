@@ -4,6 +4,7 @@
 #include <SDL3/SDL.h>
 #include "WBE/Util/WBE_Vec2D.h"
 
+
 #define WBE_MAX_WINDOW_COUNT 64
 #define WBE_MAX_TITLE_LENGTH 1024
 #define WBE_MAX_ICONPATH_LENGTH 1024
@@ -44,5 +45,7 @@ void WBE_CleanupWindows ();
 void WBE_UpdateWindows (WBE_Window* window);
 void WBE_SetWindowIcon (WBE_Window* window, char iconPath[]);
 void WBE_SetWindowVelocity (WBE_Window* window, double x, double y);
+void* WBE_GetWindowTracker ();
+int WBE_GetWindowCount ();
 
 #endif

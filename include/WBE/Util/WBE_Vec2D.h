@@ -45,6 +45,9 @@ typedef struct {
     long double y;
 } WBE_Vec2ld;
 
+WBE_Vec2f WBE_Vec2fAdd (WBE_Vec2f a, WBE_Vec2f b);
+WBE_Vec2f WBE_Vec2fSubtract (WBE_Vec2f a, WBE_Vec2f b);
+
 
 // Unsigned Variants
 
