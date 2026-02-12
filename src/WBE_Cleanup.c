@@ -5,9 +5,9 @@
 #include "WBE/WBE_Cleanup.h"
 
 void WBE_Cleanup () {
-    SDL_Log("%s Cleaning up before exit...", NAME_WBE_Cleanup);
-    // WBE_CleanupClocks();
+    SDL_Log("%s Cleaning up before exit...", WBE_NAME_Cleanup);
+
     WBE_CleanupWindows();
     SDL_Quit();
-    SDL_Log("%s Cleanup complete!", NAME_WBE_Cleanup);
+    SDL_Log("%s Cleanup complete! Goodbye!", WBE_NAME_Cleanup);
 }

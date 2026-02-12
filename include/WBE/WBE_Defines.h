@@ -5,6 +5,10 @@
 #define byte char
 #endif
 
+#ifndef ubyte
+#define ubyte unsigned char
+#endif
+
 #ifndef bool
 #define bool char
 #endif

@@ -8,13 +8,14 @@
 #include "WBE/WBE_Info.h"
 #include "WBE/WBE_Defines.h"
 
-
-#include "WBE/WBE_Startup.h"
-
+#include "WBE/WBE_Clock.h"
 #include "WBE/WBE_Window.h"
 #include "WBE/Input/WBE_Key.h"
 #include "WBE/Input/WBE_Mouse.h"
 
 #include "WBE/WBE_Cleanup.h"
+#include "WBE/WBE_Instance.h"
+
+bool WBE_Init ();
 
 #endif
