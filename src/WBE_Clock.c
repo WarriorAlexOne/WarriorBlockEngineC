@@ -3,236 +3,103 @@
 #include "WBE/WBE_Clock.h"
 #include "WBE/WBE_Names.h"
 
-WBE_Clock** clockTracker = NULL;
-int clocksMade = 0;
 
-static void WBE_CycleUpdate (WBE_Clock* clock);
-static void WBE_FrameUpdate (WBE_Clock* clock);
 static void WBE_TickUpdate (WBE_Clock* clock);
-static void WBE_SecUpdate (WBE_Clock* clock);
 
-WBE_Clock WBE_CreateClock() {
-    WBE_Clock clock = {0};
-
-    // if (clockTracker == NULL) {
-    //     clockTracker = (WBE_Clock**)SDL_malloc(sizeof(WBE_Clock*) * WBE_CLOCK_CREATION_LIMIT);
-    // }
-    // clockTracker[clocksMade++] = clock;
-
-    SDL_Log("%s Clock created!", NAME_WBE_CreateClock);
-    WBE_InitClock(&clock);
-    
-    return clock;
-}
-
-void WBE_InitClock (WBE_Clock* clock) {
-    clock->currentCycleTime = SDL_GetTicksNS();
-    clock->lastCycleTime = clock->currentCycleTime;
-    clock->cycleDelta = (clock->currentCycleTime - clock->lastCycleTime) / WBE_NANO_SEC;
-    clock->cps = 0;
-    clock->getCPS = 0;
-
-    clock->frameRate = WBE_DEFAULT_FRAMERATE;
-    clock->frameTime = WBE_NANO_SEC / clock->frameRate;
-    clock->frameTarget = clock->currentCycleTime + clock->frameTime;
-    clock->lastFrameTime = clock->currentCycleTime;
-    clock->frameDelta = (clock->currentCycleTime - clock->lastFrameTime) / WBE_NANO_SEC;
-    clock->fps = 0;
-    clock->getFPS = 0;
-
-    clock->tickRate = WBE_DEFAULT_TICKRATE;
-    clock->tickTime = WBE_NANO_SEC / WBE_DEFAULT_TICKRATE;
-    clock->tickTarget = clock->currentCycleTime + clock->tickTime;
-    clock->tickDelta = 0;
-    clock->tps = 0;
-    clock->getTPS = 0;
-
-    clock->secTarget = clock->currentCycleTime + WBE_NANO_SEC;
-
-    for (int i = 0; i < WBE_CYCLE_FUNCTION_LIMIT; i++) {
-        clock->cycleUpdateFunctions[i] = NULL;
+WBE_Clock* WBE_CreateClock (WBE_Instance* instance, int frameRate, int tickRate) {
+    // Add proper error correction code
+    if (!instance->isInitialized) {
+        WBE_Clock* failedClock = NULL;
+        return failedClock;
     }
-    for (int i = 0; i < WBE_FRAME_FUNCTION_LIMIT; i++) {
-        clock->frameUpdateFunctions[i] = NULL;
-    }
-    for (int i = 0; i < WBE_TICK_FUNCTION_LIMIT; i++) {
-        clock->tickUpdateFunctions[i] = NULL;
-    }
-    for (int i = 0; i < WBE_SEC_FUNCTION_LIMIT; i++) {
-        clock->secUpdateFunctions[i] = NULL;
-    }
+    WBE_Clock* newClock = SDL_malloc(sizeof(WBE_Clock));
 
-    clock->cycleUpdateCount = 0;
-    clock->frameUpdateCount = 0;
-    clock->tickUpdateCount = 0;
-    clock->secUpdateCount = 0;
+    newClock->currentTime = SDL_GetTicksNS();
 
-    for (int i = 0; i < WBE_CYCLE_FUNCTION_LIMIT; i++) {
-        clock->e_cycleUpdateErrorPositions[i] = false;
-    }
-    for (int i = 0; i < WBE_FRAME_FUNCTION_LIMIT; i++) {
-        clock->e_frameUpdateErrorPositions[i] = false;
-    }
-    for (int i = 0; i < WBE_TICK_FUNCTION_LIMIT; i++) {
-        clock->e_tickUpdateErrorPositions[i] = false;
-    }
-    for (int i = 0; i < WBE_SEC_FUNCTION_LIMIT; i++) {
-        clock->e_secUpdateErrorPositions[i] = false;
-    }
+    newClock->frameRate = frameRate;
+    newClock->frameLength = WBE_NS/newClock->frameRate;
+    newClock->currentFrameTime = newClock->currentTime;
+    newClock->lastFrameTime = newClock->currentTime;
+    newClock->scheduledFrameTime = newClock->currentTime+newClock->frameLength;
+    newClock->delayTime = newClock->scheduledFrameTime;
+    newClock->deltaTime = 0.0f;
+        
+    newClock->tickCounter = 0;
 
-    clock->timerCount = 0;
-    clock->timers = SDL_malloc(sizeof(WBE_Timer) * WBE_DEFAULT_TIMER_MALLOC);
+    newClock->secDelayTime = newClock->currentTime+WBE_NS;
+    newClock->fps = 0;
 
-    // for () {
-    //     clock->timers->startTime = 0;
-    //     clock->timers->endTime = 0;
-    //     clock->timers->remainingTime = 0;
-    //     clock->timers->remainingTime_Seconds = 0;
-    // }
-    SDL_Log("%s Clock initialized!", NAME_WBE_InitClock);
-}
+    instance->clocks[instance->clockCount] = newClock;
+    instance->clockCount++;
+    instance->doesClockExist = true;
 
-void WBE_DestroyClock (WBE_Clock* clock) {
-    // if (!e_Clock_destroy(clockPtr)) return;
-
-    SDL_free(clock->timers);
-    clock->timers = NULL;
-    
-    SDL_Log("%s Clock destroyed!", NAME_WBE_DestroyClock);
-}
-
-void WBE_CleanupClocks (WBE_Clock* clock) {
-    
-    // SDL_free(clock->timers);
-    // clock->timers = NULL;
+    SDL_Log("%s Clock created!", WBE_NAME_CreateClock);
+    return newClock;
 }
 
 void WBE_UpdateClock (WBE_Clock* clock) {
-    // if (!e_Clock_update(clock)) return;
-    WBE_CycleUpdate(clock);
-    
-    clock->currentCycleTime = SDL_GetTicksNS();
+    clock->deltaTime = (clock->currentFrameTime - clock->lastFrameTime) / WBE_NS;
+    clock->lastFrameTime = clock->currentFrameTime;  // Used for DeltaTime
 
-    clock->tickDelta += (clock->currentCycleTime - clock->lastCycleTime) / clock->tickTime;
-    clock->lastCycleTime = clock->currentCycleTime;
+    // Tracks frames & ticks per second
+    clock->fps++;
 
-    // Frame Loop
-    while (clock->currentCycleTime >= clock->frameTarget) {
-        WBE_FrameUpdate(clock);
+    // Keeps track of how many ticks should be ran
+    clock->tickCounter++;
 
-        clock->frameDelta = (clock->currentCycleTime - clock->lastFrameTime) / WBE_NANO_SEC;
-        clock->lastFrameTime = clock->currentCycleTime;
-
-        clock->frameTarget = clock->currentCycleTime + clock->frameTime;
-
-        clock->fps++;
-
-        // Tick Loop
-        while (clock->tickDelta >= 1) {
-
-            // Limits the amount of time that ticks can make-up for, to avoid rapid fast-forward.
-            if (clock->tickDelta > WBE_TICK_CATCHUP_LIMIT) {
-                clock->tickDelta = WBE_TICK_CATCHUP_LIMIT;
-            }
-            
-            WBE_TickUpdate(clock);
-
-            clock->tickDelta--;
-
-            clock->tps++;
-        }
+    // Get current time to compare to the next target time
+    clock->currentFrameTime = SDL_GetTicksNS();
+    // If a frame lags longer than 1 frame, advance by 1 frame of time until a frame is within range
+    while (clock->currentFrameTime >= clock->scheduledFrameTime) {
+        clock->scheduledFrameTime += clock->frameLength;
+        clock->tickCounter++;
     }
 
-    // 1 Sec Loop
-    if (clock->currentCycleTime >= clock->secTarget) {
+    // Get the difference between the next scheduled frame, and the time that was used up prior
+    clock->delayTime = clock->scheduledFrameTime-clock->currentFrameTime;
+    // Delay program until next scheduled frame
+    SDL_DelayPrecise(clock->delayTime);
 
-        // Limits the amount of time that sec clock can make-up for, to avoid rapid fast forward.
-        if (clock->currentCycleTime > clock->secTarget + WBE_SEC_CATCHUP_LIMIT) {
-            for (long long int i = clock->secTarget + WBE_SEC_CATCHUP_LIMIT; i < clock->currentCycleTime; i++) {
-                clock->secTarget += WBE_NANO_SEC;
-            }
-        }
+    // Update the frame schedule for the next frame
+    clock->scheduledFrameTime += clock->frameLength;
 
-        WBE_SecUpdate(clock);
-        
-        clock->secTarget = clock->secTarget + WBE_NANO_SEC;
+    // Run ticks
+    while (clock->tickCounter > 0) {
+        WBE_TickUpdate(clock);
+        clock->tickCounter--;
+    }
 
-        clock->getCPS = clock->cps;
-        clock->getFPS = clock->fps;
-        clock->getTPS = clock->tps;
 
-        clock->cps = 0;
+    // Sec clock to keep track of fps
+    clock->currentTime = SDL_GetTicksNS();
+    if (clock->currentTime >= clock->secDelayTime) {
+        clock->secDelayTime += WBE_NS;
+        // SDL_Log("FPS: %i", clock->fps);
         clock->fps = 0;
-        clock->tps = 0;
     }
 }
 
-static void WBE_CycleUpdate (WBE_Clock* clock) {
-    for (int i = 0; i < clock->cycleUpdateCount; i++) {
-        // if (!e_Clock_cycleUpdate(clock, i)) continue;
-        clock->cycleUpdateFunctions[i]();
-    }
-}
-static void WBE_FrameUpdate (WBE_Clock* clock) {
-    for (int i = 0; i < clock->frameUpdateCount; i++) {
-        // if (!e_Clock_frameUpdate(clock, i)) continue;
-        clock->frameUpdateFunctions[i]();
-    }
-}
 static void WBE_TickUpdate (WBE_Clock* clock) {
-    for (int i = 0; i < clock->tickUpdateCount; i++) {
+    for (int i = 0; i < clock->tickFunctionCount; i++) {
         // if (!e_Clock_tickUpdate(clock, i)) continue;
-        clock->tickUpdateFunctions[i]();
+        if (clock->tickFunctions[i] == NULL) continue;
+        clock->tickFunctions[i]();
     }
-}
-static void WBE_SecUpdate (WBE_Clock* clock) {
-    for (int i = 0; i < clock->secUpdateCount; i++) {
-        // if (!e_Clock_secUpdate(clock, i)) continue;
-        clock->secUpdateFunctions[i]();
-    }
-}
-
-// Add functions
-bool WBE_AddCycleFunction (WBE_Clock* clock, void (*function)()) {
-    // if (!e_Clock_addCycleFunction(clock, function)) return false;
-    clock->cycleUpdateFunctions[clock->cycleUpdateCount] = function;
-    clock->cycleUpdateCount++;
-    return true;
-}
-bool WBE_AddFrameFunction (WBE_Clock* clock, void (*function)()) {
-    // if (!e_Clock_addCycleFunction(clock, function)) return false;
-    clock->frameUpdateFunctions[clock->frameUpdateCount] = function;
-    clock->frameUpdateCount++;
-    return true;
 }
 bool WBE_AddTickFunction (WBE_Clock* clock, void (*function)()) {
     // if (!e_Clock_addTickFunction(clock, function)) return false;
-    clock->tickUpdateFunctions[clock->tickUpdateCount] = function;
-    clock->tickUpdateCount++;
-    return true;
-}
-bool WBE_AddSecFunction (WBE_Clock* clock, void (*function)()) {
-    // if (!e_Clock_addSecFunction(clock, function)) return false;
-    clock->secUpdateFunctions[clock->secUpdateCount] = function;
-    clock->secUpdateCount++;
+    clock->tickFunctions[clock->tickFunctionCount++] = function;
     return true;
 }
 
-// void Clock_createTimer (WBE_Clock* clock) {
-//     if (clock->timerCount % WBE_DEFAULT_TIMER_MALLOC == 0) {
-        
-//     }
-// }
-
-void WBE_SetFrameLimit (WBE_Clock* clock, int fps) {
-    clock->frameTime = WBE_NANO_SEC / fps;
+int WBE_GetFrameRate (WBE_Clock* clock) { return clock->frameRate; }
+void WBE_SetFrameRate (WBE_Clock* clock, int frameRate) {
+    clock->frameRate = frameRate;
+    clock->frameLength = frameRate/WBE_NS;
 }
 
-long long int WBE_GetCPS (WBE_Clock* clock) { return clock->cps; }
 int WBE_GetFPS (WBE_Clock* clock) { return clock->fps; }
-int WBE_GetTPS (WBE_Clock* clock) { return clock->tps; }
-
-double WBE_GetDT (WBE_Clock* clock) { return clock->frameDelta; }
+double WBE_GetDT (WBE_Clock* clock) { return clock->deltaTime; }
 
 // Add Clock_pause, which pauses all clocks, or maybe add a parameter that takes in an enum, that has entries for each clock type (to pause frame, tick, sec, or all, individually)
 // Add Clock_unpause, which brings the clocks up-to-date, then resumes them
