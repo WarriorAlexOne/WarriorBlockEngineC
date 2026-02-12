@@ -1,4 +1,4 @@
-#include "WBE/Input/WBE_Key.h"
+#include "WBE/Input/WBE_Keyboard.h"
 
 
 void WBE_UpdateKeys (WBE_Keys* keys) {
