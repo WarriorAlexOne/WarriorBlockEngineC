@@ -1,136 +1,72 @@
-#include <SDL3/SDL.h>
-#include "WBE/Input/WBE_Key.h"
-// #include "WBE/WBE_Clock.h"
+#include <WBE/WBE.h>
+#include "WBE/Paint/WBE_Gradient.h"
 
-#define WBE_NS 1000000000.0
-
-SDL_Window* window;
-SDL_Renderer* renderer;
 SDL_Event event;
 
-bool running = true;
+WBE_Clock* clock;
+WBE_Window window;
+WBE_Keys keys;
+
+WBE_Instance wbe;
 
 SDL_FRect player = {64, 64, 64, 64};
-float speed = 60.0f;
 
-// SDL_FRect box = { 50.0f, 200.0f, 60.0f, 60.0f };
-// float speed_pixels_per_second = 220.0f; // how fast it moves
+float rotato = 0.0f;
 
-// void testFunc () {
-//     if (event.type == SDL_EVENT_QUIT) {
-//         WBE_QuitWindow();
-//     }
-// }
-
-// void draw () {
-//     // SDL_SetRenderVSync()
-
-//     SDL_SetRenderDrawColor(renderer, 25, 51, 153, 255);
-//     SDL_RenderClear(renderer);
-
-//     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-//     SDL_RenderRect(renderer, &box);
-
-//     SDL_RenderPresent(renderer);
-// }
 
 int main () {
-    SDL_Init(SDL_INIT_VIDEO);
+    WBE_Init();
 
-    SDL_Log("Am I Looping?");
+    wbe = WBE_CreateNewInstance();
+    window = WBE_CreateWindow("blockengine", 800, 600);
 
-    SDL_CreateWindowAndRenderer("Test Window", 800, 600, SDL_WINDOW_RESIZABLE, &window, &renderer);
+    clock = WBE_CreateClock(&wbe, 60, 60);
 
-    // // WBE_AddFunc(testFunc);
-    // WBE_AddFunc(draw);
+    SDL_Texture* gradientTexture = WBE_CreateGradient(window.sdl_renderer, 0, 0, 255, 255, 0, 0);
 
-    // WBE_InitClock();
-
-    // while (WBE_Clock(&event)) {
-    //     SDL_Log("WHILE!!!");
-    // }
-
-    long long currentTime = SDL_GetTicksNS();
-
-    int frameRate = 60;
-    long long frameTarget = WBE_NS/frameRate;
-    long long currentFrameTime = currentTime;
-    long long lastFrameTime = currentTime;
-    long long scheduledFrameTime = currentTime+frameTarget;
-    long long delayTime = scheduledFrameTime;
-    float deltaTime = 0.0f;
-
-    int tickCounter = 0;
-
-    long long secDelayTime = currentTime+WBE_NS;
-    int fps = 0;
-
-    WBE_Keys keys;
-
+    bool running = true;
     while (running) {
-    // ---------------- Clock ----------------
-
-        // ---------------- Frames ----------------
-        deltaTime = (currentFrameTime - lastFrameTime) / WBE_NS;
-        lastFrameTime = currentFrameTime;  // Used for DeltaTime
-
-        // Tracks frames & ticks per second
-        fps++;
-
-        // Keeps track of how many ticks should be ran
-        tickCounter++;
-
-        // Get current time to compare to the next target time
-        currentFrameTime = SDL_GetTicksNS();
-        // If a frame lags longer than 1 frame, advance by 1 frame of time until a frame is within range
-        while (currentFrameTime >= scheduledFrameTime) {
-            scheduledFrameTime += frameTarget;
-            tickCounter++;
+        rotato += 0.01;
+        WBE_Update(&wbe);
+        
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_EVENT_QUIT) {
+                running = false;
+            }
         }
 
-        // Get the difference between the next scheduled frame, and the time that was used up prior
-        delayTime = scheduledFrameTime-currentFrameTime;
-        // Delay program until next scheduled frame
-        SDL_DelayPrecise(delayTime);
-
-        // Update the frame schedule for the next frame
-        scheduledFrameTime += frameTarget;
-
-        // Run ticks
-        while (tickCounter > 0) {
-            tickCounter--;
-            // Add TickUpdate Functions Here
-        }
-        // ---------------- Frames ----------------
-
-
-        // ---------------- Seconds ----------------
-        // Sec clock to keep track of fps
-        currentTime = SDL_GetTicksNS();
-        if (currentTime >= secDelayTime) {
-            secDelayTime += WBE_NS;
-            SDL_Log("FPS: %i", fps);
-            fps = 0;
-        }
-        // ---------------- Seconds ----------------
-    // ---------------- Clock ----------------
-
-        SDL_PollEvent(&event);
-        if (event.type == SDL_EVENT_QUIT) running = false;
         WBE_UpdateKeys(&keys);
 
-        SDL_SetRenderDrawColor(renderer, 25, 51, 153, 255);
-        SDL_RenderClear(renderer);
+        if (WBE_IsKeyDown(&keys, SDL_SCANCODE_W)) player.y -= 400 * WBE_GetDT(clock);
+        if (WBE_IsKeyDown(&keys, SDL_SCANCODE_A)) player.x -= 400 * WBE_GetDT(clock);
+        if (WBE_IsKeyDown(&keys, SDL_SCANCODE_S)) player.y += 400 * WBE_GetDT(clock);
+        if (WBE_IsKeyDown(&keys, SDL_SCANCODE_D)) player.x += 400 * WBE_GetDT(clock);
 
-        SDL_SetRenderDrawColor(renderer, 0, 127, 127, 255);
-        SDL_RenderFillRect(renderer, &player);
+        
+        SDL_SetRenderDrawColor(window.sdl_renderer, 25, 51, 153, 255);
+        SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 255);
+        SDL_RenderClear(window.sdl_renderer);
 
-        SDL_RenderPresent(renderer);
+        // SDL_SetRenderDrawColor(window.sdl_renderer, 217, 177, 107, 255);
+        // SDL_RenderFillRect(window.sdl_renderer, &player);
 
-        if (WBE_IsKeyPressed(&keys, SDL_SCANCODE_W)) SDL_DelayPrecise(frameTarget*30);
-        player.x += speed * deltaTime;
+        // RenderGradient(window.sdl_renderer, 20, 184, 152, 221, 144, 36);
+        // RenderGradient(window.sdl_renderer, 42, 21, 214, 59, 71, 46);
+        // RenderGradient(window.sdl_renderer, 0, 0, 255, 255, 0, 0);
+
+        SDL_RenderTextureRotated(
+            window.sdl_renderer,
+            gradientTexture,
+            &(SDL_FRect){0, 0, gradientTexture->w, gradientTexture->h},
+            &(SDL_FRect){500-SDL_sin(rotato)*100, 100, gradientTexture->w+(SDL_sin(rotato)*200), gradientTexture->h+500},
+            rotato*50,
+            &(SDL_FPoint){(gradientTexture->w/2)+(SDL_sin(rotato)*100), (gradientTexture->h/2)+250},
+            SDL_FLIP_NONE
+        );
+
+        SDL_RenderPresent(window.sdl_renderer);
     }
 
-    SDL_Quit();
+    WBE_Cleanup();
     return 0;
 }
