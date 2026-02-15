@@ -1,23 +1,13 @@
 #ifndef WBE_KEY_H
 #define WBE_KEY_H
 
-#include <SDL3/SDL.h>
+#include "WBE/WBE_Instance_Types.h"
 
-
-typedef struct {
-    bool isKeyDown[SDL_SCANCODE_COUNT];
-
-    bool isKeyPressed[SDL_SCANCODE_COUNT];
-    bool wasKeyPressed[SDL_SCANCODE_COUNT];
-
-    bool isKeyReleased[SDL_SCANCODE_COUNT];
-} WBE_Keys;
-
-
-void WBE_UpdateKeys (WBE_Keys* keyCheckObject);
-bool WBE_IsKeyDown (WBE_Keys* keyCheckObject, int sdl_scancode);
-bool WBE_IsKeyUp (WBE_Keys* keyCheckObject, int sdl_scancode);
-bool WBE_IsKeyPressed (WBE_Keys* keyCheckObject, int sdl_scancode);
-bool WBE_IsKeyReleased (WBE_Keys* keyCheckObject, int sdl_scancode);
+void WBE_UpdateKeys (WBE_Instance* instance);
+void WBE_FrameUpdateKeys (WBE_Instance* instance);
+bool WBE_IsKeyDown (WBE_Instance* instance, int sdl_scancode);
+bool WBE_IsKeyUp (WBE_Instance* instance, int sdl_scancode);
+bool WBE_IsKeyPressed (WBE_Instance* instance, int sdl_scancode);
+bool WBE_IsKeyReleased (WBE_Instance* instance, int sdl_scancode);
 
 #endif

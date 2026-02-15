@@ -10,7 +10,7 @@
 
 #include "WBE/WBE_Clock.h"
 #include "WBE/WBE_Window.h"
-#include "WBE/Input/WBE_Key.h"
+#include "WBE/Input/WBE_Keyboard.h"
 #include "WBE/Input/WBE_Mouse.h"
 
 #include "WBE/WBE_Cleanup.h"

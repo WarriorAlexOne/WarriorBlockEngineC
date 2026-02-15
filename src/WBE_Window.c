@@ -86,11 +86,11 @@ void WBE_CleanupWindows () {
             SDL_DestroyWindow(windowTracker[i]);
             rendererTracker[i] = NULL;
             windowTracker[i] = NULL;
-            SDL_Log("%s Window %i Cleaned Up!\n", NAME_WBE_CleanupWindows, i+1);
+            SDL_Log("%s Window %i Cleaned Up!\n", WBE_NAME_CleanupWindows, i+1);
         }
         return;
     }
-    SDL_Log("%s No windows were created. All clean.\n", NAME_WBE_CleanupWindows);
+    SDL_Log("%s No windows were created. All clean.\n", WBE_NAME_CleanupWindows);
 }
 
 // Required to update the data of all windows.
@@ -106,11 +106,11 @@ void WBE_SetWindowIcon (WBE_Window* window, char iconPath[]) {
 
     // Ensures that path is valid before use.
     if (errorNum == 1) {
-        SDL_Log ("%s Path argument is too long!", NAME_WBE_SetWindowIcon);
+        SDL_Log ("%s Path argument is too long!", WBE_NAME_SetWindowIcon);
         return;
     }
     else if (errorNum == -1) {
-        SDL_Log ("%s Path argument is invalid!", NAME_WBE_SetWindowIcon);
+        SDL_Log ("%s Path argument is invalid!", WBE_NAME_SetWindowIcon);
         return;
     }
 

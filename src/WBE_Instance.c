@@ -1,6 +1,7 @@
 #include "WBE/WBE_Instance.h"
 #include "WBE/WBE_Clock.h"
 #include "WBE/WBE_Window.h"
+#include "WBE/Input/WBE_Input.h"
 
 WBE_Clock* currentClock;
 WBE_Window* currentWindow;
@@ -11,7 +12,6 @@ WBE_Instance WBE_CreateNewInstance () {
 
         .clocks = SDL_malloc(sizeof(void*) * 8),
         .windows = SDL_malloc(sizeof(void*) * 8),
-        .keyCheckers = SDL_malloc(sizeof(void*) * 8),
 
         .clockCount = 0,
         .windowCount = 0,
@@ -37,4 +37,5 @@ void WBE_Update (WBE_Instance* instance) {
             currentWindow = instance->windows[i];
         }
     }
+    WBE_UpdateInput(instance);
 }
