@@ -10,6 +10,7 @@ WBE_Clock* WBE_CreateClock (WBE_Instance* instance, int frameRate, int tickRate)
     // Add proper error correction code
     if (!instance->isInitialized) {
         WBE_Clock* failedClock = NULL;
+        SDL_Log("%s Failed to create Clock!", WBE_NAME_CreateClock);
         return failedClock;
     }
     WBE_Clock* newClock = SDL_malloc(sizeof(WBE_Clock));
