@@ -3,10 +3,15 @@ A program creation engine that can be used to create a variety of software, incl
 
 # Implemented Features
 -A Clock Module that automatically limits the program's framerate to whatever the user chooses.
+
 -An Input Module that automatically handles all keyboard inputs (mouse inputs coming soon), and gives various options for easy input detection (similar to Raylib).
+
 -An Engine-Wide Update system that automatically keeps things running through 1 simple-to-use function.
+
 -An Instance and Pointer System that gives the user full control of all data that they create (can also be almost-entirely ignored, for users who want more ease-of-use).
+
 -The user still has full control of the program loop (along with the rest of the program), and can choose to activate BlockEngine wherever they please.
+
 -Modular Code "Blocks" that can be activated or deactivated with ease. (Want to activate a WBE Clock instance for a moment, then disable it? Go for it!)
 
 # The Purpose
