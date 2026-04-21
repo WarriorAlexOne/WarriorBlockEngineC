@@ -7,6 +7,7 @@ WBE_Window* window;
 WBE_Window* window1;
 WBE_Window* window2;
 WBE_Window* window3;
+WBE_Window* window4;
 SDL_FRect player = {64, 64, 64, 64};
 
 float rotato = 0.0f;
@@ -21,6 +22,7 @@ int main () {
     window1 = WBE_CreateWindow(&wbe, "1", 800, 600);
     window2 = WBE_CreateWindow(&wbe, "2", 800, 600);
     window3 = WBE_CreateWindow(&wbe, "3", 800, 600);
+    window4 = WBE_CreateWindow(&wbe, "4", 800, 600);
     clock = WBE_CreateClock(&wbe, 60, 60);
 
     SDL_Texture* gradientTexture = WBE_CreateGradient(window->sdl_renderer, 0, 255, 20, 40, 140, 140, 20, 20);
