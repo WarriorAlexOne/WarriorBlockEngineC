@@ -14,7 +14,7 @@ rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 # Files
 SRCS = $(call rwildcard,$(SRC_DIR)/,*.c)
 OBJS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
-EXEC = $(BUILD_DIR)/game
+EXEC = $(BUILD_DIR)/WarriorBlockEngine
 
 # Default target
 all: $(EXEC)

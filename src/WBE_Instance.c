@@ -13,19 +13,23 @@ WBE_Instance WBE_CreateNewInstance () {
         .clocks = SDL_malloc(sizeof(void*) * 8),
         .windows = SDL_malloc(sizeof(void*) * 8),
 
+        .event = {0},
+        .keyboard = {0},
+
         .clockCount = 0,
         .windowCount = 0,
-        .keyCheckerCount = 0,
 
         .doesClockExist = false,
         .doesWindowExist = false,
-        .doesKeyCheckerExist = false
+
+        .quitProgram = false
     };
 
     return newInstance;
 }
 
-void WBE_Update (WBE_Instance* instance) {
+// Returns 1 while the WBE Instance is active, or 0 upon Instance quitting.
+bool WBE_Update (WBE_Instance* instance) {
     if (instance->doesClockExist) {
         for (int i = 0; i < 1; i++) {
             currentClock = instance->clocks[i];
@@ -38,4 +42,11 @@ void WBE_Update (WBE_Instance* instance) {
         }
     }
     WBE_UpdateInput(instance);
+
+    if (instance->quitProgram) return 0;
+    return 1;
+}
+
+bool WBE_InstanceQuitState (WBE_Instance* instance) {
+    return instance->quitProgram;
 }

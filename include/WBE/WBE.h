@@ -10,8 +10,12 @@
 
 #include "WBE/WBE_Clock.h"
 #include "WBE/WBE_Window.h"
+#include "WBE/Input/WBE_Scancodes.h"
 #include "WBE/Input/WBE_Keyboard.h"
 #include "WBE/Input/WBE_Mouse.h"
+#include "WBE/Input/WBE_Input.h"
+
+#include "WBE/Paint/WBE_Gradient.h"
 
 #include "WBE/WBE_Cleanup.h"
 #include "WBE/WBE_Instance.h"

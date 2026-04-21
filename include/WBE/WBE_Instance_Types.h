@@ -3,14 +3,15 @@
 
 #include <SDL3/SDL.h>
 #include "WBE/WBE_Defines.h"
+#include "WBE/Input/WBE_Scancodes.h"
 
 typedef struct {
-    bool isKeyDown[SDL_SCANCODE_COUNT];
+    bool isKeyDown[WBE_SCANCODE_COUNT];
 
-    bool isKeyPressed[SDL_SCANCODE_COUNT];
-    bool wasKeyPressed[SDL_SCANCODE_COUNT];
+    bool isKeyPressed[WBE_SCANCODE_COUNT];
+    bool wasKeyPressed[WBE_SCANCODE_COUNT];
 
-    bool isKeyReleased[SDL_SCANCODE_COUNT];
+    bool isKeyReleased[WBE_SCANCODE_COUNT];
 } WBE_Keyboard;
 
 typedef struct {
@@ -20,15 +21,15 @@ typedef struct {
     void** windows;
 
     SDL_Event event;
-    WBE_Keyboard keyboard;
+    WBE_Keyboard keyboard;  // Windows can't detect individual keyboard inputs, so there is only 1 per WBE Instance.
 
     int clockCount;
     int windowCount;
-    int keyCheckerCount;
 
     bool doesClockExist;
     bool doesWindowExist;
-    bool doesKeyCheckerExist;
+
+    bool quitProgram;
 } WBE_Instance;
 
 #endif

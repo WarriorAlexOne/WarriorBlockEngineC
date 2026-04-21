@@ -1,14 +1,88 @@
+// #include <WBE/WBE.h>
+// #include "WBE/Paint/WBE_Gradient.h"
+// #include "WBE/Input/WBE_Input.h"
+
+// SDL_Event event;
+
+// WBE_Clock* clock;
+// WBE_Window window;
+
+// WBE_Instance wbe;
+
+// SDL_FRect player = {64, 64, 64, 64};
+
+// float rotato = 0.0f;
+
+
+// int main () {
+//     WBE_Init();
+
+//     wbe = WBE_CreateNewInstance();
+//     window = WBE_CreateWindow("blockengine", 800, 600);
+
+//     clock = WBE_CreateClock(&wbe, 60, 60);
+
+//     SDL_Texture* gradientTexture = WBE_CreateGradient(window.sdl_renderer, 0, 255, 20, 40, 140, 140, 20, 20);
+
+
+//     bool running = true;
+//     while (running) {
+//         rotato += 0.01;
+//         WBE_Update(&wbe);
+
+//         // if (WBE_IsKeyDown(&wbe, SDL_SCANCODE_W)) player.y -= 400 * WBE_GetDT(clock);
+//         // if (WBE_IsKeyDown(&wbe, SDL_SCANCODE_A)) player.x -= 400 * WBE_GetDT(clock);
+//         // if (WBE_IsKeyDown(&wbe, SDL_SCANCODE_S)) player.y += 400 * WBE_GetDT(clock);
+//         // if (WBE_IsKeyDown(&wbe, SDL_SCANCODE_D)) player.x += 400 * WBE_GetDT(clock);
+//         // if (WBE_IsKeyUp(&wbe, SDL_SCANCODE_W)) player.y -= 400 * WBE_GetDT(clock);
+//         // if (WBE_IsKeyUp(&wbe, SDL_SCANCODE_A)) player.x -= 400 * WBE_GetDT(clock);
+//         // if (WBE_IsKeyUp(&wbe, SDL_SCANCODE_S)) player.y += 400 * WBE_GetDT(clock);
+//         // if (WBE_IsKeyUp(&wbe, SDL_SCANCODE_D)) player.x += 400 * WBE_GetDT(clock);
+//         if (WBE_IsKeyPressed(&wbe, SDL_SCANCODE_W)) player.y -= 80;
+//         if (WBE_IsKeyPressed(&wbe, SDL_SCANCODE_A)) player.x -= 80;
+//         if (WBE_IsKeyPressed(&wbe, SDL_SCANCODE_S)) player.y += 80;
+//         if (WBE_IsKeyPressed(&wbe, SDL_SCANCODE_D)) player.x += 80;
+//         // if (WBE_IsKeyReleased(&wbe, SDL_SCANCODE_W)) player.y -= 80;
+//         // if (WBE_IsKeyReleased(&wbe, SDL_SCANCODE_A)) player.x -= 80;
+//         // if (WBE_IsKeyReleased(&wbe, SDL_SCANCODE_S)) player.y += 80;
+//         // if (WBE_IsKeyReleased(&wbe, SDL_SCANCODE_D)) player.x += 80;
+        
+//         SDL_SetRenderDrawColor(window.sdl_renderer, 25, 51, 153, 255);
+//         SDL_RenderClear(window.sdl_renderer);
+
+//         int screenWid = 2560;
+//         int screenHei = 1440;
+//         int gradwid = 3000;
+//         int gradhei = 3000;
+//         SDL_RenderTextureRotated(
+//             window.sdl_renderer,
+//             gradientTexture,
+//             &(SDL_FRect){0, 0, gradientTexture->w, gradientTexture->h},
+//             &(SDL_FRect){(screenWid/2)-(gradwid/2), (screenHei/2)-(gradhei/2), gradwid, gradhei},
+//             rotato*12,
+//             &(SDL_FPoint){gradwid/2, gradhei/2},
+//             SDL_FLIP_NONE
+//         );
+
+//         SDL_SetRenderDrawColor(window.sdl_renderer, 217, 177, 107, 255);
+//         SDL_RenderFillRect(window.sdl_renderer, &player);
+
+//         SDL_RenderPresent(window.sdl_renderer);
+//     }
+
+//     WBE_Cleanup();
+//     return 0;
+// }
+
 #include <WBE/WBE.h>
-#include "WBE/Paint/WBE_Gradient.h"
-#include "WBE/Input/WBE_Input.h"
 
-SDL_Event event;
-
-WBE_Clock* clock;
-WBE_Window window;
 
 WBE_Instance wbe;
-
+WBE_Clock* clock;
+WBE_Window* window;
+WBE_Window* window1;
+WBE_Window* window2;
+WBE_Window* window3;
 SDL_FRect player = {64, 64, 64, 64};
 
 float rotato = 0.0f;
@@ -17,45 +91,36 @@ float rotato = 0.0f;
 int main () {
     WBE_Init();
 
+    // Game Setup
     wbe = WBE_CreateNewInstance();
-    window = WBE_CreateWindow("blockengine", 800, 600);
-
+    window = WBE_CreateWindow(&wbe, WBE_NAME " " WBE_VERSION, 800, 600);
+    window1 = WBE_CreateWindow(&wbe, "1", 800, 600);
+    window2 = WBE_CreateWindow(&wbe, "2", 800, 600);
+    window3 = WBE_CreateWindow(&wbe, "3", 800, 600);
     clock = WBE_CreateClock(&wbe, 60, 60);
 
-    SDL_Texture* gradientTexture = WBE_CreateGradient(window.sdl_renderer, 0, 255, 20, 40, 140, 140, 20, 20);
+    SDL_Texture* gradientTexture = WBE_CreateGradient(window->sdl_renderer, 0, 255, 20, 40, 140, 140, 20, 20);
 
 
-    bool running = true;
-    while (running) {
+    while (WBE_Update(&wbe)) {
         rotato += 0.01;
-        WBE_Update(&wbe);
 
-        // if (WBE_IsKeyDown(&wbe, SDL_SCANCODE_W)) player.y -= 400 * WBE_GetDT(clock);
-        // if (WBE_IsKeyDown(&wbe, SDL_SCANCODE_A)) player.x -= 400 * WBE_GetDT(clock);
-        // if (WBE_IsKeyDown(&wbe, SDL_SCANCODE_S)) player.y += 400 * WBE_GetDT(clock);
-        // if (WBE_IsKeyDown(&wbe, SDL_SCANCODE_D)) player.x += 400 * WBE_GetDT(clock);
-        // if (WBE_IsKeyUp(&wbe, SDL_SCANCODE_W)) player.y -= 400 * WBE_GetDT(clock);
-        // if (WBE_IsKeyUp(&wbe, SDL_SCANCODE_A)) player.x -= 400 * WBE_GetDT(clock);
-        // if (WBE_IsKeyUp(&wbe, SDL_SCANCODE_S)) player.y += 400 * WBE_GetDT(clock);
-        // if (WBE_IsKeyUp(&wbe, SDL_SCANCODE_D)) player.x += 400 * WBE_GetDT(clock);
-        if (WBE_IsKeyPressed(&wbe, SDL_SCANCODE_W)) player.y -= 80;
-        if (WBE_IsKeyPressed(&wbe, SDL_SCANCODE_A)) player.x -= 80;
-        if (WBE_IsKeyPressed(&wbe, SDL_SCANCODE_S)) player.y += 80;
-        if (WBE_IsKeyPressed(&wbe, SDL_SCANCODE_D)) player.x += 80;
-        // if (WBE_IsKeyReleased(&wbe, SDL_SCANCODE_W)) player.y -= 80;
-        // if (WBE_IsKeyReleased(&wbe, SDL_SCANCODE_A)) player.x -= 80;
-        // if (WBE_IsKeyReleased(&wbe, SDL_SCANCODE_S)) player.y += 80;
-        // if (WBE_IsKeyReleased(&wbe, SDL_SCANCODE_D)) player.x += 80;
-        
-        SDL_SetRenderDrawColor(window.sdl_renderer, 25, 51, 153, 255);
-        SDL_RenderClear(window.sdl_renderer);
+        // Smooth Player Movement
+        if (WBE_IsKeyDown(&wbe, WBE_SCANCODE_W)) player.y -= 400 * WBE_GetDT(clock);
+        if (WBE_IsKeyDown(&wbe, WBE_SCANCODE_A)) player.x -= 400 * WBE_GetDT(clock);
+        if (WBE_IsKeyDown(&wbe, WBE_SCANCODE_S)) player.y += 400 * WBE_GetDT(clock);
+        if (WBE_IsKeyDown(&wbe, WBE_SCANCODE_D)) player.x += 400 * WBE_GetDT(clock);
+
+        // Render
+        SDL_SetRenderDrawColor(window->sdl_renderer, 25, 51, 153, 255);
+        SDL_RenderClear(window->sdl_renderer);
 
         int screenWid = 2560;
         int screenHei = 1440;
         int gradwid = 3000;
         int gradhei = 3000;
         SDL_RenderTextureRotated(
-            window.sdl_renderer,
+            window->sdl_renderer,
             gradientTexture,
             &(SDL_FRect){0, 0, gradientTexture->w, gradientTexture->h},
             &(SDL_FRect){(screenWid/2)-(gradwid/2), (screenHei/2)-(gradhei/2), gradwid, gradhei},
@@ -64,10 +129,17 @@ int main () {
             SDL_FLIP_NONE
         );
 
-        SDL_SetRenderDrawColor(window.sdl_renderer, 217, 177, 107, 255);
-        SDL_RenderFillRect(window.sdl_renderer, &player);
+        SDL_SetRenderDrawColor(window->sdl_renderer, 217, 177, 107, 255);
+        SDL_RenderFillRect(window->sdl_renderer, &player);
 
-        SDL_RenderPresent(window.sdl_renderer);
+        // for (int x = 0; x < 1024; x++) {
+        //     for (int y = 0; y < 1024; y++) {
+        //         SDL_SetRenderDrawColor(window->sdl_renderer, x, y, x+y, 255);
+        //         SDL_RenderFillRect(window->sdl_renderer, &(SDL_FRect){x,y,1,1});
+        //     }
+        // }
+
+        SDL_RenderPresent(window->sdl_renderer);
     }
 
     WBE_Cleanup();
