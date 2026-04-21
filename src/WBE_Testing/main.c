@@ -56,13 +56,6 @@ int main () {
         SDL_SetRenderDrawColor(window->sdl_renderer, 217, 177, 107, 255);
         SDL_RenderFillRect(window->sdl_renderer, &player);
 
-        // for (int x = 0; x < 1024; x++) {
-        //     for (int y = 0; y < 1024; y++) {
-        //         SDL_SetRenderDrawColor(window->sdl_renderer, x, y, x+y, 255);
-        //         SDL_RenderFillRect(window->sdl_renderer, &(SDL_FRect){x,y,1,1});
-        //     }
-        // }
-
         SDL_RenderPresent(window->sdl_renderer);
     }
 
