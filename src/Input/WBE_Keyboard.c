@@ -1,4 +1,5 @@
 #include "WBE/Input/WBE_Keyboard.h"
+#include "WBE/Input/WBE_Input_Defines.h"
 
 
 // Checks for scancode events, then updates the isKeyDown bool to the correct state.
@@ -38,23 +39,57 @@ void WBE_FrameUpdateKeys (WBE_Instance* instance) {
         // If both if statements are false, then it's safe to assume key was pressed.
         instance->keyboard.isKeyPressed[scancode] = true;
         instance->keyboard.wasKeyPressed[scancode] = true;
-        // SDL_Log("%s key was pressed!", SDL_GetScancodeName(scancode));
+
+        WBE_LogKey(instance, scancode);
+
+        // SDL_Log("Test");
+        // for (int i = 0; i < WBE_MAX_KEYLOGGER_LENGTH; i++) {
+        //     if (instance->keyboard.keyLogs[i] != 0) {
+        //         SDL_Log(SDL_GetKeyName(SDL_GetKeyFromScancode(instance->keyboard.keyLogs[i], 0, 0)));
+        //     }
+        // }
+
+        SDL_Log("%s key was pressed!", SDL_GetScancodeName(scancode));
     }
 }
 
 // Checks if a key is pressed. Returns true for every frame the key is pressed.
 bool WBE_IsKeyDown (WBE_Instance* instance, WBE_Scancode scancode) {
-    return instance->keyboard.isKeyDown[scancode];
+    if (instance->keyboard.isKeyDown[scancode]) {
+        WBE_LogKey(instance, scancode);
+        return true;
+    }
+    return false;
+    // return instance->keyboard.isKeyDown[scancode];
 }
 // Checks if a key was released. Returns true for every frame the key is released.
 bool WBE_IsKeyUp (WBE_Instance* instance, WBE_Scancode scancode) {
-    return !instance->keyboard.isKeyDown[scancode];
+    if (!instance->keyboard.isKeyDown[scancode]) {
+        WBE_LogKey(instance, scancode);
+        return true;
+    }
+    return false;
 }
 // Checks if a key is pressed. Returns true for the first frame the key is pressed.
 bool WBE_IsKeyPressed (WBE_Instance* instance, WBE_Scancode scancode) {
-    return instance->keyboard.isKeyPressed[scancode];
+    if (instance->keyboard.isKeyPressed[scancode]) {
+        WBE_LogKey(instance, scancode);
+        return true;
+    }
+    return false;
 }
 // Checks if a key is released. Returns true for the first frame the key is released.
 bool WBE_IsKeyReleased (WBE_Instance* instance, WBE_Scancode scancode) {
-    return instance->keyboard.isKeyReleased[scancode];
+    if (instance->keyboard.isKeyReleased[scancode]) {
+        WBE_LogKey(instance, scancode);
+        return true;
+    }
+    return false;
+}
+
+void WBE_LogKey (WBE_Instance* instance, WBE_Scancode scancode) {
+    for (int i = WBE_MAX_KEYLOGGER_LENGTH-1; i > 0; i--) {
+        instance->keyboard.keyLogs[i] = instance->keyboard.keyLogs[i-1];
+    }
+    instance->keyboard.keyLogs[0] = scancode;
 }

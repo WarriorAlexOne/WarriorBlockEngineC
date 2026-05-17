@@ -10,5 +10,6 @@ bool WBE_IsKeyDown (WBE_Instance* instance, WBE_Scancode scancode);
 bool WBE_IsKeyUp (WBE_Instance* instance, WBE_Scancode scancode);
 bool WBE_IsKeyPressed (WBE_Instance* instance, WBE_Scancode scancode);
 bool WBE_IsKeyReleased (WBE_Instance* instance, WBE_Scancode scancode);
+void WBE_LogKey (WBE_Instance* instance, WBE_Scancode scancode);
 
 #endif
