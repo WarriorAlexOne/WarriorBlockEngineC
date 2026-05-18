@@ -14,6 +14,7 @@
 #include "WBE/Input/WBE_Keyboard.h"
 #include "WBE/Input/WBE_Mouse.h"
 #include "WBE/Input/WBE_Input.h"
+#include "WBE/Input/WBE_Input_Defines.h"
 
 #include "WBE/Paint/WBE_Gradient.h"
 

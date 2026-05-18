@@ -3,7 +3,9 @@
 
 #include <SDL3/SDL.h>
 #include "WBE/WBE_Defines.h"
+#include "WBE/Input/WBE_Input_Defines.h"
 #include "WBE/Input/WBE_Scancodes.h"
+
 
 typedef struct {
     bool isKeyDown[WBE_SCANCODE_COUNT];
@@ -12,6 +14,8 @@ typedef struct {
     bool wasKeyPressed[WBE_SCANCODE_COUNT];
 
     bool isKeyReleased[WBE_SCANCODE_COUNT];
+
+    int keyLogs[WBE_MAX_KEYLOGGER_LENGTH];
 } WBE_Keyboard;
 
 typedef struct {

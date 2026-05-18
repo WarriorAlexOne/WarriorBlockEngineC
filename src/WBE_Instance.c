@@ -25,6 +25,18 @@ WBE_Instance WBE_CreateNewInstance () {
         .quitProgram = false
     };
 
+    for (int i = 0; i < WBE_SCANCODE_COUNT; i++) {
+        newInstance.keyboard.isKeyDown[i] = 0;
+
+        newInstance.keyboard.isKeyPressed[i] = 0;
+        newInstance.keyboard.wasKeyPressed[i] = 0;
+
+        newInstance.keyboard.isKeyReleased[i] = 0;
+    }
+    for (int i = 0; i < WBE_MAX_KEYLOGGER_LENGTH; i++) {
+        newInstance.keyboard.keyLogs[i] = 0;
+    }
+
     return newInstance;
 }
 

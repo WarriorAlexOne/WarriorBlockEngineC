@@ -1,0 +1,6 @@
+#ifndef WBE_INPUT_DEFINES_H
+#define WBE_INPUT_DEFINES_H
+
+#define WBE_MAX_KEYLOGGER_LENGTH 32
+
+#endif
