@@ -40,6 +40,7 @@ void WBE_FrameUpdateKeys (WBE_Instance* instance) {
         instance->keyboard.isKeyPressed[scancode] = true;
         instance->keyboard.wasKeyPressed[scancode] = true;
 
+        // Update KeyLogger after a key press is detected.
         WBE_LogKey(instance, scancode);
 
         // SDL_Log("Test");
@@ -49,42 +50,25 @@ void WBE_FrameUpdateKeys (WBE_Instance* instance) {
         //     }
         // }
 
-        SDL_Log("%s key was pressed!", SDL_GetScancodeName(scancode));
+        // SDL_Log("%s key was pressed!", SDL_GetScancodeName(scancode));
     }
 }
 
 // Checks if a key is pressed. Returns true for every frame the key is pressed.
 bool WBE_IsKeyDown (WBE_Instance* instance, WBE_Scancode scancode) {
-    if (instance->keyboard.isKeyDown[scancode]) {
-        WBE_LogKey(instance, scancode);
-        return true;
-    }
-    return false;
-    // return instance->keyboard.isKeyDown[scancode];
+    return instance->keyboard.isKeyDown[scancode];
 }
 // Checks if a key was released. Returns true for every frame the key is released.
 bool WBE_IsKeyUp (WBE_Instance* instance, WBE_Scancode scancode) {
-    if (!instance->keyboard.isKeyDown[scancode]) {
-        WBE_LogKey(instance, scancode);
-        return true;
-    }
-    return false;
+    return !instance->keyboard.isKeyDown[scancode];
 }
 // Checks if a key is pressed. Returns true for the first frame the key is pressed.
 bool WBE_IsKeyPressed (WBE_Instance* instance, WBE_Scancode scancode) {
-    if (instance->keyboard.isKeyPressed[scancode]) {
-        WBE_LogKey(instance, scancode);
-        return true;
-    }
-    return false;
+    return instance->keyboard.isKeyPressed[scancode];
 }
 // Checks if a key is released. Returns true for the first frame the key is released.
 bool WBE_IsKeyReleased (WBE_Instance* instance, WBE_Scancode scancode) {
-    if (instance->keyboard.isKeyReleased[scancode]) {
-        WBE_LogKey(instance, scancode);
-        return true;
-    }
-    return false;
+    return instance->keyboard.isKeyReleased[scancode];
 }
 
 void WBE_LogKey (WBE_Instance* instance, WBE_Scancode scancode) {
@@ -92,4 +76,21 @@ void WBE_LogKey (WBE_Instance* instance, WBE_Scancode scancode) {
         instance->keyboard.keyLogs[i] = instance->keyboard.keyLogs[i-1];
     }
     instance->keyboard.keyLogs[0] = scancode;
+}
+
+bool WBE_CheckForKeyString (WBE_Instance* instance, char* keyString, unsigned int amountOfKeys) {
+    int keyLength = SDL_strnlen(keyString, 1023) + 1;  // +1 for null terminator.
+    char keyLogString[keyLength];  // Variable that stores the key logger strings.
+    keyLogString[0] = '\0';
+
+    if (amountOfKeys <= 0) return false;
+    if (amountOfKeys >= WBE_MAX_KEYLOGGER_LENGTH) amountOfKeys = WBE_MAX_KEYLOGGER_LENGTH;
+
+    // Turn logged key number values into a string
+    for (int i = amountOfKeys-1; i >= 0; i--)
+        SDL_snprintf(keyLogString, keyLength, "%s%s", keyLogString, SDL_GetKeyName(SDL_GetKeyFromScancode(instance->keyboard.keyLogs[i], 0, 0)));
+    SDL_Log("Looking for: %s  Found: %s", keyString, keyLogString);
+
+    if (SDL_strcmp(keyLogString, keyString) != 0) return false;
+    return true;
 }
