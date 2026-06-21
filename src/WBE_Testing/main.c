@@ -21,41 +21,18 @@ typedef struct {
 } WBE_Test;
 
 
-// bool WBE_CheckForCheatCode (WBE_Instance* instance, char* cheatCode, int keyLength) {
-//     int strLen = SDL_strnlen(cheatCode, 1024);
-//     char* keyString = SDL_malloc((sizeof(char) * strLen));
-//     keyString = "";
-
-//     // Turn logged key number values into a string
-//     for (int i = keyLength; i > 0; i--) {
-//         SDL_asprintf(&keyString, "%s%s", keyString, SDL_GetKeyName(SDL_GetKeyFromScancode(instance->keyboard.keyLogs[i], 0, 0)));
-//     }
-
-//     // Compare each char from the keyString and cheatCode string
-//     for (int i = 0; i < strLen; i++) {
-//         if (keyString[i] != cheatCode[i]) {
-//             SDL_Log("Cheat not found!");
-//             return;
-//         }
-//     }
-
-//     SDL_Log("Cheat found!");
-// }
-
 
 int main () {
     WBE_Init();
 
-
     WBE_Test* test = WBE_CreateList(sizeof(WBE_Test));
 
-    // SDL_Log("OG Pointer: %i", &test);
+    for (int i = 0; i < 65; i++) {
+        
+        WBE_ListAdd(test) = (WBE_Test){i*i, i, i*1.5, i*1.128};
 
 
-
-    for (int i = 0; i < 64; i++) {
-        WBE_ListAdd(test);
-        test[WBE_GetLastIndex(test)] = (WBE_Test){i*i, i, i*1.5, i*1.128};
+        // test[WBE_GetLastIndex(test)] = (WBE_Test){i*i, i, i*1.5, i*1.128};
         SDL_Log(
             "Struct Values: int %d char %d float %f double %lf",
             test[WBE_GetLastIndex(test)].int1,
@@ -63,22 +40,7 @@ int main () {
             test[WBE_GetLastIndex(test)].float3,
             test[WBE_GetLastIndex(test)].double4
         );
-
-        // test[WBE_ListAdd(test)] = (WBE_Test){i*i, i, i*1.5, i*1.128};
-        // // SDL_Log("%i", &test[WBE_ListAdd(test)]);
-        // SDL_Log(
-        //     "Struct Values: int %d char %d float %f double %lf",
-        //     test[WBE_GetLastIndex(test)].int1,
-        //     test[WBE_GetLastIndex(test)].char2,
-        //     test[WBE_GetLastIndex(test)].float3,
-        //     test[WBE_GetLastIndex(test)].double4
-        // );
-        // WBE_ListAdd(test);
-        // test[WBE_GetLastIndex(test)] = (WBE_Test){i*i, i, i*1.5, i*1.128};
     }
-
-    // int* reallocTest = SDL_malloc(sizeof(int*));
-    // unsigned int reallocSize = 8;
 
 
     // Game Setup
@@ -86,8 +48,6 @@ int main () {
     window = WBE_CreateWindow(&wbe, WBE_NAME " " WBE_VERSION, 800, 600);
     // window1 = WBE_CreateWindow(&wbe, "1", 800, 600);
     // window2 = WBE_CreateWindow(&wbe, "2", 800, 600);
-    // window3 = WBE_CreateWindow(&wbe, "3", 800, 600);
-    // window4 = WBE_CreateWindow(&wbe, "4", 800, 600);
     clock = WBE_CreateClock(&wbe, 60, 60);
 
     SDL_Texture* gradientTexture = WBE_CreateGradient(window->sdl_renderer, 0, 255, 20, 20, 140, 140, 20, 20);
@@ -113,17 +73,12 @@ int main () {
         if (WBE_IsKeyDown(&wbe, WBE_SCANCODE_S)) player.y += 400 * WBE_GetDT(clock);
         if (WBE_IsKeyDown(&wbe, WBE_SCANCODE_D)) rotX += 0.025;
         
-        if (WBE_IsKeyPressed(&wbe, WBE_SCANCODE_D)) {
-            if (WBE_CheckForKeyString(&wbe, "WASD", 4)) {
+        if (WBE_IsKeyPressed(&wbe, WBE_SCANCODE_RETURN)) {
+            if (WBE_CheckForKeyString(&wbe, "UpUpDownDownLeftRightLeftRightBAReturn", 11)) {
                 SDL_Log("Cheat found!");
             }
         }
 
-        // if (WBE_IsKeyPressed(&wbe, WBE_SCANCODE_UP)) {
-        //     reallocSize *= 2;
-        //     reallocTest = SDL_realloc(reallocTest, sizeof(int*) * reallocSize);
-        //     SDL_Log("SIZE UP!!! %i", reallocSize);
-        // }
 
         // Render
         SDL_SetRenderDrawColor(window->sdl_renderer, 25, 51, 153, 255);
@@ -142,9 +97,6 @@ int main () {
             &(SDL_FPoint){gradwid/2, gradhei/2},
             SDL_FLIP_NONE
         );
-
-        // SDL_SetRenderDrawColor(window->sdl_renderer, 217, 177, 107, 255);
-        // SDL_RenderFillRect(window->sdl_renderer, &player);
 
         SDL_RenderTextureRotated(
             window->sdl_renderer,
