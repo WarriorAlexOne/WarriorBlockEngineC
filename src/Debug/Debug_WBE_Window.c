@@ -1,7 +1,7 @@
 #include "WBE/Debug/Debug_WBE_Window.h"
 #include "WBE/WBE_Names.h"
 
-void Debug_WBE_CreateWindow (WBE_Window window) {
+void GetInfo_WBE_CreateWindow (WBE_Window window) {
     SDL_Log("%s Window WBE ID: %i\n", WBE_NAME_Debug_CreateWindow, window.id);
 
     SDL_Log("%s Is SDL_Window NULL: %s\n", WBE_NAME_Debug_CreateWindow, (window.sdl_window == NULL ? "True" : "False"));
@@ -19,7 +19,7 @@ void Debug_WBE_CreateWindow (WBE_Window window) {
     SDL_Log("%s Window Default Position: X: %f   Y: %f\n", WBE_NAME_Debug_CreateWindow, window.defaultPos.x, window.defaultPos.y);
     SDL_Log("%s Window Default Size: W: %f   H: %f\n", WBE_NAME_Debug_CreateWindow, window.defaultSize.x, window.defaultSize.y);
 
-    SDL_Log("%s Display Number: %i\n", WBE_NAME_Debug_CreateWindow, window.displayNumber);
+    SDL_Log("%s Display Number: %i\n", WBE_NAME_Debug_CreateWindow, window.displayCount);
     SDL_Log("%s Display Size: W: %i   H: %i\n", WBE_NAME_Debug_CreateWindow, window.displaySize.x, window.displaySize.y);
     SDL_Log("%s Display Refresh Rate: %f\n", WBE_NAME_Debug_CreateWindow, window.displayRate);
     

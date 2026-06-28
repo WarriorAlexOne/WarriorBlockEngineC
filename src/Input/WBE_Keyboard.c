@@ -1,5 +1,6 @@
 #include "WBE/Input/WBE_Keyboard.h"
 #include "WBE/Input/WBE_Input_Defines.h"
+#include "WBE/Debug/Debug_WBE_Keyboard.h"
 
 
 // Checks for scancode events, then updates the isKeyDown bool to the correct state.
@@ -78,6 +79,10 @@ void WBE_LogKey (WBE_Instance* instance, WBE_Scancode scancode) {
     instance->keyboard.keyLogs[0] = scancode;
 }
 
+char* WBE_GetKeyName (WBE_Scancode scancode) {
+    return SDL_GetKeyName(SDL_GetKeyFromScancode(scancode, 0, 0));
+}
+
 bool WBE_CheckForKeyString (WBE_Instance* instance, char* keyString, unsigned int amountOfKeys) {
     int keyLength = SDL_strnlen(keyString, 1023) + 1;  // +1 for null terminator.
     char keyLogString[keyLength];  // Variable that stores the key logger strings.
@@ -88,8 +93,9 @@ bool WBE_CheckForKeyString (WBE_Instance* instance, char* keyString, unsigned in
 
     // Turn logged key number values into a string
     for (int i = amountOfKeys-1; i >= 0; i--)
-        SDL_snprintf(keyLogString, keyLength, "%s%s", keyLogString, SDL_GetKeyName(SDL_GetKeyFromScancode(instance->keyboard.keyLogs[i], 0, 0)));
-    SDL_Log("Looking for: %s  Found: %s", keyString, keyLogString);
+        SDL_snprintf(keyLogString, keyLength, "%s%s", keyLogString, WBE_GetKeyName(instance->keyboard.keyLogs[i]));
+    
+    Debug_WBE_CheckForKeyString(keyString, keyLogString);
 
     if (SDL_strcmp(keyLogString, keyString) != 0) return false;
     return true;

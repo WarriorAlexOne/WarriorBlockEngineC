@@ -3,6 +3,6 @@
 
 #include "WBE/WBE_Window.h"
 
-void Debug_WBE_CreateWindow (WBE_Window window);
+void GetInfo_WBE_CreateWindow (WBE_Window window);
 
 #endif
