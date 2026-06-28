@@ -16,6 +16,10 @@
 #define WBE_DEFAULT_TICKRATE 60
 #endif
 
+#ifndef WBE_TICKFUNCTION_LIMIT
+#define WBE_TICKFUNCTION_LIMIT 1024
+#endif
+
 
 typedef struct {
    long long currentTime;
@@ -31,7 +35,7 @@ typedef struct {
 
     int tickCounter;
 
-    void (*tickFunctions[1024])();
+    void (*tickFunctions[WBE_TICKFUNCTION_LIMIT])();
     int tickFunctionCount;
 
     long long secDelayTime;
@@ -40,6 +44,7 @@ typedef struct {
 
 
 WBE_Clock* WBE_CreateClock(WBE_Instance* instance, int frameRate, int tickRate);
+void WBE_CleanupClocks (WBE_Instance* instance);
 
 void WBE_UpdateClock (WBE_Clock* clock);
 bool WBE_AddTickFunction (WBE_Clock* clock, void (*function)());

@@ -27,11 +27,15 @@ WBE_Clock* WBE_CreateClock (WBE_Instance* instance, int frameRate, int tickRate)
         
     newClock->tickCounter = 0;
 
+    for (int i = 0; i < WBE_TICKFUNCTION_LIMIT; i++) {
+        newClock->tickFunctions[i] = NULL;
+    }
+    newClock->tickFunctionCount = 0;
+
     newClock->secDelayTime = newClock->currentTime+WBE_NS;
     newClock->fps = 0;
 
-    instance->clocks[instance->clockCount] = newClock;
-    instance->clockCount++;
+    instance->clocks[instance->clockCount++] = newClock;
     instance->doesClockExist = true;
 
     SDL_Log("%s Clock created!", WBE_NAME_CreateClock);

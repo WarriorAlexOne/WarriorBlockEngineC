@@ -25,7 +25,7 @@ typedef struct {
     void** windows;
 
     SDL_Event event;
-    WBE_Keyboard keyboard;  // Windows can't detect individual keyboard inputs, so there is only 1 per WBE Instance.
+    WBE_Keyboard keyboard;  // Windows can't differentiate between multiple connected keyboards, so there is only 1 per WBE Instance.
 
     int clockCount;
     int windowCount;

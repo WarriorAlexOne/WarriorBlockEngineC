@@ -2,6 +2,7 @@
 #include "WBE/WBE_Clock.h"
 #include "WBE/WBE_Window.h"
 #include "WBE/Input/WBE_Input.h"
+#include "WBE/WBE_Names.h"
 
 WBE_Clock* currentClock;
 WBE_Window* currentWindow;
@@ -25,6 +26,11 @@ WBE_Instance WBE_CreateNewInstance () {
         .quitProgram = false
     };
 
+    for (int i = 0; i < 8; i++) {
+        newInstance.clocks[i] = NULL;
+        newInstance.windows[i] = NULL;
+    }
+
     for (int i = 0; i < WBE_SCANCODE_COUNT; i++) {
         newInstance.keyboard.isKeyDown[i] = 0;
 
@@ -39,6 +45,29 @@ WBE_Instance WBE_CreateNewInstance () {
 
     return newInstance;
 }
+
+void WBE_CleanupInstance (WBE_Instance* instance) {
+    // Cleanup Windows and Renderers
+    for (int i = 0; i < instance->windowCount; i++) {
+        SDL_Log("Freed Window");
+        SDL_free(instance->windows[i]);
+    }
+    SDL_free(instance->windows);
+    SDL_Log("%s Cleaned up %i window%s and renderer%s!", WBE_NAME_CleanupInstance, instance->windowCount, (instance->windowCount != 1 ? "s" : ""), (instance->windowCount != 1 ? "s" : ""));
+
+    // Cleanup Clocks
+    for (int i = 0; i < instance->clockCount; i++) {
+        SDL_free(instance->clocks[i]);
+    }
+    SDL_free(instance->clocks);
+}
+
+// void WBE_CleanupWindows (WBE_Instance* instance) {
+//     for (int i = 0; i < 1; i++) {
+//         instance->clocks[i];
+
+//     }
+// }
 
 // Returns 1 while the WBE Instance is active, or 0 upon Instance quitting.
 bool WBE_Update (WBE_Instance* instance) {
@@ -59,6 +88,10 @@ bool WBE_Update (WBE_Instance* instance) {
     return 1;
 }
 
-bool WBE_InstanceQuitState (WBE_Instance* instance) {
+void WBE_QuitInstance (WBE_Instance* instance) {
+    instance->quitProgram = true;
+}
+
+bool WBE_GetInstanceQuitState (WBE_Instance* instance) {
     return instance->quitProgram;
 }
