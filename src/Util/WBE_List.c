@@ -80,11 +80,21 @@ unsigned int WBE_ListAdd_Func (void** list) {
 }
 
 
-unsigned int WBE_GetLastIndex (void* list) {
+unsigned int WBE_GetLastListIndex (void* list) {
     for (int i = 0; i < listTrackerCount; i++) {
         if (list == listTracker[i]->listAddress) {
             return listTracker[i]->lastIndexFilled;
         }
     }
     // Add error code, list could not be found...
+}
+
+void WBE_CleanupLists () {
+    for (int i = 0; i < listTrackerCount; i++) {
+        if (listTracker[i]->listAddress != NULL) SDL_free(listTracker[i]->listAddress);
+    }
+    for (int i = 0; i < WBE_LIST_TRACKER_DEFAULT_SIZE; i++) {
+        if (listTracker[i] != NULL) SDL_free(listTracker[i]);
+    }
+    if (listTracker != NULL) SDL_free(listTracker);
 }
