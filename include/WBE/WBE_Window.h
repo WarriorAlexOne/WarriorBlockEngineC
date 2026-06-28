@@ -3,11 +3,10 @@
 
 #include <SDL3/SDL.h>
 #include "WBE/Util/WBE_Vec2D.h"
+#include "WBE/WBE_Instance_Types.h"
 
-
-#define WBE_MAX_WINDOW_COUNT 64
-#define WBE_MAX_TITLE_LENGTH 1024
-#define WBE_MAX_ICONPATH_LENGTH 1024
+#define WBE_MAX_TITLE_LENGTH 256
+#define WBE_MAX_ICONPATH_LENGTH 260
 
 typedef struct {
     int id;
@@ -27,10 +26,7 @@ typedef struct {
     WBE_Vec2d defaultPos;
     WBE_Vec2d defaultSize;
 
-    WBE_Vec2d speed;
-    WBE_Vec2d vel;
-
-    int displayNumber;
+    int displayCount;
     WBE_Vec2i displaySize;
     float displayRate;
 
@@ -38,14 +34,15 @@ typedef struct {
     bool isBorderless;
     bool isHidden;
     bool isResizable;
+
+    bool quitWindow;
+    bool wasWindowQuit;
+
+    bool debug;
 } WBE_Window;
 
-WBE_Window WBE_CreateWindow (char title[], double width, double height);
-void WBE_CleanupWindows ();
-void WBE_UpdateWindows (WBE_Window* window);
+WBE_Window* WBE_CreateWindow (WBE_Instance* instance, char title[], double width, double height);
+void CloseWindow (WBE_Instance* instance);
 void WBE_SetWindowIcon (WBE_Window* window, char iconPath[]);
-void WBE_SetWindowVelocity (WBE_Window* window, double x, double y);
-void* WBE_GetWindowTracker ();
-int WBE_GetWindowCount ();
 
 #endif
